@@ -4,14 +4,17 @@ import com.zhao.firstapp.R;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.EditText;
 
 
 public class MainActivity extends Activity {
-
-	private static final String TAG = "zhaominSamplesdfad";
+	
+	public static final String TAG = "zhaominSamplesdfad";
+	public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,11 @@ public class MainActivity extends Activity {
 	public void sendMessage(View view) {
 	    // Do something in response to button
 		Log.v(TAG, "sendMessage");
+		Intent intent = new Intent(this, DisplayMessageActivity.class);
+	    EditText editText = (EditText) findViewById(R.id.edit_message);
+	    String message = editText.getText().toString();
+	    intent.putExtra(EXTRA_MESSAGE, message);
+	    startActivity(intent);
 	}
 
 }

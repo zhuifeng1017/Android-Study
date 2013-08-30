@@ -1,2 +1,6 @@
 bin
 gen
+
+/FirstApp/res/drawable-mdpi/Thumbs.db
+/FirstApp/res/drawable-xhdpi/Thumbs.db
+/FirstApp/res/drawable-xxhdpi/Thumbs.db
