@@ -31,6 +31,7 @@ limitations under the License.
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             
+            <!-- filter for sending text or images; accepts SEND action and text or image data -->
             <intent-filter>
         		<action android:name="android.intent.action.SEND"/>
         		<category android:name="android.intent.category.DEFAULT"/>

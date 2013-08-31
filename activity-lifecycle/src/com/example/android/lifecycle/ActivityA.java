@@ -51,7 +51,7 @@ public class ActivityA extends Activity {
         
         Log.i(EXTRA_MESSAGE, "启动了/");
         // Get the intent that started this activity
-        Intent intent = getIntent();
+        Intent intent = getIntent();	//accepts SEND action
         if (intent != null){
         	 // Figure out what to do based on the intent type
         	String type  = intent.getType();
@@ -64,7 +64,6 @@ public class ActivityA extends Activity {
                 	Log.i(EXTRA_MESSAGE, "收到消息了text/plain");
                 }
         	}
-       	
         }
     }
 
