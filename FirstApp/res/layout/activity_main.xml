@@ -23,4 +23,7 @@
         android:layout_height="wrap_content"
         android:text="@string/button_testIntent" android:onClick="testIntent"/>
     	
+    	<Button android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_testResultActivity" android:onClick="testResultActivity"/>
 </LinearLayout>
