@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest android:versionCode="90" android:versionName="0.9 Beta" package="com.mappn.gfan"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <permission android:name="com.hudee.pns.permission.RECEIVE" android:protectionLevel="normal" />
+    <permission android:name="com.mappn.gfan.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <permission android:name="com.mappn.gfan.permission.BATCH_DOWNLOAD" android:protectionLevel="signature" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="com.mappn.gfan.permission.C2D_MESSAGE" />
+    <!-- <uses-permission android:name="com.hudee.pns.permission.RECEIVE" /> -->
+    <supports-screens android:anyDensity="true" />
+    <uses-sdk android:minSdkVersion="5" android:targetSdkVersion="9" />
+    <application android:theme="@style/gfan_theme_light" android:label="@string/app_name" android:icon="@drawable/app_icon">
+        <activity android:name=".ui.SplashActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.SearchActivity" android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ui.SearchResultActivity" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.HomeTabActivity" android:launchMode="singleTop" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="stateUnchanged" />
+        <activity android:name=".ui.HomeActivity" />
+        <activity android:name=".ui.CategoryActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.InstallNecessaryActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.MasterTabActivity" android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="stateVisible|adjustResize" />
+        <activity android:name=".ui.RecommendListActivity" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.RecommendActivity" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.RecommendAppsActivity" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.RecommendDiscussActivity" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.FollowedRecommendActivity" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.RankTabActivity" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.ProductListActivity" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.AppManagerActivity" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.AppsUpdateActivity" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.DownloadManagerActivity" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.ProductDetailActivity" android:configChanges="keyboardHidden|orientation" android:allowTaskReparenting="true" />
+        <activity android:name=".ui.ProductFindActivity" android:configChanges="keyboardHidden|orientation" />
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name=".ui.PreloadActivity" android:configChanges="keyboardHidden|orientation">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="gfan" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.ProductInfoActivity" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.ProductCommentActivity" android:configChanges="keyboardHidden|orientation" />
+        <activity android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" android:name=".ui.ScreenshotActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.SafeActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.ClientPreferenceActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.FeedBackActivity" android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="stateVisible|adjustResize" />
+        <activity android:name=".ui.MoreInfoActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.SplashGalleryActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.PersonalAccountActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.ChargeTypeListActivity" android:launchMode="singleTop" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.PayMainActivity" android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".ui.RegisterActivity" android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ui.LoginActivity" android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="adjustResize" />
+        <provider android:name=".common.util.MarketProvider" android:authorities="gfan" />
+        <service android:name=".common.util.AppPushService" />
+        <service android:name=".common.util.BatchDownloadService" android:permission="com.mappn.gfan.permission.BATCH_DOWNLOAD" android:exported="true" />
+        <receiver android:name=".common.util.AppPushReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.mappn.gfan.download.intent" />
+            </intent-filter>
+        </receiver>
+        <provider android:name=".common.download.DownloadProvider" android:authorities="gfan_downloads" />
+        <service android:name=".common.download.DownloadService" />
+        <receiver android:name=".common.download.DownloadReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".common.util.CheckSplashUpdateReceiver">
+            <intent-filter>
+                <action android:name="com.mappn.market.broadcast.splash.CHECK_UPGRADE" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".common.util.AppStatusReceiver">
+            <intent-filter>
+                <data android:scheme="package" />
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+        <!--  
+        <receiver android:name=".common.hudee.C2DMReceiver">
+            <intent-filter>
+                <action android:name="com.hudee.pns.intent.MESSAGE" />
+                <category android:name="com.mappn.gfan" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.hudee.pns.intent.REGISTRATION" />
+                <category android:name="com.mappn.gfan" />
+            </intent-filter>
+        </receiver>
+        -->
+        <activity android:name="com.feedback.ui.SendFeedback" android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.feedback.ui.FeedbackConversations" />
+        <activity android:name="com.feedback.ui.FeedbackConversation" android:configChanges="keyboard" />
+        <!--  
+        <service android:name="com.hudee.pns.service.RegistrationService">
+            <intent-filter>
+                <action android:name="com.hudee.pns.intent.REGISTER" />
+                <action android:name="com.hudee.pns.intent.UNREGISTER" />
+            </intent-filter>
+        </service>
+        <service android:name="com.hudee.pns.service.SendMessageService">
+            <intent-filter>
+                <action android:name="com.hudee.pns.intent.SENDMSG" />
+            </intent-filter>
+        </service>
+        <service android:name="com.hudee.pns.service.PushService">
+            <intent-filter>
+                <action android:name="com.hudee.pns.intent.START_PUSH_SERVICE" />
+                <action android:name="com.hudee.pns.intent.STOP_PUSH_SERVICE" />
+                <action android:name="com.hudee.pns.intent.RESTART_PUSH_SERVICE" />
+            </intent-filter>
+        </service>
+        <service android:name="com.hudee.pns.service.SubscriptionService">
+            <intent-filter>
+                <action android:name="com.hudee.pns.intent.SUBSCRIBE" />
+            </intent-filter>
+        </service>
+        <receiver android:name="com.hudee.pns.receiver.SystemEventReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <data android:scheme="package" android:path="com.hudee.pns" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.hudee.pns.receiver.ScreenEventReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.SCREEN_OFF" />
+                <action android:name="android.intent.action.SCREEN_ON" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.hudee.pns.receiver.ParametersSyncReceiver">
+            <intent-filter>
+                <action android:name="com.hudee.pns.sync.parameters" />
+            </intent-filter>
+        </receiver>
+        -->
+        <meta-data android:name="gfan_cpid" android:value="机锋市场" />
+        <meta-data android:name="gfan_statistics_appkey" android:value="41PGCCKAJ1IQ3LG59H59ME12H1" />
+        <meta-data android:name="gfan_type" android:value="tongjisdk" />
+        <meta-data android:name="gfan_cid" android:value="9" />
+        <meta-data android:name="gfan_debug" android:value="0" />
+        <meta-data android:name="UMENG_APPKEY" android:value="4e424a43431fe35a5600002a" />
+    </application>
+</manifest>

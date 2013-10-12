@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/notification_bar"
+    android:layout_width="fill_parent"
+    android:layout_height="42.599976dip"
+    android:background="@drawable/notify_update_selector"
+    android:clickable="true"
+    android:visibility="gone" >
+
+    <ImageView
+        android:id="@id/indicator"
+        android:layout_width="21.399994dip"
+        android:layout_height="21.399994dip"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="8.0dip"
+        android:src="@drawable/notify_arrow" />
+
+    <TextView
+        android:id="@id/notification_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="12.0dip"
+        android:layout_toLeftOf="@id/indicator"
+        android:singleLine="true"
+        android:textColor="@color/color_e" />
+
+</RelativeLayout>

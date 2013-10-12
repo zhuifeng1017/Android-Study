@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="horizontal" android:paddingLeft="15.0dip" android:paddingTop="15.0dip" android:paddingBottom="15.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ProgressBar android:layout_gravity="center_vertical" android:layout_width="48.0dip" android:layout_height="48.0dip" android:indeterminate="true" />
+    <TextView android:textAppearance="?android:textAppearanceMedium" android:textColor="#ffffffff" android:layout_gravity="center_vertical" android:id="@id/tv_hint" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:layout_marginRight="10.0dip" />
+</LinearLayout>

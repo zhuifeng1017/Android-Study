@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/top_bar"
+    android:layout_width="fill_parent"
+    android:layout_height="48.0dip"
+    android:focusableInTouchMode="true"
+    android:gravity="center_vertical" >
+
+    <ImageButton
+        android:id="@id/top_bar_search"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:background="?topbar_btn_bg"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@id/logo"
+        android:layout_width="180.0dip"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="6.0dip"
+        android:visibility="gone" />
+
+    <com.mappn.gfan.common.widget.NavigationTitle
+        android:id="@id/top_bar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="16.0dip"
+        android:visibility="gone" />
+
+    <AutoCompleteTextView
+        android:id="@id/top_bar_input"
+        android:layout_width="fill_parent"
+        android:layout_height="36.0dip"
+        android:layout_alignParentRight="true"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_marginBottom="8.0dip"
+        android:layout_marginLeft="6.0dip"
+        android:layout_marginRight="48.0dip"
+        android:layout_marginTop="6.0dip"
+        android:layout_toLeftOf="@id/top_bar_search"
+        android:background="@drawable/edit_box"
+        android:completionThreshold="1"
+        android:gravity="left|center"
+        android:hint="@string/hint_search"
+        android:paddingLeft="10.0dip"
+        android:singleLine="true"
+        android:textAppearance="@style/text_style_2b"
+        android:visibility="gone" />
+
+</RelativeLayout>

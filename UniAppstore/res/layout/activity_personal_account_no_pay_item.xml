@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:gravity="center" android:id="@id/no_pay_log" android:background="@drawable/list_item_bg_normal" android:focusable="false" android:clickable="false" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@id/iv_icon" android:layout_width="85.0dip" android:layout_height="85.0dip" android:layout_marginTop="40.0dip" android:src="@drawable/pay_no_log" android:layout_alignParentTop="true" />
+    <TextView android:textColor="@color/black" android:id="@id/tv_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10.0dip" android:layout_marginBottom="30.0dip" android:layout_below="@id/iv_icon" />
+</RelativeLayout>

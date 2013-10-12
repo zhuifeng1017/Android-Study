@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="@drawable/action_bar_bg" android:layout_width="fill_parent" android:layout_height="47.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@id/iv_icon" android:background="@drawable/default_user_small" android:layout_width="32.0dip" android:layout_height="32.0dip" android:layout_marginLeft="8.0dip" android:layout_marginRight="8.0dip" android:layout_alignParentLeft="true" android:layout_centerVertical="true" />
+    <ImageView android:id="@id/iv_indicator" android:layout_width="24.0dip" android:layout_height="24.0dip" android:layout_marginRight="8.0dip" android:src="@drawable/more_indicator" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+    <TextView android:id="@id/tv_info" android:layout_width="24.0dip" android:layout_height="24.0dip" android:layout_marginTop="15.0dip" android:text="@string/label_not_login" android:layout_toLeftOf="@id/iv_indicator" android:layout_toRightOf="@id/iv_icon" android:layout_centerVertical="true" />
+</RelativeLayout>

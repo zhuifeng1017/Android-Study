@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="@drawable/product_detail_other_item_bg" android:paddingTop="8.0dip" android:paddingBottom="8.0dip" android:addStatesFromChildren="true" android:layout_width="67.0dip" android:layout_height="wrap_content" android:layout_marginLeft="7.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@id/more_app_logo" android:layout_width="48.0dip" android:layout_height="48.0dip" android:layout_marginBottom="4.0dip" android:layout_centerHorizontal="true" />
+    <TextView android:ellipsize="marquee" android:gravity="center" android:id="@id/more_app_name" android:focusable="true" android:layout_width="fill_parent" android:layout_height="wrap_content" android:singleLine="true" android:includeFontPadding="false" android:layout_below="@id/more_app_logo" style="@style/text_style_1a" />
+</RelativeLayout>

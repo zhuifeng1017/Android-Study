@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:admobsdk="http://schemas.android.com/apk/res/com.mappn.gfan">
+    <include android:layout_width="fill_parent" android:layout_height="47.0dip" android:layout_alignParentBottom="true" layout="@layout/bottom_action_bar" />
+    <include android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="47.0dip" android:layout_alignParentBottom="true" layout="@layout/bottom_download_status_bar" />
+    <ScrollView android:scrollbarThumbVertical="@drawable/scrollbar" android:id="@id/parent_scroll" android:background="@color/background_color" android:fadingEdge="none" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_above="@id/download_status_bar">
+        <LinearLayout android:orientation="vertical" android:id="@id/parent_content" android:layout_width="fill_parent" android:layout_height="wrap_content">
+            <include android:layout_width="fill_parent" android:layout_height="fill_parent" layout="@layout/app_screenshot_show" />
+            <include android:layout_width="fill_parent" android:layout_height="fill_parent" layout="@layout/product_info" />
+            <ViewStub android:id="@id/stub_import_rating" android:layout="@layout/product_rating_details" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+            <include android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/product_description" />
+            <ViewStub android:id="@id/stub_import_expert" android:layout="@layout/app_find_expert" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+            <ViewStub android:id="@id/stub_import_enjoy" android:layout="@layout/app_maybe_enjoy" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+            <include android:layout_width="fill_parent" android:layout_height="48.0dip" layout="@layout/app_authority_declare" />
+            <LinearLayout android:orientation="vertical" android:id="@id/security_settings_list" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+        </LinearLayout>
+    </ScrollView>
+    <ImageView android:id="@id/shadow" android:background="@drawable/bottom_shadow" android:layout_width="fill_parent" android:layout_height="4.0dip" android:layout_above="@id/action_bar" />
+</RelativeLayout>
