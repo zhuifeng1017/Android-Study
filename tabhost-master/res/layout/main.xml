@@ -33,7 +33,6 @@
             android:layout_above="@id/tab_frame_layout" >
 
             <!-- 首页 -->
-
             <LinearLayout
                 android:id="@+id/line1"
                 android:layout_width="fill_parent"
@@ -46,7 +45,6 @@
             </LinearLayout>
 
             <!-- 第二页 -->
-
             <LinearLayout
                 android:id="@+id/line2"
                 android:layout_width="fill_parent"
@@ -59,7 +57,6 @@
             </LinearLayout>
 
             <!-- 第三页 -->
-
             <LinearLayout
                 android:id="@+id/line3"
                 android:layout_width="fill_parent"

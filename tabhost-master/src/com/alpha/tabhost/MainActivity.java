@@ -1,7 +1,11 @@
 package com.alpha.tabhost;
 
+
 import android.app.Activity;
+import android.app.ActivityGroup;
+import android.app.LocalActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,25 +13,28 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
+/*如果tabhost 使用 setContent(Intent intent)，则需要extends ActivityGroup，
+ * addTab之前一定要调用 android.widget.TabHost.setup(LocalActivityManager activityGroup)
+ * */
+public class MainActivity extends ActivityGroup {
 
 	private TabHost mTabHost;
-
 	private LayoutInflater mInflater;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
+		
 		mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		// 如果该Activity继承了TabActivity,使用该方法
 		// tabHost = this.getTabHost();
 		// 否则必须使用该方法
 		mTabHost = (TabHost) findViewById(R.id.tabhost);
 		// 本方法必须调用,在底层去查找TabWidegt和TabContent,所以xml文件中两个节点的id必须和系统的相匹配
-		mTabHost.setup();
-
+		//mTabHost.setup();
+		mTabHost.setup(this.getLocalActivityManager());
+		
 		// 添加标签页
 		TabSpec tabSpec1 = mTabHost.newTabSpec("tabSpec1");
 		// 指定显示的标题
@@ -60,9 +67,16 @@ public class MainActivity extends Activity {
 		tabSpec3.setIndicator(createView("第三页"));
 		tabSpec3.setContent(R.id.line3);
 		mTabHost.addTab(tabSpec3);
-
+		
+		// 添加第四页
+		if (true) {
+			TabSpec tabSpec4 = mTabHost.newTabSpec("tabSpec4");
+			tabSpec4.setIndicator(createView("第四页"));
+			tabSpec4.setContent(new Intent(this, ListActivityImpl.class));
+			mTabHost.addTab(tabSpec4);
+		}
 	}
-
+	
 	// 创建一个自定义布局
 	private View createView(String name) {
 		View view = mInflater.inflate(R.layout.custom, null);
