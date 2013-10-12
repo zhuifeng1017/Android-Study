@@ -5,25 +5,32 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <!-- android:id="@+id/tabhost" -->
-    <!-- android:id="@android:id/tabs" -->
-    <!-- android:id="@android:id/tabcontent" -->
-    <!-- 这三个属性必须设置,在代码调用tabHost.setup()的时候会查找这三个控件 -->
-
-    <LinearLayout
+    <RelativeLayout
+        android:id="@id/tab_parent"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical" >
+        android:layout_height="fill_parent" >
 
-        <TabWidget
-            android:id="@android:id/tabs"
+        <!-- android:id="@+id/tabhost" -->
+        <!-- android:id="@android:id/tabs" -->
+        <!-- android:id="@android:id/tabcontent" -->
+        <!-- 这三个属性必须设置,在代码调用tabHost.setup()的时候会查找这三个控件 -->
+        
+        <FrameLayout
+            android:id="@id/tab_frame_layout"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" >
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+        </FrameLayout>
 
         <FrameLayout
             android:id="@android:id/tabcontent"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
+            android:layout_height="fill_parent"
+            android:layout_above="@id/tab_frame_layout" >
 
             <!-- 首页 -->
 
@@ -35,10 +42,11 @@
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="首页" />
+                    android:text="tab首页" />
             </LinearLayout>
-            
+
             <!-- 第二页 -->
+
             <LinearLayout
                 android:id="@+id/line2"
                 android:layout_width="fill_parent"
@@ -47,10 +55,11 @@
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="第二页" />
+                    android:text="tab第二页" />
             </LinearLayout>
-            
+
             <!-- 第三页 -->
+
             <LinearLayout
                 android:id="@+id/line3"
                 android:layout_width="fill_parent"
@@ -59,9 +68,9 @@
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="第三页" />
+                    android:text="tab第三页" />
             </LinearLayout>
         </FrameLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
 </TabHost>
