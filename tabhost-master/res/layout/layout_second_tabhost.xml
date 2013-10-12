@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tabhost" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <!-- android:id="@+id/tabhost" -->
+    <!-- android:id="@android:id/tabs" -->
+    <!-- android:id="@android:id/tabcontent" -->
+    <!-- 这三个属性必须设置,在代码调用tabHost.setup()的时候会查找这三个控件 -->
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:orientation="vertical" >
+        
+        <TabWidget
+            android:id="@android:id/tabs"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+        
+        <FrameLayout
+            android:id="@android:id/tabcontent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <!-- 第一项 -->
+
+            <LinearLayout
+                android:id="@+id/item1"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="第一项 " />
+            </LinearLayout>
+            
+            <!-- 第二项 -->
+            <LinearLayout
+                android:id="@+id/item2"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="第二项" />
+            </LinearLayout>
+           
+        </FrameLayout>
+    </LinearLayout>
+
+</TabHost>

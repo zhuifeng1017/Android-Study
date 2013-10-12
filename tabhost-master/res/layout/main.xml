@@ -56,17 +56,6 @@
                     android:text="tab第二页" />
             </LinearLayout>
 
-            <!-- 第三页 -->
-            <LinearLayout
-                android:id="@+id/line3"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent" >
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="tab第三页" />
-            </LinearLayout>
         </FrameLayout>
     </RelativeLayout>
 

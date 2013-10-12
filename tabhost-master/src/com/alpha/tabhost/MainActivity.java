@@ -4,6 +4,7 @@ package com.alpha.tabhost;
 import android.app.Activity;
 import android.app.ActivityGroup;
 import android.app.LocalActivityManager;
+import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -61,12 +62,12 @@ public class MainActivity extends ActivityGroup {
 		mTabHost.addTab(tabSpec2);
 
 		// 添加第三页
-		TabSpec tabSpec3 = mTabHost.newTabSpec("tabSpec3");
-		// tabSpec3.setIndicator("第三页",
-		// getResources().getDrawable(R.drawable.i7));
-		tabSpec3.setIndicator(createView("第三页"));
-		tabSpec3.setContent(R.id.line3);
-		mTabHost.addTab(tabSpec3);
+		if (true){
+			TabSpec tabSpec3 = mTabHost.newTabSpec("tabSpec3");
+			tabSpec3.setIndicator(createView("第三页"));
+			tabSpec3.setContent(new Intent(this, SecondTabActivity.class));
+			mTabHost.addTab(tabSpec3);
+		}
 		
 		// 添加第四页
 		if (true) {

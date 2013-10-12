@@ -18,6 +18,7 @@
             </intent-filter>
         </activity>
     <activity android:name=".ListActivityImpl"></activity>
+    <activity android:name=".SecondTabActivity"></activity>
     </application>
 
 </manifest>
