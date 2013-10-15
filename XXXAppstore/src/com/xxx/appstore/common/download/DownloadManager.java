@@ -313,7 +313,7 @@ public class DownloadManager {
       public static final String COLUMN_TOTAL_BYTES = "total_bytes";
       public static final String COLUMN_URI = "uri";
       public static final String COLUMN_VISIBILITY = "visibility";
-      public static final Uri CONTENT_URI = Uri.parse("content://gfan_downloads/my_downloads");
+      public static final Uri CONTENT_URI = Uri.parse("content://gfan_downloads_xxx/my_downloads");
       public static final int CONTROL_PAUSED = 1;
       public static final int CONTROL_PENDING = 2;
       public static final int CONTROL_RUN = 0;

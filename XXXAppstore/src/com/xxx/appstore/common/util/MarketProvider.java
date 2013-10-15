@@ -85,21 +85,21 @@ public class MarketProvider extends ContentProvider {
 
 
    static {
-      sURIMatcher.addURI("gfan", "search_history", 1);
-      sURIMatcher.addURI("gfan", "search_history/#", 2);
-      sURIMatcher.addURI("gfan", "products", 3);
-      sURIMatcher.addURI("gfan", "updates", 4);
-      sURIMatcher.addURI("gfan", "buy", 5);
-      sURIMatcher.addURI("gfan", "card", 6);
-      sURIMatcher.addURI("gfan", "log", 7);
-      sURIMatcher.addURI("gfan", "push", 8);
-      SEARCH_CONTENT_URI = Uri.parse("content://gfan/search_history");
-      PRODUCTS_CONTENT_URI = Uri.parse("content://gfan/products");
-      UPDATE_CONTENT_URI = Uri.parse("content://gfan/updates");
-      BUY_CONTENT_URI = Uri.parse("content://gfan/buy");
-      CARD_CONTENT_URI = Uri.parse("content://gfan/card");
-      LOG_CONTENT_URI = Uri.parse("content://gfan/log");
-      PUSH_CONTENT_URI = Uri.parse("content://gfan/push");
+      sURIMatcher.addURI("gfan_xxx", "search_history", 1);
+      sURIMatcher.addURI("gfan_xxx", "search_history/#", 2);
+      sURIMatcher.addURI("gfan_xxx", "products", 3);
+      sURIMatcher.addURI("gfan_xxx", "updates", 4);
+      sURIMatcher.addURI("gfan_xxx", "buy", 5);
+      sURIMatcher.addURI("gfan_xxx", "card", 6);
+      sURIMatcher.addURI("gfan_xxx", "log", 7);
+      sURIMatcher.addURI("gfan_xxx", "push", 8);
+      SEARCH_CONTENT_URI = Uri.parse("content://gfan_xxx/search_history");
+      PRODUCTS_CONTENT_URI = Uri.parse("content://gfan_xxx/products");
+      UPDATE_CONTENT_URI = Uri.parse("content://gfan_xxx/updates");
+      BUY_CONTENT_URI = Uri.parse("content://gfan_xxx/buy");
+      CARD_CONTENT_URI = Uri.parse("content://gfan_xxx/card");
+      LOG_CONTENT_URI = Uri.parse("content://gfan_xxx/log");
+      PUSH_CONTENT_URI = Uri.parse("content://gfan_xxx/push");
    }
 
    private static String getTableFromUri(Uri var0) {

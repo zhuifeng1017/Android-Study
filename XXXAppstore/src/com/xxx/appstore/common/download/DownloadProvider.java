@@ -41,8 +41,8 @@ public final class DownloadProvider extends ContentProvider {
 
 
    static {
-      sURIMatcher.addURI("gfan_downloads", "my_downloads", 1);
-      sURIMatcher.addURI("gfan_downloads", "my_downloads/#", 2);
+      sURIMatcher.addURI("gfan_downloads_xxx", "my_downloads", 1);
+      sURIMatcher.addURI("gfan_downloads_xxx", "my_downloads/#", 2);
    }
 
    private static final void copyInteger(String var0, ContentValues var1, ContentValues var2) {

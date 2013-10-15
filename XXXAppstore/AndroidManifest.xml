@@ -63,7 +63,7 @@
         <activity android:name=".ui.PayMainActivity" android:configChanges="keyboardHidden|orientation" />
         <activity android:name=".ui.RegisterActivity" android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.LoginActivity" android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="adjustResize" />
-        <provider android:name=".common.util.MarketProvider" android:authorities="gfan" />
+        <provider android:name=".common.util.MarketProvider" android:authorities="gfan_xxx" />
         <service android:name=".common.util.AppPushService" />
         <service android:name=".common.util.BatchDownloadService" android:permission="com.unistrong.appstore.permission.BATCH_DOWNLOAD" android:exported="true" />
         <receiver android:name=".common.util.AppPushReceiver">
@@ -72,7 +72,7 @@
                 <action android:name="com.unistrong.appstore.download.intent" />
             </intent-filter>
         </receiver>
-        <provider android:name=".common.download.DownloadProvider" android:authorities="gfan_downloads" />
+        <provider android:name=".common.download.DownloadProvider" android:authorities="gfan_downloads_xxx" />
         <service android:name=".common.download.DownloadService" />
         <receiver android:name=".common.download.DownloadReceiver">
             <intent-filter>
