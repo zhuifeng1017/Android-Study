@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <include layout="@layout/top_bar" />
+    <include android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_below="@id/top_bar" android:layout_alignWithParentIfMissing="true" layout="@layout/common_list_view" />
+    <ImageView android:id="@id/shadow" android:background="@drawable/top_shadow" android:layout_width="fill_parent" android:layout_height="4.0dip" android:layout_below="@id/top_bar" />
+</RelativeLayout>

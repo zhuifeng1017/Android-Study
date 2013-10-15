@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:gravity="center" android:layout_width="fill_parent" android:layout_height="47.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditText android:id="@id/et_comment" android:background="@drawable/edit_box" android:paddingLeft="10.5dip" android:layout_width="0.0dip" android:layout_height="36.0dip" android:layout_marginLeft="6.0dip" android:hint="@string/label_hint_comment" android:maxLines="4" android:layout_weight="1.0" style="@style/text_style_2a" />
+    <Button android:id="@id/ib_send" android:background="@drawable/action_bar_btn_bg" android:layout_width="54.0dip" android:layout_height="36.0dip" android:layout_marginLeft="6.0dip" android:layout_marginRight="6.0dip" android:text="@string/label_response" />
+</LinearLayout>

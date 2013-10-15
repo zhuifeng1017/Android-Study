@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TabHost android:id="@android:id/tabhost" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:id="@id/tab_parent" android:layout_width="fill_parent" android:layout_height="fill_parent"
+      xmlns:android="http://schemas.android.com/apk/res/android">
+        <FrameLayout android:id="@id/tab_frame_layout" android:clickable="true" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_alignParentBottom="true"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+            <ImageView android:id="@id/iv_mover" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="?home_tab_indicator" android:scaleType="fitXY" />
+            <TabWidget android:id="@android:id/tabs" android:layout_width="fill_parent" android:layout_height="64.0dip" />
+        </FrameLayout>
+        <FrameLayout android:id="@android:id/tabcontent" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_above="@id/tab_frame_layout"
+          xmlns:android="http://schemas.android.com/apk/res/android" />
+        <include android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_above="@id/tab_frame_layout" android:layout_below="@id/top_bar" layout="@layout/notification_bar" />
+        <ImageView android:id="@id/shadow" android:background="@drawable/bottom_shadow" android:layout_width="fill_parent" android:layout_height="4.0dip" android:layout_above="@id/tab_frame_layout" />
+    </RelativeLayout>
+</TabHost>

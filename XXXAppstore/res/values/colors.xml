@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#ff000000</color>
+    <color name="gray_2">#ffdcdcdc</color>
+    <color name="orange">#ffffb400</color>
+    <color name="list_view_bg_color">#00000000</color>
+    <color name="splash_notification_bg">#77ffffff</color>
+    <color name="progress_fg_top">#ffffc800</color>
+    <color name="progress_fg_bottom">#fff0a000</color>
+    <color name="hot3">#ffff9600</color>
+    <color name="short_description_color">#ff333333</color>
+    <color name="background_color">#fff0f0f0</color>
+    <color name="color_a">#ff323232</color>
+    <color name="color_b">#ff646464</color>
+    <color name="color_c">#ff969696</color>
+    <color name="color_d">#ffc8c8c8</color>
+    <color name="color_e">#ffffffff</color>
+    <color name="color_f">#fff08c00</color>
+</resources>

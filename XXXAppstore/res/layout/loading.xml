@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:id="@id/loading" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ProgressBar android:layout_gravity="center" android:id="@id/progressbar" android:visibility="gone" android:layout_width="54.0dip" android:layout_height="12.0dip" android:indeterminateOnly="true" />
+    <TextView android:textColor="@color/black" android:gravity="center" android:layout_gravity="center" android:id="@id/no_data" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/no_data" android:drawableTop="@drawable/btn_retry" android:drawablePadding="10.0dip" />
+</FrameLayout>

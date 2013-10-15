@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="@drawable/main_tab_bg_selector" android:layout_width="fill_parent" android:layout_height="64.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@id/tab_widget_icon" android:layout_width="32.0dip" android:layout_height="32.0dip" android:layout_marginTop="5.0dip" android:layout_alignParentTop="true" android:layout_centerHorizontal="true" />
+    <TextView android:id="@id/tab_widget_content" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2.5999756dip" android:layout_marginBottom="6.0dip" android:layout_below="@id/tab_widget_icon" android:layout_centerHorizontal="true" />
+</RelativeLayout>

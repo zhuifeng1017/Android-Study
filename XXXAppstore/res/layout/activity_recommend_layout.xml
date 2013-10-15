@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <include android:layout_width="fill_parent" android:layout_height="47.0dip" android:layout_alignParentBottom="true" layout="@layout/bottom_action_bar" />
+    <include android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_above="@id/action_bar" android:layout_alignWithParentIfMissing="true" layout="@layout/common_list_view" />
+    <ImageView android:id="@id/shadow" android:background="@drawable/bottom_shadow" android:layout_width="fill_parent" android:layout_height="4.0dip" android:layout_above="@id/action_bar" />
+</RelativeLayout>

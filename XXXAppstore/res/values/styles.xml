@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="text_style_1a">
+        <item name="android:textSize">@dimen/font_size_s</item>
+        <item name="android:textColor">@color/color_a</item>
+    </style>
+    <style name="text_style_1b">
+        <item name="android:textSize">@dimen/font_size_s</item>
+        <item name="android:textColor">@color/color_b</item>
+    </style>
+    <style name="text_style_1c">
+        <item name="android:textSize">@dimen/font_size_s</item>
+        <item name="android:textColor">@color/color_c</item>
+    </style>
+    <style name="text_style_1d">
+        <item name="android:textSize">@dimen/font_size_s</item>
+        <item name="android:textColor">@color/color_d</item>
+    </style>
+    <style name="text_style_1e">
+        <item name="android:textSize">@dimen/font_size_s</item>
+        <item name="android:textColor">@color/color_e</item>
+    </style>
+    <style name="text_style_1f">
+        <item name="android:textSize">@dimen/font_size_s</item>
+        <item name="android:textColor">@color/color_f</item>
+    </style>
+    <style name="text_style_2a">
+        <item name="android:textSize">@dimen/font_size_m</item>
+        <item name="android:textColor">@color/color_a</item>
+    </style>
+    <style name="text_style_2c">
+        <item name="android:textSize">@dimen/font_size_m</item>
+        <item name="android:textColor">@color/color_c</item>
+    </style>
+    <style name="text_style_2f">
+        <item name="android:textSize">@dimen/font_size_m</item>
+        <item name="android:textColor">@color/color_f</item>
+    </style>
+    <style name="text_style_2e">
+        <item name="android:textSize">@dimen/font_size_m</item>
+        <item name="android:textColor">@color/color_e</item>
+    </style>
+    <style name="text_style_3a">
+        <item name="android:textSize">@dimen/font_size_l</item>
+        <item name="android:textColor">@color/color_a</item>
+    </style>
+    <style name="text_style_3c">
+        <item name="android:textSize">@dimen/font_size_l</item>
+        <item name="android:textColor">@color/color_c</item>
+    </style>
+    <style name="text_style_3d">
+        <item name="android:textSize">@dimen/font_size_l</item>
+        <item name="android:textColor">@color/color_d</item>
+    </style>
+    <style name="text_style_3e">
+        <item name="android:textSize">@dimen/font_size_l</item>
+        <item name="android:textColor">@color/color_e</item>
+    </style>
+    <style name="app_text_style1">
+        <item name="android:textSize">@dimen/font_size_l</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="app_text_style4">
+        <item name="android:textSize">@dimen/font_size_m</item>
+        <item name="android:textColor">@drawable/tab_text_selector</item>
+    </style>
+    <style name="text_style_2b">
+        <item name="android:textSize">@dimen/font_size_m</item>
+        <item name="android:textColor">@color/color_b</item>
+    </style>
+    <style name="text_style_3b">
+        <item name="android:textSize">@dimen/font_size_l</item>
+        <item name="android:textColor">@color/color_b</item>
+    </style>
+    <style name="app_text_style12">
+        <item name="android:textSize">@dimen/font_size_s</item>
+        <item name="android:textColor">@color/short_description_color</item>
+    </style>
+    <style name="app_text_style19">
+        <item name="android:textSize">@dimen/font_size_s</item>
+        <item name="android:textColor">#ff78b400</item>
+    </style>
+    <style name="app_text_style55">
+        <item name="android:textSize">@dimen/font_size_s</item>
+        <item name="android:textColor">@drawable/main_tab_text_selector</item>
+    </style>
+    <style name="first_login_number">
+        <item name="android:textSize">@dimen/font_size_l</item>
+        <item name="android:textColor">@color/color_e</item>
+    </style>
+    <style name="list_font_l_normal">
+        <item name="android:textSize">@dimen/font_size_l</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="home_tab_text_style_dark">
+        <item name="android:textSize">@dimen/font_size_s</item>
+        <item name="android:textColor">@drawable/main_tab_text_selector</item>
+    </style>
+    <style name="home_tab_text_style_light">
+        <item name="android:textSize">@dimen/font_size_s</item>
+        <item name="android:textColor">@drawable/main_tab_text_selector_light</item>
+    </style>
+    <style name="tab_text_style_light">
+        <item name="android:textSize">@dimen/font_size_m</item>
+        <item name="android:textColor">@drawable/tab_text_selector_light</item>
+    </style>
+    <style name="tab_text_style_dark">
+        <item name="android:textSize">@dimen/font_size_m</item>
+        <item name="android:textColor">@drawable/tab_text_selector</item>
+    </style>
+    <style name="app_name_white_font">
+        <item name="android:textSize">@dimen/font_size_l</item>
+        <item name="android:textColor">@color/color_e</item>
+        <item name="android:shadowColor">@color/black</item>
+        <item name="android:shadowDy">-2.0</item>
+        <item name="android:shadowRadius">0.1</item>
+    </style>
+    <style name="manager_apk_icon">
+        <item name="android:layout_marginLeft">10.0dip</item>
+        <item name="android:layout_marginTop">10.0dip</item>
+        <item name="android:layout_marginBottom">10.0dip</item>
+    </style>
+    <style name="personal_account_name">
+        <item name="android:layout_marginTop">12.0dip</item>
+    </style>
+    <style name="progressbar_horizontal">
+        <item name="android:maxHeight">8.0dip</item>
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal</item>
+        <item name="android:progressDrawable">@drawable/progress_horizontal</item>
+        <item name="android:minHeight">8.0dip</item>
+    </style>
+    <style name="progressbar_horizontal_light">
+        <item name="android:maxHeight">8.0dip</item>
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal</item>
+        <item name="android:progressDrawable">@drawable/progress_horizontal_light</item>
+        <item name="android:minHeight">8.0dip</item>
+    </style>
+    <style name="RatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:maxHeight">12.0dip</item>
+        <item name="android:progressDrawable">@drawable/rating_star</item>
+        <item name="android:minHeight">12.0dip</item>
+        <item name="android:numStars">5</item>
+    </style>
+    <style name="RatingBarLarge" parent="@android:style/Widget.RatingBar">
+        <item name="android:maxWidth">140.0dip</item>
+        <item name="android:maxHeight">27.0dip</item>
+        <item name="android:progressDrawable">@drawable/rating_star_large</item>
+        <item name="android:minWidth">140.0dip</item>
+        <item name="android:minHeight">27.0dip</item>
+    </style>
+    <style name="TopbarTitleLight">
+        <item name="android:textAppearance">@style/app_text_style1</item>
+        <item name="android:shadowColor">@color/color_e</item>
+        <item name="android:shadowDy">-2.0</item>
+        <item name="android:shadowRadius">0.1</item>
+    </style>
+    <style name="TopbarTitleDark">
+        <item name="android:textAppearance">@style/text_style_3e</item>
+        <item name="android:shadowColor">@color/black</item>
+        <item name="android:shadowDy">-2.0</item>
+        <item name="android:shadowRadius">0.1</item>
+    </style>
+    <style name="TabHomeSelectorDark">
+        <item name="android:src">@drawable/main_tab_index_selector</item>
+    </style>
+    <style name="TabHomeSelectorLight">
+        <item name="android:src">@drawable/main_tab_index_light_selector</item>
+    </style>
+    <style name="ActionBarBgDark">
+        <item name="android:background">@drawable/action_bar_bg</item>
+    </style>
+    <style name="ActionBarBgLight">
+        <item name="android:background">@drawable/action_bar_bg_light</item>
+    </style>
+    <style name="gfan_theme_light" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowBackground">@null</item>
+        <item name="home_tab_bg">@drawable/home_tab_bg_light</item>
+        <item name="home_tab_indicator">@drawable/main_tab_anim_light</item>
+        <item name="tab_bg">@drawable/tab_bg_light</item>
+        <item name="top_logo">@drawable/logo_light</item>
+        <item name="topbar_btn_search">@drawable/topbar_btn_search_light</item>
+        <item name="topbar_btn_bg">@drawable/topbar_btn_bg_light</item>
+        <item name="share_btn_bg">@drawable/topbar_btn_share_light</item>
+        <item name="topbar_title_font">@style/TopbarTitleLight</item>
+        <item name="actionbar_bg">@style/ActionBarBgLight</item>
+    </style>
+    <style name="gfan_theme_dark" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowBackground">@null</item>
+        <item name="home_tab_bg">@drawable/home_tab_bg</item>
+        <item name="home_tab_indicator">@drawable/main_tab_anim</item>
+        <item name="tab_bg">@drawable/tab_bg</item>
+        <item name="top_logo">@drawable/logo</item>
+        <item name="topbar_btn_search">@drawable/topbar_btn_search</item>
+        <item name="topbar_btn_bg">@drawable/topbar_btn_bg</item>
+        <item name="share_btn_bg">@drawable/topbar_btn_share</item>
+        <item name="topbar_title_font">@style/TopbarTitleDark</item>
+        <item name="actionbar_bg">@style/ActionBarBgDark</item>
+    </style>
+</resources>
