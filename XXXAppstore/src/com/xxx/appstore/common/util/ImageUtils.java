@@ -609,7 +609,7 @@ public class ImageUtils
         	  str = this.url + String.valueOf(2131492971);
         }
         
-        if (this.cache.existsDrawable(str)) {
+        if (!this.cache.existsDrawable(str)) {
       	  Object localObject = ImageUtils.getBitmapFromSdcard(this.context, str);
             if (localObject == null)
             {

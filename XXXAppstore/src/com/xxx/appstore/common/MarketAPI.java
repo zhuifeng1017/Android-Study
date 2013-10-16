@@ -79,7 +79,64 @@ public class MarketAPI {
    public static final String API_HOST_CLOUD = "http://passport.gfan.com/gfan_center/";
    public static final String API_HOST_JAVA = "http://api.gfan.com/market/api/";
    public static final String API_UCENTER_HOST = "http://api.gfan.com/uc1/common/";
-   static final String[] API_URLS = new String[]{"http://api.gfan.com/uc1/common/login", "http://api.gfan.com/uc1/common/register", "http://api.gfan.com/market/api/getComments", "http://api.gfan.com/market/api/addComment", "http://api.gfan.com/market/api/addRating", "http://api.gfan.com/sdk/pay/purchaseProduct", "http://api.gfan.com/sdk/pay/getConsumeSum", "http://api.gfan.com/market/api/syncBuyLog", "http://api.gfan.com/market/api/getMyRating", "http://api.gfan.com/sdk/pay/getConsumeDetail", "http://api.gfan.com/market/api/getTopic", "http://api.gfan.com/market/api/search", "http://api.gfan.com/market/api/getProducts", "http://api.gfan.com/market/api/getRecommendProducts", "http://api.gfan.com/market/api/getProductDetail", "http://api.gfan.com/market/api/getDownloadUrl", "http://api.gfan.com/market/api/getHomeRecommend", "http://api.gfan.com/market/api/checkNewVersion", "http://api.gfan.com/market/api/getCategory", "http://api.gfan.com/market/api/checkUpgrade", "http://passport.gfan.com/gfan_center/?mo=cloud_phone&do=addDev", "http://api.gfan.com/uc1/common/query_balance", "http://api.gfan.com/sdk/pay/chargeConsumeLog", "http://api.gfan.com/pay/szf/servlet/rechargeRequest", "http://api.gfan.com/pay/szf/getCardConfigServlet", "http://api.gfan.com/pay/szf/sdk/queryServlet", "http://api.gfan.com/uc1/common/query_charge_log_list", "http://api.gfan.com/market/api/syncApps", "http://api.gfan.com/market/api/checkNewSplash", "http://passport.gfan.com/gfan_center/?mo=cloud_phone&do=delDev&uid=", "http://api.gfan.com/market/api/getDetail", "http://api.gfan.com/pay/szf/servlet/businessProcess.do", "http://api.gfan.com/pay/szf/servlet/businessProcess.do", "http://api.gfan.com/market/api/getKeywords", "http://api.gfan.com/market/api/getTopRecommend", "http://api.gfan.com/market/api/getRankByCategory", "http://api.gfan.com/market/api/getGrowFast", "http://api.gfan.com/market/api/getAllCategory", "http://api.gfan.com/market/api/getRequired", "http://search.gfan.com/search/search/luntanAttJk", "http://logcollect.gfan.com/marketExceptionReport/api/getModuleLogLevel", "http://logcollect.gfan.com/marketExceptionReport/api/insertModuleExceptionLog", "http://api.gfan.com/market/api/masterRecommend", "http://api.gfan.com/market/api/masterRecommendApps", "http://api.gfan.com/market/api/downReport", "http://api.gfan.com/market/api/masterRecommendDiscuss", "http://api.gfan.com/market/api/addMasterRecommendDiscuss", "http://api.gfan.com/market/api/addMasterRecommendRating", "http://api.gfan.com/market/api/masterRecommendRating", "http://api.gfan.com/market/api/notification", "http://api.gfan.com/market/api/masterContainsApp", "http://api.gfan.com/market/api/recommendByApp", "http://api.gfan.com/market/api/followMasterRecommend", "http://api.gfan.com/market/api/followedMasterRecommend", "http://api.gfan.com/market/api/homeMasterRecommend", "http://api.gfan.com/market/api/masterRecommendNewApps", "http://api.gfan.com/market/api/notificationReport"};
+   static final String[] API_URLS = new String[]{
+	   "http://api.gfan.com/uc1/common/login", 	// 0
+	   "http://api.gfan.com/uc1/common/register", 	// 1
+	   "http://api.gfan.com/market/api/getComments",
+	   "http://api.gfan.com/market/api/addComment",
+	   "http://api.gfan.com/market/api/addRating",
+	   "http://api.gfan.com/sdk/pay/purchaseProduct", 
+	   "http://api.gfan.com/sdk/pay/getConsumeSum",
+	   "http://api.gfan.com/market/api/syncBuyLog",
+	   "http://api.gfan.com/market/api/getMyRating", 
+	   "http://api.gfan.com/sdk/pay/getConsumeDetail", 
+	   "http://api.gfan.com/market/api/getTopic", 
+	   "http://api.gfan.com/market/api/search", 
+	   "http://api.gfan.com/market/api/getProducts", 
+	   "http://api.gfan.com/market/api/getRecommendProducts", 
+	   "http://api.gfan.com/market/api/getProductDetail", 
+	   "http://api.gfan.com/market/api/getDownloadUrl", 
+	   "http://api.gfan.com/market/api/getHomeRecommend",
+	   "http://api.gfan.com/market/api/checkNewVersion", 
+	   "http://api.gfan.com/market/api/getCategory", 
+	   "http://api.gfan.com/market/api/checkUpgrade", 
+	   "http://passport.gfan.com/gfan_center/?mo=cloud_phone&do=addDev", 
+	   "http://api.gfan.com/uc1/common/query_balance", 
+	   "http://api.gfan.com/sdk/pay/chargeConsumeLog", 
+	   "http://api.gfan.com/pay/szf/servlet/rechargeRequest", 
+	   "http://api.gfan.com/pay/szf/getCardConfigServlet", 
+	   "http://api.gfan.com/pay/szf/sdk/queryServlet", 
+	   "http://api.gfan.com/uc1/common/query_charge_log_list",
+	   "http://api.gfan.com/market/api/syncApps", 
+	   "http://api.gfan.com/market/api/checkNewSplash", 
+	   "http://passport.gfan.com/gfan_center/?mo=cloud_phone&do=delDev&uid=", 
+	   "http://api.gfan.com/market/api/getDetail", 
+	   "http://api.gfan.com/pay/szf/servlet/businessProcess.do", 
+	   "http://api.gfan.com/pay/szf/servlet/businessProcess.do", 
+	   "http://api.gfan.com/market/api/getKeywords",
+	   "http://api.gfan.com/market/api/getTopRecommend",
+	   "http://api.gfan.com/market/api/getRankByCategory", 
+	   "http://api.gfan.com/market/api/getGrowFast", 
+	   "http://api.gfan.com/market/api/getAllCategory", 
+	   "http://api.gfan.com/market/api/getRequired", 
+	   "http://search.gfan.com/search/search/luntanAttJk", 
+	   "http://logcollect.gfan.com/marketExceptionReport/api/getModuleLogLevel", 
+	   "http://logcollect.gfan.com/marketExceptionReport/api/insertModuleExceptionLog", 
+	   "http://api.gfan.com/market/api/masterRecommend", 
+	   "http://api.gfan.com/market/api/masterRecommendApps", 
+	   "http://api.gfan.com/market/api/downReport", 
+	   "http://api.gfan.com/market/api/masterRecommendDiscuss", 
+	   "http://api.gfan.com/market/api/addMasterRecommendDiscuss", 
+	   "http://api.gfan.com/market/api/addMasterRecommendRating", 
+	   "http://api.gfan.com/market/api/masterRecommendRating",
+	   "http://api.gfan.com/market/api/notification",
+	   "http://api.gfan.com/market/api/masterContainsApp", 
+	   "http://api.gfan.com/market/api/recommendByApp",
+	   "http://api.gfan.com/market/api/followMasterRecommend", 
+	   "http://api.gfan.com/market/api/followedMasterRecommend", 
+	   "http://api.gfan.com/market/api/homeMasterRecommend", 
+	   "http://api.gfan.com/market/api/masterRecommendNewApps", 
+	   "http://api.gfan.com/market/api/notificationReport"};
    public static final String BBS_SEARCH_API = "http://search.gfan.com/search/search/luntanAttJk";
    private static final String LOG_HOST = "http://logcollect.gfan.com";
 
@@ -481,11 +538,11 @@ public class MarketAPI {
       (new ApiAsyncTask(var0, ACTION_GET_TOPIC, var1, var3)).execute(new Void[0]);
    }
 
-   public static void login(Context var0, ApiAsyncTask.ApiRequestListener var1, String var2, String var3) {
-      HashMap var4 = new HashMap(2);
-      var4.put("username", var2);
-      var4.put("password", var3);
-      (new ApiAsyncTask(var0, ACTION_LOGIN, var1, var4)).execute(new Void[0]);
+   public static void login(Context context, ApiAsyncTask.ApiRequestListener requestListener, String username, String password) {
+      HashMap hmap = new HashMap(2);
+      hmap.put("username", username);
+      hmap.put("password", password);
+      (new ApiAsyncTask(context, ACTION_LOGIN, requestListener, hmap)).execute(new Void[0]);
    }
 
    public static void markFollowedRead(Context var0, String var1, ApiAsyncTask.ApiRequestListener var2) {

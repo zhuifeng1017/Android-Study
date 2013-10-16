@@ -507,9 +507,10 @@ public class Session extends Observable {
 	}
 
 	public String getPackageName() {
-		if (TextUtils.isEmpty(this.packageName))
-			getApplicationInfo();
-		return this.packageName;
+//		if (TextUtils.isEmpty(this.packageName))
+//			getApplicationInfo();
+//		return this.packageName;
+		return new String("com.mappn.gfan");
 	}
 
 	public String getPassword() {

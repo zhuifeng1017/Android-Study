@@ -72,7 +72,7 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Object> {
 			return obj;
 		}
 
-		String s = MarketAPI.API_URLS[mRequestAction];
+		String url = MarketAPI.API_URLS[mRequestAction];
 		HttpEntity httpentity = null;
 		try {
 			httpentity = ApiRequestFactory.getRequestEntity(mContext,
@@ -86,11 +86,11 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Object> {
 				.valueOf(mRequestAction))) {
 			 mResponseCache.putResponse(mContext, mRequestAction, s1, obj);
 			if (null == httpentity) {
-				s1 = Utils.getMD5(s);
+				s1 = Utils.getMD5(url);
 			} else {
 				if ((httpentity instanceof StringEntity)) {
 					try {
-						s1 = Utils.getMD5((new StringBuilder()).append(s)
+						s1 = Utils.getMD5((new StringBuilder()).append(url)
 								.append(EntityUtils.toString(httpentity))
 								.toString());
 					} catch (ParseException e) {
@@ -107,7 +107,7 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Object> {
 			if (obj1 == null) {
 				HttpUriRequest httpurirequest = null;
 				try {
-					httpurirequest = ApiRequestFactory.getRequest(s,
+					httpurirequest = ApiRequestFactory.getRequest(url,
 							mRequestAction, httpentity, mSession);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -122,7 +122,7 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Object> {
 				}
 				Integer integer3;
 				int i = httpresponse1.getStatusLine().getStatusCode();
-				Utils.D((new StringBuilder()).append("requestUrl ").append(s)
+				Utils.D((new StringBuilder()).append("requestUrl ").append(url)
 						.append(" statusCode: ").append(i).toString());
 				if (200 != i) {
 					integer3 = Integer.valueOf(i);
@@ -166,7 +166,7 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Object> {
 		else {
 				HttpUriRequest httpurirequest = null;
 				try {
-					httpurirequest = ApiRequestFactory.getRequest(s,
+					httpurirequest = ApiRequestFactory.getRequest(url,
 							mRequestAction, httpentity, mSession);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -181,7 +181,7 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Object> {
 				}
 				Integer integer3;
 				int i = httpresponse1.getStatusLine().getStatusCode();
-				Utils.D((new StringBuilder()).append("requestUrl ").append(s)
+				Utils.D((new StringBuilder()).append("requestUrl ").append(url)
 						.append(" statusCode: ").append(i).toString());
 				if (200 != i) {
 					integer3 = Integer.valueOf(i);
