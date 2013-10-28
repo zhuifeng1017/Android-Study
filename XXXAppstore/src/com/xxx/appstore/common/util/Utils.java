@@ -129,7 +129,8 @@ public class Utils {
    }
 
    public static void V(String var0) {
-      if(sDebug) {
+      if(/*Debug*/true) {
+    	 sLogTag = "com.xxx.appstore.v";
          Log.v(sLogTag, var0);
       }
    }

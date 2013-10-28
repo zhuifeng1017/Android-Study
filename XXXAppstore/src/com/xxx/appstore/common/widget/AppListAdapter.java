@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -79,107 +80,110 @@ public class AppListAdapter extends BaseAdapter
   {
     public void onClick(View paramAnonymousView)
     {
-//      int i = ((Integer)paramAnonymousView.getTag()).intValue();
-//      HashMap localHashMap = (HashMap)AppListAdapter.this.mDataSource.get(i);
-//      int j = ((Integer)localHashMap.get("product_download")).intValue();
-//      Object localObject = localHashMap.get("pay_category");
-//      if (localObject != null);
-//      for (int k = ((Integer)localObject).intValue(); ; k = 1)
-//      {
-//        if (12 == j)
-//        {
-//          String str7 = (String)localHashMap.get("packagename");
-//          DownloadInfo localDownloadInfo2 = (DownloadInfo)AppListAdapter.this.mDownloadingTask.get(str7);
-//          if (localDownloadInfo2 != null)
-//          {
-//            DownloadManager localDownloadManager = AppListAdapter.this.mDownloadManager;
-//            long[] arrayOfLong = new long[1];
-//            arrayOfLong[0] = localDownloadInfo2.id;
-//            localDownloadManager.resumeDownload(arrayOfLong);
-//          }
-//        }
-//        while (true)
-//        {
-//          return;
-//          if ((j == 0) || (10 == j))
-//          {
-//            if (AppListAdapter.this.mIsNeedSort)
-//            {
-//              Context localContext1 = AppListAdapter.this.mContext;
-//              String[] arrayOfString1 = new String[2];
-//              arrayOfString1[0] = "应用管理";
-//              arrayOfString1[1] = "点击更新";
-//              Utils.trackEvent(localContext1, arrayOfString1);
-//            }
-//            paramAnonymousView.setEnabled(false);
-//            if (2 == k)
-//            {
-//              if (Session.get(AppListAdapter.this.mContext).isLogin())
-//              {
-//                Intent localIntent1 = new Intent(AppListAdapter.this.mContext, PreloadActivity.class);
-//                localIntent1.putExtra("extra.key.pid", (String)localHashMap.get("p_id"));
-//                localIntent1.putExtra("is_buy", true);
-//                localIntent1.setFlags(268435456);
-//                AppListAdapter.this.mContext.startActivity(localIntent1);
-//              }
-//              else
-//              {
-//                Intent localIntent2 = new Intent(AppListAdapter.this.mContext, LoginActivity.class);
-//                localIntent2.setFlags(268435456);
-//                AppListAdapter.this.mContext.startActivity(localIntent2);
-//              }
-//            }
-//            else if (10 == j)
-//            {
-//              String str1 = (String)localHashMap.get("rsa_md5");
-//              String str2 = (String)localHashMap.get("packagename");
-//              if (!Utils.isSameSign(AppListAdapter.this.mContext, str2, str1))
-//              {
-//                if (AppListAdapter.this.mActivity.isFinishing())
-//                  continue;
-//                DialogUtil.createComfirmDownloadDialog(AppListAdapter.this.mActivity, true, new AppListAdapter.2.1(this, localHashMap)).show();
-//              }
-//            }
-//            else
-//            {
-//              AppListAdapter.this.startDownload(localHashMap);
-//            }
-//          }
-//          else if (9 == j)
-//          {
-//            String str5 = (String)localHashMap.get("packagename");
-//            String str6 = (String)localHashMap.get("info");
-//            DownloadInfo localDownloadInfo1 = (DownloadInfo)AppListAdapter.this.mDownloadingTask.get(str5);
-//            if (localDownloadInfo1 != null)
-//              str6 = localDownloadInfo1.mFilePath;
-//            if (!TextUtils.isEmpty(str6))
-//              if (Utils.compareFileWithPathAndPkg(AppListAdapter.this.mContext, str6, str5))
-//                Utils.installApk(AppListAdapter.this.mContext, new File(str6));
-//              else
-//                DialogUtil.createComfirmDownloadDialog(AppListAdapter.this.mActivity, false, new AppListAdapter.2.2(this, str5, str6)).show();
-//          }
-//          else if (11 == j)
-//          {
-//            if (AppListAdapter.this.mIsNeedSort)
-//            {
-//              Context localContext2 = AppListAdapter.this.mContext;
-//              String[] arrayOfString2 = new String[2];
-//              arrayOfString2[0] = "应用管理";
-//              arrayOfString2[1] = "点击卸载";
-//              Utils.trackEvent(localContext2, arrayOfString2);
-//              String str4 = (String)localHashMap.get("packagename");
-//              Utils.uninstallApk(AppListAdapter.this.mContext, str4);
-//            }
-//            else
-//            {
-//              String str3 = (String)localHashMap.get("packagename");
-//              Utils.openApk(AppListAdapter.this.mActivity, str3);
-//            }
-//          }
-//        }
-//      }
+      Utils.V("onClick");
+      int i = ((Integer)paramAnonymousView.getTag()).intValue();
+      HashMap localHashMap = (HashMap)AppListAdapter.this.mDataSource.get(i);
+      int j = ((Integer)localHashMap.get("product_download")).intValue();
+      
+      Object localObject = localHashMap.get("pay_category");
+      int k = ((Integer)localObject).intValue();
+      if (localObject != null)
+      {
+        if (12 == j)
+        {
+          String str7 = (String)localHashMap.get("packagename");
+          DownloadInfo localDownloadInfo2 = (DownloadInfo)AppListAdapter.this.mDownloadingTask.get(str7);
+          if (localDownloadInfo2 != null)
+          {
+            DownloadManager localDownloadManager = AppListAdapter.this.mDownloadManager;
+            long[] arrayOfLong = new long[1];
+            arrayOfLong[0] = localDownloadInfo2.id;
+            localDownloadManager.resumeDownload(arrayOfLong);
+          }
+        }
+        if (true)
+        {
+          if ((j == 0) || (10 == j))
+          {
+            if (AppListAdapter.this.mIsNeedSort)
+            {
+              Context localContext1 = AppListAdapter.this.mContext;
+              String[] arrayOfString1 = new String[2];
+              arrayOfString1[0] = "应用管理";
+              arrayOfString1[1] = "点击更新";
+              Utils.trackEvent(localContext1, arrayOfString1);
+            }
+            paramAnonymousView.setEnabled(false);
+            if (2 == k)
+            {
+              if (Session.get(AppListAdapter.this.mContext).isLogin())
+              {
+                Intent localIntent1 = new Intent(AppListAdapter.this.mContext, PreloadActivity.class);
+                localIntent1.putExtra("extra.key.pid", (String)localHashMap.get("p_id"));
+                localIntent1.putExtra("is_buy", true);
+                localIntent1.setFlags(268435456);
+                AppListAdapter.this.mContext.startActivity(localIntent1);
+              }
+              else
+              {
+                Intent localIntent2 = new Intent(AppListAdapter.this.mContext, LoginActivity.class);
+                localIntent2.setFlags(268435456);
+                AppListAdapter.this.mContext.startActivity(localIntent2);
+              }
+            }
+            else if (10 == j)
+            {
+              String str1 = (String)localHashMap.get("rsa_md5");
+              String str2 = (String)localHashMap.get("packagename");
+              if (!Utils.isSameSign(AppListAdapter.this.mContext, str2, str1))
+              {
+                if (AppListAdapter.this.mActivity.isFinishing())
+                  return;
+                //DialogUtil.createComfirmDownloadDialog(AppListAdapter.this.mActivity, true, new AppListAdapter.2.1(this, localHashMap)).show();
+              }
+            }
+            else
+            {
+              AppListAdapter.this.startDownload(localHashMap);
+            }
+          }
+          else if (9 == j)
+          {
+            String str5 = (String)localHashMap.get("packagename");
+            String str6 = (String)localHashMap.get("info");
+            DownloadInfo localDownloadInfo1 = (DownloadInfo)AppListAdapter.this.mDownloadingTask.get(str5);
+            if (localDownloadInfo1 != null)
+              str6 = localDownloadInfo1.mFilePath;
+            if (!TextUtils.isEmpty(str6)){
+              if (Utils.compareFileWithPathAndPkg(AppListAdapter.this.mContext, str6, str5))
+                Utils.installApk(AppListAdapter.this.mContext, new File(str6));
+            }
+              //else
+                //DialogUtil.createComfirmDownloadDialog(AppListAdapter.this.mActivity, false, new AppListAdapter(this, str5, str6)).show();
+          }
+          else if (11 == j)
+          {
+            if (AppListAdapter.this.mIsNeedSort)
+            {
+              Context localContext2 = AppListAdapter.this.mContext;
+              String[] arrayOfString2 = new String[2];
+              arrayOfString2[0] = "应用管理";
+              arrayOfString2[1] = "点击卸载";
+              Utils.trackEvent(localContext2, arrayOfString2);
+              String str4 = (String)localHashMap.get("packagename");
+              Utils.uninstallApk(AppListAdapter.this.mContext, str4);
+            }
+            else
+            {
+              String str3 = (String)localHashMap.get("packagename");
+              Utils.openApk(AppListAdapter.this.mActivity, str3);
+            }
+          }
+        }
+      }
     }
   };
+  
   private DownloadManager mDownloadManager;
   private ConcurrentHashMap<String, DownloadInfo> mDownloadingTask;
   private String[] mFrom;

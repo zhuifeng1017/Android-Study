@@ -177,18 +177,19 @@ public class ImageUtils
       return bitmap1;
   }
 
-  public static void download(Context paramContext, String paramString, ImageView paramImageView)
+  public static void download(Context context, String url, ImageView imageView)
   {
-    download(paramContext, paramString, paramImageView, 2130837640, false);
+    download(context, url, imageView, 2130837640, false);
   }
 
 	public static void download(Context paramContext, String paramString,
 			ImageView paramImageView, int paramInt) {
 		Bitmap localBitmap = CacheManager.getInstance().getDrawableFromCache(
 				paramContext, paramString);
-		if (localBitmap != null)
+		if (localBitmap != null){
 			paramImageView.setImageBitmap(localBitmap);
-
+			return;
+		}
 		Drawable localDrawable1 = paramContext.getResources().getDrawable(
 				paramInt);
 		Drawable localDrawable2 = paramImageView.getDrawable();
@@ -231,11 +232,11 @@ public class ImageUtils
 		} else
 			localBitmap = localCacheManager.getDrawableFromCache(paramContext,
 					paramString);
-		if (localBitmap != null)
+		if (localBitmap != null){
 			paramImageView.setImageBitmap(localBitmap);
-
-		Drawable localDrawable1 = paramContext.getResources().getDrawable(
-				paramInt);
+			return;
+		}
+		Drawable localDrawable1 = paramContext.getResources().getDrawable(paramInt);
 		Drawable localDrawable2 = paramImageView.getDrawable();
 		if (localDrawable2 != null)
 			localDrawable2.setCallback(null);

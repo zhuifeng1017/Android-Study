@@ -23,7 +23,7 @@ import android.preference.PreferenceManager;
 @SuppressLint("NewApi")
 public class AppConfig {
 
-	private final static String APP_CONFIG = "config";
+	private final static String APP_CONFIG = "config";	// 配置文件
 
 	public final static String TEMP_TWEET = "temp_tweet";
 	public final static String TEMP_TWEET_IMAGE = "temp_tweet_image";

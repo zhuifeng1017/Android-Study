@@ -30,7 +30,11 @@ import org.apache.http.HttpHost;
 public class SplashActivity extends BaseActivity implements ApiRequestListener {
 	private static final int LOAD = 2;
 	private static final int VALID = 1;
+	
+	// 在启动画面加载数据传递到主界面
+	// mContent含广告栏和推荐list
 	private HashMap<String, Object> mContent;
+	
 	private Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {

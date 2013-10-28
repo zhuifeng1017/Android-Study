@@ -89,7 +89,7 @@ public class Main extends BaseActivity {
 
 	private ImageView mHeadLogo;
 	private TextView mHeadTitle;
-	private ProgressBar mHeadProgress;
+	private ProgressBar mHeadProgress;	// 等待转圈
 	private ImageButton mHead_search;
 	private ImageButton mHeadPub_post;
 	private ImageButton mHeadPub_tweet;
@@ -1143,11 +1143,13 @@ public class Main extends BaseActivity {
 	 * 初始化水平滚动翻页
 	 */
 	private void initPageScroll() {
+		// 初始化body
 		mScrollLayout = (ScrollLayout) findViewById(R.id.main_scrolllayout);
 
+		// 初始化底部
 		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.main_linearlayout_footer);
 		mHeadTitles = getResources().getStringArray(R.array.head_titles);
-		mViewCount = mScrollLayout.getChildCount();
+		mViewCount = mScrollLayout.getChildCount();		// 共4页
 		mButtons = new RadioButton[mViewCount];
 
 		for (int i = 0; i < mViewCount; i++) {

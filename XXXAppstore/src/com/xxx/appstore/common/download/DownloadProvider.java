@@ -36,7 +36,7 @@ public final class DownloadProvider extends ContentProvider {
    private static final String DOWNLOAD_TYPE = "vnd.android.cursor.item/download";
    private static final int MY_DOWNLOADS = 1;
    private static final int MY_DOWNLOADS_ID = 2;
-   private static final UriMatcher sURIMatcher = new UriMatcher(-1);
+   private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
    private SQLiteOpenHelper mOpenHelper = null;
 
 

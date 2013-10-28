@@ -42,31 +42,31 @@ public class CacheManager {
       return var1;
    }
 
-   public void cacheDrawable(Context var1, String var2, Bitmap var3) {
+   public void cacheDrawable(Context context, String url, Bitmap bitmap) {
       synchronized(this){}
-      if(var3 != null) {
+      if(bitmap != null) {
          try {
-            int var5 = var2.hashCode();
+            int hCode = url.hashCode();
             LinkedHashMap var6 = (LinkedHashMap)this.mL1Cache.get();
             if(var6 == null) {
                this.mL1Cache = new SoftReference(this.mDrawableMap);
             }
 
             if(var6.size() < 100) {
-               var6.put(Integer.valueOf(var5), var3);
+               var6.put(Integer.valueOf(hCode), bitmap);
             } else {
                Iterator var7 = var6.keySet().iterator();
                if(var7.hasNext()) {
                   var6.remove((Integer)var7.next());
-                  var6.put(Integer.valueOf(var5), var3);
+                  var6.put(Integer.valueOf(hCode), bitmap);
                }
             }
 
-            if(!this.mL2Cache.containsKey(Integer.valueOf(var5))) {
-               ImageUtils.saveBitmapToSdcard(var1, var5, var3);
+            if(!this.mL2Cache.containsKey(Integer.valueOf(hCode))) {
+               ImageUtils.saveBitmapToSdcard(context, hCode, bitmap);
             }
 
-            this.mL2Cache.put(Integer.valueOf(var5), new SoftReference(var3));
+            this.mL2Cache.put(Integer.valueOf(hCode), new SoftReference(bitmap));
          } finally {
             ;
          }
@@ -74,16 +74,16 @@ public class CacheManager {
 
    }
 
-   public void cacheDrawableToL2(Context var1, String var2, Bitmap var3) {
+   public void cacheDrawableToL2(Context context, String url, Bitmap bitmap) {
       synchronized(this){}
-      if(var3 != null) {
+      if(bitmap != null) {
          try {
-            int var5 = var2.hashCode();
-            if(!this.mL2Cache.containsKey(Integer.valueOf(var5))) {
-               ImageUtils.saveBitmapToSdcard(var1, var5, var3);
+            int hCode = url.hashCode();
+            if(!this.mL2Cache.containsKey(Integer.valueOf(hCode))) {
+               ImageUtils.saveBitmapToSdcard(context, hCode, bitmap);
             }
 
-            this.mL2Cache.put(Integer.valueOf(var5), null);
+            this.mL2Cache.put(Integer.valueOf(hCode),  new SoftReference(bitmap));
          } finally {
             ;
          }
