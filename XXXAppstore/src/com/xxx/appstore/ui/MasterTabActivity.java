@@ -74,7 +74,7 @@ public class MasterTabActivity extends BaseTabActivity implements OnTabChangeLis
       this.setContentView(2130903051);
       this.initTopBar();
       this.initView();
-      IntentFilter var2 = new IntentFilter("com.unistrong.appstore.theme");
+      IntentFilter var2 = new IntentFilter("com.xxx.appstore.theme");
       this.registerReceiver(this.mThemeReceiver, var2);
    }
 

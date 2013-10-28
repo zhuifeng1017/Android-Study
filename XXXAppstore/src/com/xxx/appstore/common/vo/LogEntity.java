@@ -2,10 +2,8 @@ package com.xxx.appstore.common.vo;
 
 import android.content.Context;
 import android.text.TextUtils;
-
 import com.xxx.appstore.common.util.Pair;
 import com.xxx.appstore.common.util.Utils;
-
 import java.io.Serializable;
 import org.json.JSONException;
 import org.json.JSONObject;

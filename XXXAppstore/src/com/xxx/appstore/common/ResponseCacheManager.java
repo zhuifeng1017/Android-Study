@@ -2,9 +2,7 @@ package com.xxx.appstore.common;
 
 import android.content.Context;
 import android.text.TextUtils;
-
 import com.xxx.appstore.common.util.Utils;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

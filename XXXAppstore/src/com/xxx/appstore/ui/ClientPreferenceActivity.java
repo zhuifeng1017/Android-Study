@@ -29,7 +29,7 @@ public class ClientPreferenceActivity extends PreferenceActivity {
                ClientPreferenceActivity.this.mLightTheme.setEnabled(true);
                ClientPreferenceActivity.this.mLightTheme.setChecked(false);
                var1.getEditor().putInt("pref.theme", 2131361833).commit();
-               ClientPreferenceActivity.this.sendBroadcast(new Intent("com.unistrong.appstore.theme"));
+               ClientPreferenceActivity.this.sendBroadcast(new Intent("com.xxx.appstore.theme"));
                Utils.trackEvent(ClientPreferenceActivity.this.getApplicationContext(), new String[]{"设置", "换肤到深色系"});
             }
 
@@ -40,7 +40,7 @@ public class ClientPreferenceActivity extends PreferenceActivity {
                ClientPreferenceActivity.this.mDarkTheme.setEnabled(true);
                ClientPreferenceActivity.this.mDarkTheme.setChecked(false);
                var1.getEditor().putInt("pref.theme", 2131361832).commit();
-               ClientPreferenceActivity.this.sendBroadcast(new Intent("com.unistrong.appstore.theme"));
+               ClientPreferenceActivity.this.sendBroadcast(new Intent("com.xxx.appstore.theme"));
                Utils.trackEvent(ClientPreferenceActivity.this.getApplicationContext(), new String[]{"设置", "换肤到浅色系"});
             }
 
@@ -85,7 +85,7 @@ public class ClientPreferenceActivity extends PreferenceActivity {
                   SessionManager.get(ClientPreferenceActivity.this.getApplicationContext()).setTheme(2131361832);
                }
 
-               ClientPreferenceActivity.this.sendBroadcast(new Intent("com.unistrong.appstore.theme"));
+               ClientPreferenceActivity.this.sendBroadcast(new Intent("com.xxx.appstore.theme"));
             }
 
             var3 = false;
@@ -110,7 +110,7 @@ public class ClientPreferenceActivity extends PreferenceActivity {
       Session var2 = Session.get(this.getApplicationContext());
       View[] var3 = new View[]{this.findViewById(2131493035)};
       TopBar.createTopBar(var2, this, var3, new int[]{0}, this.getString(2131296355));
-      IntentFilter var4 = new IntentFilter("com.unistrong.appstore.theme");
+      IntentFilter var4 = new IntentFilter("com.xxx.appstore.theme");
       this.registerReceiver(this.mThemeReceiver, var4);
       this.addPreferencesFromResource(2131034112);
       this.findPreference("update_app_notification").setOnPreferenceChangeListener(this.changeListener);

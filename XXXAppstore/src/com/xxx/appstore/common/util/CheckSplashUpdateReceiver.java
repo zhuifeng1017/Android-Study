@@ -5,14 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
-
 import com.xxx.appstore.Session;
 import com.xxx.appstore.common.ApiAsyncTask;
 import com.xxx.appstore.common.MarketAPI;
 import com.xxx.appstore.common.download.DownloadManager;
 import com.xxx.appstore.common.util.Utils;
 import com.xxx.appstore.common.vo.SplashInfo;
-
 import java.io.File;
 
 public class CheckSplashUpdateReceiver extends BroadcastReceiver implements ApiAsyncTask.ApiRequestListener {

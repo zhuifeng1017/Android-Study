@@ -1,6 +1,5 @@
 package com.xxx.appstore.common.download;
 
-import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,8 +8,6 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import com.xxx.appstore.common.util.Utils;
-
-import java.util.Random;
 
 public class DownloadInfo {
 	public static final String EXTRA_IS_WIFI_REQUIRED = "isWifiRequired";
@@ -48,178 +45,175 @@ public class DownloadInfo {
 	public int mVisibility;
 
 	private DownloadInfo(Context paramContext) {
-		this.mContext = paramContext;
-		this.mFuzz = Helper.rnd.nextInt(1001);
+		mContext = paramContext;
+		mFuzz = Helper.rnd.nextInt(1001);
 	}
 
-	private boolean isReadyToStart(long paramLong) {
-		boolean bool;
-		if (this.mHasActiveThread)
-			bool = false;
-		else {
-			if ((this.mControl == 1) || (this.mControl == 2))
-				bool = false;
-			else if (this.mCurrentBytes == this.mTotalBytes)
-				bool = false;
-			else
-				switch (this.mStatus) {
-				default:
-					bool = false;
-					break;
-				case 200:
-					bool = false;
-					break;
-				case 0:
-				case 190:
-				case 192:
-					bool = true;
-					break;
-				case 195:
-				case 196:
-					if (checkCanUseNetwork() == 1)
-						bool = true;
-					else
-						bool = false;
-					break;
-				case 194:
-					if (restartTime(paramLong) <= paramLong)
-						bool = true;
-					else
-						bool = false;
-					break;
-				}
-		}
-		return bool;
-	}
+	/**
+     * Returns whether this download (which the download manager hasn't seen yet)
+     * should be started.
+     */
+    private boolean isReadyToStart(long now) {
+        if (mHasActiveThread) {
+            // already running
+            return false;
+        }
+        if ((mControl == DownloadManager.Impl.CONTROL_PAUSED) || (mControl == DownloadManager.Impl.CONTROL_PENDING))
+        	return false;
+         else if (mCurrentBytes == mTotalBytes) {
+        	 return false;
+         }
+        switch (mStatus) {
+            case 0: // status hasn't been initialized yet, this is a new download
+            case DownloadManager.Impl.STATUS_PENDING: // download is explicit marked as ready to start
+            case DownloadManager.Impl.STATUS_RUNNING: // download interrupted (process killed etc) while
+                                                // running, without a chance to update the database
+                return true;
 
+            case DownloadManager.Impl.STATUS_WAITING_FOR_NETWORK:
+            case DownloadManager.Impl.STATUS_QUEUED_FOR_WIFI:
+                return checkCanUseNetwork() == NETWORK_OK;
+
+            case DownloadManager.Impl.STATUS_WAITING_TO_RETRY:
+                // download was waiting for a delayed restart
+                return restartTime(now) <= now;
+        }
+        return false;
+    }
+    	
+	/**
+     * Returns whether this download is allowed to use the network.
+     * @return one of the NETWORK_* constants
+     */
 	public int checkCanUseNetwork() {
-		int i = 2;
-		if (Helper.getActiveNetworkType(this.mContext) == null)
-			i = 1;
-		return i;
+		return (Helper.getActiveNetworkType(mContext) == null)?NETWORK_NO_CONNECTION:NETWORK_OK;
 	}
 
-	public String getLogMessageForNetworkError(int paramInt) {
-		switch (paramInt) {
-		default:
-		case 2:
-		}
-		for (String str = "unknown error with network connectivity";; str = "no network connection available")
-			return str;
-	}
+	 /**
+     * @return a non-localized string appropriate for logging corresponding to one of the
+     * NETWORK_* constants.
+     */
+    public String getLogMessageForNetworkError(int networkError) {
+        switch (networkError) {
+            case NETWORK_NO_CONNECTION:
+                return "no network connection available";
+            case NETWORK_TYPE_DISALLOWED_BY_REQUESTOR:
+                return "download was requested to not use the current network type";
+            default:
+                return "unknown error with network connectivity";
+        }
+    }
 
 	public Uri getMyDownloadsUri() {
 		return ContentUris.withAppendedId(DownloadManager.Impl.CONTENT_URI,
-				this.mId);
+				mId);
 	}
 
 	public String getVerboseInfo() {
-		StringBuilder localStringBuilder1 = new StringBuilder();
-		localStringBuilder1.append("ID      : " + this.mId + "\n");
-		StringBuilder localStringBuilder2 = new StringBuilder()
-				.append("URI     : ");
-		if (this.mUri != null)
-			;
-		for (String str = this.mUri;; str = "no") {
-			localStringBuilder1.append(str + "\n");
-			localStringBuilder1.append("HINT    : " + this.mHint + "\n");
-			localStringBuilder1.append("FILENAME: " + this.mFileName + "\n");
-			localStringBuilder1.append("MIMETYPE: " + this.mMimeType + "\n");
-			localStringBuilder1.append("DESTINAT: " + this.mDestination + "\n");
-			localStringBuilder1.append("VISIBILI: " + this.mVisibility + "\n");
-			localStringBuilder1.append("CONTROL : " + this.mControl + "\n");
-			localStringBuilder1.append("STATUS  : " + this.mStatus + "\n");
-			localStringBuilder1.append("FAILED_C: " + this.mNumFailed + "\n");
-			localStringBuilder1.append("RETRY_AF: " + this.mRetryAfter + "\n");
-			localStringBuilder1.append("REDIRECT: " + this.mRedirectCount
-					+ "\n");
-			localStringBuilder1.append("LAST_MOD: " + this.mLastMod + "\n");
-			localStringBuilder1.append("PACKAGE : " + this.mPackage + "\n");
-			localStringBuilder1.append("CLASS   : " + this.mClass + "\n");
-			localStringBuilder1.append("TOTAL   : " + this.mTotalBytes + "\n");
-			localStringBuilder1
-					.append("CURRENT : " + this.mCurrentBytes + "\n");
-			localStringBuilder1.append("ETAG    : " + this.mETag + "\n");
-			localStringBuilder1.append("DELETED : " + this.mDeleted + "\n");
-			return localStringBuilder1.toString();
-		}
+		StringBuilder sb = new StringBuilder();
+		sb.append("ID      : " + mId + "\n");	
+		sb.append("URI     : ");
+		String str = ((mUri != null)? "yes" : "no");
+		sb.append(str + "\n");
+		sb.append("HINT    : " + mHint + "\n");
+		sb.append("FILENAME: " + mFileName + "\n");
+		sb.append("MIMETYPE: " + mMimeType + "\n");
+		sb.append("DESTINAT: " + mDestination + "\n");
+		sb.append("VISIBILI: " + mVisibility + "\n");
+		sb.append("CONTROL : " + mControl + "\n");
+		sb.append("STATUS  : " + mStatus + "\n");
+		sb.append("FAILED_C: " + mNumFailed + "\n");
+		sb.append("RETRY_AF: " + mRetryAfter + "\n");
+		sb.append("REDIRECT: " + mRedirectCount	+ "\n");
+		sb.append("LAST_MOD: " + mLastMod + "\n");
+		sb.append("PACKAGE : " + mPackage + "\n");
+		sb.append("CLASS   : " + mClass + "\n");
+		sb.append("TOTAL   : " + mTotalBytes + "\n");
+		sb.append("CURRENT : " + mCurrentBytes + "\n");
+		sb.append("ETAG    : " + mETag + "\n");
+		sb.append("DELETED : " + mDeleted + "\n");
+		return sb.toString();
 	}
 
-	public boolean hasCompletionNotification() {
-		boolean bool;
-		if (!DownloadManager.Impl.isStatusCompleted(this.mStatus))
-			bool = false;
-		else {
-			if (this.mVisibility == 1)
-				bool = true;
-			else
-				bool = false;
-		}
-		return bool;
-	}
-
+	/**
+     * Returns whether this download has a visible notification after
+     * completion.
+     */
+    public boolean hasCompletionNotification() {
+        if (!DownloadManager.Impl.isStatusCompleted(mStatus)) {
+            return false;
+        }
+        if (mVisibility == DownloadManager.Impl.VISIBILITY_VISIBLE_NOTIFY_COMPLETED) {
+            return true;
+        }
+        return false;
+    }
+    
 	public boolean isCompleted() {
-		return DownloadManager.Impl.isStatusCompleted(this.mStatus);
+		return DownloadManager.Impl.isStatusCompleted(mStatus);
 	}
 
 	public boolean isRunning() {
-		return DownloadManager.Impl.isStatusRunning(this.mStatus);
+		return DownloadManager.Impl.isStatusRunning(mStatus);
 	}
 
 	public void logVerboseInfo() {
 		Utils.D(getVerboseInfo());
 	}
 
-	long nextAction(long paramLong) {
-		long l2;
-		if (DownloadManager.Impl.isStatusCompleted(this.mStatus))
-			l2 = -1L;
-		else {
-			if (this.mStatus != 194) {
-				l2 = 0L;
-			} else {
-				long l1 = restartTime(paramLong);
-				if (l1 <= paramLong)
-					l2 = 0L;
-				else
-					l2 = l1 - paramLong;
-			}
-		}
-		return l2;
-	}
-
-	public long restartTime(long paramLong) {
-		long l;
-		if (this.mNumFailed == 0)
-			l = paramLong;
-		else {
-
-			if (this.mRetryAfter > 0)
-				l = this.mLastMod + this.mRetryAfter;
-			else
-				l = this.mLastMod + 30 * (1000 + this.mFuzz)
-						* (1 << this.mNumFailed - 1);
-		}
-		return l;
-	}
-
+	/**
+     * Returns the amount of time (as measured from the "now" parameter)
+     * at which a download will be active.
+     * 0 = immediately - service should stick around to handle this download.
+     * -1 = never - service can go away without ever waking up.
+     * positive value - service must wake up in the future, as specified in ms from "now"
+     */
+    long nextAction(long now) {
+        if (DownloadManager.Impl.isStatusCompleted(mStatus)) {
+            return -1;
+        }
+        if (mStatus != DownloadManager.Impl.STATUS_WAITING_TO_RETRY) {
+            return 0;
+        }
+        long when = restartTime(now);
+        if (when <= now) {
+            return 0;
+        }
+        return when - now;
+    }
+    
+    /**
+     * Returns the time when a download should be restarted.
+     */
+    public long restartTime(long now) {
+        if (mNumFailed == 0) {
+            return now;
+        }
+        if (mRetryAfter > 0) {
+            return mLastMod + mRetryAfter;
+        }
+        return mLastMod +
+                Constants.RETRY_FIRST_DELAY *
+                    (1000 + mFuzz) * (1 << (mNumFailed - 1));
+    }
+            
 	boolean startIfReady(long paramLong) {
 		if (!isReadyToStart(paramLong))
 			return false;
-		Utils.D("Service spawning thread to handle download " + this.mId);
-		if (this.mHasActiveThread)
+		
+		Utils.D("Service spawning thread to handle download " + mId);
+		if (mHasActiveThread)
 			throw new IllegalStateException("Multiple threads on same download");
-		if (this.mStatus != 192) {
-			this.mStatus = 192;
-			ContentValues localContentValues = new ContentValues();
-			localContentValues.put("status", Integer.valueOf(this.mStatus));
-			this.mContext.getContentResolver().update(getMyDownloadsUri(),
-					localContentValues, null, null);
+		if (mStatus != DownloadManager.Impl.STATUS_RUNNING) {
+			mStatus = DownloadManager.Impl.STATUS_RUNNING;
+			ContentValues values = new ContentValues();
+			values.put(DownloadManager.Impl.COLUMN_STATUS, mStatus);
+			mContext.getContentResolver().update(getMyDownloadsUri(),
+					values, null, null);
 		}
-		DownloadThread localDownloadThread = new DownloadThread(this.mContext,
-				this);
-		this.mHasActiveThread = true;
-		localDownloadThread.start();
+		DownloadThread downloader = new DownloadThread(mContext,this);
+		mHasActiveThread = true;
+		downloader.start();
 		return true;
 	}
 
@@ -229,106 +223,84 @@ public class DownloadInfo {
 		private CharArrayBuffer mOldChars;
 
 		public Reader(Cursor paramCursor) {
-			this.mCursor = paramCursor;
+			mCursor = paramCursor;
 		}
 
-		private Integer getInt(String paramString) {
-			return Integer.valueOf(this.mCursor.getInt(this.mCursor
-					.getColumnIndexOrThrow(paramString)));
+		/**
+         * Returns a String that holds the current value of the column, optimizing for the case
+         * where the value hasn't changed.
+         */
+        private String getString(String old, String column) {
+            int index = mCursor.getColumnIndexOrThrow(column);
+            if (old == null) {
+                return mCursor.getString(index);
+            }
+            if (mNewChars == null) {
+                mNewChars = new CharArrayBuffer(128);
+            }
+            mCursor.copyStringToBuffer(index, mNewChars);
+            int length = mNewChars.sizeCopied;
+            if (length != old.length()) {
+                return new String(mNewChars.data, 0, length);
+            }
+            if (mOldChars == null || mOldChars.sizeCopied < length) {
+                mOldChars = new CharArrayBuffer(length);
+            }
+            char[] oldArray = mOldChars.data;
+            char[] newArray = mNewChars.data;
+            old.getChars(0, length, oldArray, 0);
+            for (int i = length - 1; i >= 0; --i) {
+                if (oldArray[i] != newArray[i]) {
+                    return new String(newArray, 0, length);
+                }
+            }
+            return old;
+        }
+        
+        private Integer getInt(String column) {
+            return mCursor.getInt(mCursor.getColumnIndexOrThrow(column));
+        }
+
+        private Long getLong(String column) {
+            return mCursor.getLong(mCursor.getColumnIndexOrThrow(column));
+        }
+
+		public DownloadInfo newDownloadInfo(Context context) {
+			DownloadInfo info = new DownloadInfo(context);
+			updateFromDatabase(info);
+			return info;
 		}
 
-		private Long getLong(String paramString) {
-			return Long.valueOf(this.mCursor.getLong(this.mCursor
-					.getColumnIndexOrThrow(paramString)));
-		}
-
-		private String getString(String paramString1, String paramString2) {
-			int i = this.mCursor.getColumnIndexOrThrow(paramString2);
-			String str;
-			if (paramString1 == null)
-				str = this.mCursor.getString(i);
-			else {
-
-				if (this.mNewChars == null)
-					this.mNewChars = new CharArrayBuffer(128);
-				this.mCursor.copyStringToBuffer(i, this.mNewChars);
-				int j = this.mNewChars.sizeCopied;
-				if (j != paramString1.length()) {
-					str = new String(this.mNewChars.data, 0, j);
-				} else {
-					if ((this.mOldChars == null)
-							|| (this.mOldChars.sizeCopied < j))
-						this.mOldChars = new CharArrayBuffer(j);
-					char[] arrayOfChar1 = this.mOldChars.data;
-					char[] arrayOfChar2 = this.mNewChars.data;
-					paramString1.getChars(0, j, arrayOfChar1, 0);
-					for (int k = j - 1;; k--) {
-						if (k < 0)
-							str = paramString1;
-						if (arrayOfChar1[k] != arrayOfChar2[k]) {
-							str = new String(arrayOfChar2, 0, j);
-							break;
-						}
-					}
-				}
-			}
-			return str;
-		}
-
-		public DownloadInfo newDownloadInfo(Context paramContext) {
-			DownloadInfo localDownloadInfo = new DownloadInfo(paramContext);
-			updateFromDatabase(localDownloadInfo);
-			return localDownloadInfo;
-		}
-
-		public void updateFromDatabase(DownloadInfo paramDownloadInfo) {
-			paramDownloadInfo.mId = getLong("_id").longValue();
-			paramDownloadInfo.mUri = getString(paramDownloadInfo.mUri, "uri");
-			paramDownloadInfo.mHint = getString(paramDownloadInfo.mHint, "hint");
-			paramDownloadInfo.mFileName = getString(
-					paramDownloadInfo.mFileName, "_data");
-			paramDownloadInfo.mMimeType = getString(
-					paramDownloadInfo.mMimeType, "mimetype");
-			paramDownloadInfo.mDestination = getInt("destination").intValue();
-			paramDownloadInfo.mVisibility = getInt("visibility").intValue();
-			paramDownloadInfo.mStatus = getInt("status").intValue();
-			paramDownloadInfo.mNumFailed = getInt("numfailed").intValue();
-			int i = getInt("redirectcount").intValue();
-			paramDownloadInfo.mRetryAfter = (0xFFFFFFF & i);
-			paramDownloadInfo.mRedirectCount = (i >> 28);
-			paramDownloadInfo.mLastMod = getLong("lastmod").longValue();
-			paramDownloadInfo.mPackage = getString(paramDownloadInfo.mPackage,
-					"notificationpackage");
-			paramDownloadInfo.mClass = getString(paramDownloadInfo.mClass,
-					"notificationclass");
-			paramDownloadInfo.mExtras = getString(paramDownloadInfo.mExtras,
-					"notificationextras");
-			paramDownloadInfo.mTotalBytes = getLong("total_bytes").longValue();
-			paramDownloadInfo.mCurrentBytes = getLong("current_bytes")
-					.longValue();
-			paramDownloadInfo.mETag = getString(paramDownloadInfo.mETag, "etag");
-			boolean bool = false;
-			if (getInt("deleted").intValue() == 1)
-				bool = true;
-
-			paramDownloadInfo.mDeleted = bool;
-			paramDownloadInfo.mTitle = getString(paramDownloadInfo.mTitle,
-					"title");
-			paramDownloadInfo.mDescription = getString(
-					paramDownloadInfo.mDescription, "description");
-			paramDownloadInfo.mSource = getInt("source").intValue();
-			paramDownloadInfo.mPackageName = getString(
-					paramDownloadInfo.mPackageName, "package_name");
-			paramDownloadInfo.mMD5 = getString(paramDownloadInfo.mPackageName,
-					"md5");
-			paramDownloadInfo.mAllowedNetworkTypes = getInt("allow_network")
-					.intValue();
-			try {
-				paramDownloadInfo.mControl = getInt("control").intValue();
-				return;
-			} finally {
-
-			}
+		public void updateFromDatabase(DownloadInfo info) {
+			info.mId = getLong(DownloadManager.Impl.COLUMN_ID);
+			info.mUri = getString(info.mUri, DownloadManager.Impl.COLUMN_URI);
+			info.mHint = getString(info.mHint, DownloadManager.Impl.COLUMN_FILE_NAME_HINT);
+			info.mFileName = getString(info.mFileName, DownloadManager.Impl.COLUMN_DATA);
+			info.mMimeType = getString(info.mMimeType, DownloadManager.Impl.COLUMN_MIME_TYPE);
+			info.mDestination = getInt(DownloadManager.Impl.COLUMN_DESTINATION);
+            info.mVisibility = getInt(DownloadManager.Impl.COLUMN_VISIBILITY);
+            info.mStatus = getInt(DownloadManager.Impl.COLUMN_STATUS);
+            info.mNumFailed = getInt(DownloadManager.Impl.COLUMN_FAILED_CONNECTIONS);
+			int i = getInt(DownloadManager.Impl.COLUMN_RETRY_AFTER_REDIRECT_COUNT).intValue();
+			info.mRetryAfter = (0xFFFFFFF & i);
+			info.mRedirectCount = (i >> 28);
+			info.mLastMod = getLong("lastmod").longValue();
+			info.mPackage = getString(info.mPackage, DownloadManager.Impl.COLUMN_NOTIFICATION_PACKAGE);
+			info.mClass = getString(info.mClass, DownloadManager.Impl.COLUMN_NOTIFICATION_CLASS);
+			info.mExtras = getString(info.mExtras, DownloadManager.Impl.COLUMN_NOTIFICATION_EXTRAS);
+			info.mTotalBytes = getLong(DownloadManager.Impl.COLUMN_TOTAL_BYTES);
+			info.mCurrentBytes = getLong(DownloadManager.Impl.COLUMN_CURRENT_BYTES);
+			info.mETag = getString(info.mETag, DownloadManager.Impl.COLUMN_ETAG);
+			info.mDeleted = getInt(DownloadManager.Impl.COLUMN_DELETED) == 1;
+			info.mTitle = getString(info.mTitle, DownloadManager.Impl.COLUMN_TITLE);
+			info.mDescription = getString(info.mDescription, DownloadManager.Impl.COLUMN_DESCRIPTION);
+			info.mSource = getInt(DownloadManager.Impl.COLUMN_SOURCE).intValue();
+			info.mPackageName = getString(info.mPackageName, DownloadManager.Impl.COLUMN_PACKAGE_NAME);
+			info.mMD5 = getString(info.mPackageName,DownloadManager.Impl.COLUMN_MD5);
+			info.mAllowedNetworkTypes = getInt(DownloadManager.Impl.COLUMN_ALLOW_NETWORK_TYPE).intValue();
+			synchronized (this) {
+                info.mControl = getInt(DownloadManager.Impl.COLUMN_CONTROL);
+            }
 		}
 	}
 }

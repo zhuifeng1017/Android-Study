@@ -30,6 +30,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.xxx.appstore.R;
 import com.xxx.appstore.Session;
 import com.xxx.appstore.common.AndroidHttpClient;
 import com.xxx.appstore.common.ApiAsyncTask;
@@ -41,9 +42,6 @@ import com.xxx.appstore.common.util.StringUtils;
 import com.xxx.appstore.common.util.ThemeManager;
 import com.xxx.appstore.common.vo.RecommendTopic;
 import com.xxx.appstore.common.widget.DefaultExceptionHandler;
-import com.xxx.appstore.ui.LoginActivity;
-import com.xxx.appstore.ui.PreloadActivity;
-import com.xxx.appstore.ui.RecommendActivity;
 import com.mobclick.android.MobclickAgent;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -88,8 +86,8 @@ public class Utils {
    public static final int REPORT_TYPE_START = 0;
    private static final String TAG = "Utils";
    private static WeakReference<Calendar> calendar;
-   public static boolean sDebug;
-   public static String sLogTag;
+   public static boolean sDebug = true;
+   public static String sLogTag = "com.unistrong.apptore";
 
 
    public static void D(String var0) {
@@ -129,8 +127,7 @@ public class Utils {
    }
 
    public static void V(String var0) {
-      if(/*Debug*/true) {
-    	 sLogTag = "com.xxx.appstore.v";
+      if(true || sDebug) {
          Log.v(sLogTag, var0);
       }
    }
@@ -167,16 +164,16 @@ public class Utils {
          Object[] var9 = new Object[]{Float.valueOf(var3 / 1000000.0F)};
          var8[0] = String.format("%.02f", var9);
          var8[1] = "M";
-         var5 = var0.getString(2131296369, var8);
+         var5 = var0.getString(R.string.download_remain_bytes, var8);
       } else if(var3 > 1000.0F) {
          Object[] var6 = new Object[2];
          Object[] var7 = new Object[]{Float.valueOf(var3 / 1000.0F)};
          var6[0] = String.format("%.02f", var7);
          var6[1] = "K";
-         var5 = var0.getString(2131296369, var6);
+         var5 = var0.getString(R.string.download_remain_bytes, var6);
       } else {
          Object[] var4 = new Object[]{Integer.valueOf((int)var3), "B"};
-         var5 = var0.getString(2131296369, var4);
+         var5 = var0.getString(R.string.download_remain_bytes, var4);
       }
 
       return var5;
@@ -309,7 +306,7 @@ public class Utils {
    public static View createTabView(Context var0, Session var1, String var2, int var3, TextView var4) {
       TextView var5;
       if(var4 == null) {
-         var5 = (TextView)LayoutInflater.from(var0).inflate(2130903095, (ViewGroup)null);
+         var5 = (TextView)LayoutInflater.from(var0).inflate(R.layout.common_tab_view, (ViewGroup)null);
       } else {
          var5 = var4;
       }
@@ -376,7 +373,7 @@ public class Utils {
 
       while(var4.hasNext()) {
          PackageInfo var5 = (PackageInfo)var4.next();
-         if(!"com.unistrong.appstore".equals(var5.packageName)) {
+         if(!"com.xxx.appstore".equals(var5.packageName)) {
             var2.add(var5);
             var3.add(var5.packageName);
          }
@@ -436,7 +433,7 @@ public class Utils {
 
                if(var33 > 0) {
                   HashMap var34 = new HashMap();
-                  var34.put("name", var0.getString(2131296547) + "(" + var3.getAbsolutePath() + ")");
+                  var34.put("name", var0.getString(R.string.apk_title_market) + "(" + var3.getAbsolutePath() + ")");
                   var34.put("place_holder", Boolean.valueOf(true));
                   var2.add(0, var34);
                   var4 = true;
@@ -477,7 +474,7 @@ public class Utils {
 
                if(var23 > var5) {
                   HashMap var24 = new HashMap();
-                  var24.put("name", var0.getString(2131296548) + "(" + var6.getAbsolutePath() + ")");
+                  var24.put("name", var0.getString(R.string.apk_title_bbs) + "(" + var6.getAbsolutePath() + ")");
                   var24.put("place_holder", Boolean.valueOf(true));
                   if(var4) {
                      var2.add(var5 + 1, var24);
@@ -521,7 +518,7 @@ public class Utils {
 
             if(var13 > var7) {
                HashMap var14 = new HashMap();
-               var14.put("name", var0.getString(2131296549) + "(" + var9.getAbsolutePath() + ")");
+               var14.put("name", var0.getString(R.string.apk_title_cloud) + "(" + var9.getAbsolutePath() + ")");
                var14.put("place_holder", Boolean.valueOf(true));
                if(var4 && var8) {
                   var2.add(var7 + 2, var14);
@@ -584,6 +581,12 @@ public class Utils {
            JarFile jarFile = new JarFile(filePath);
            JarEntry jarEntry = jarFile.getJarEntry("AndroidManifest.xml");
            if (jarEntry != null) {
+        	   
+        	   InputStream is = jarFile.getInputStream(jarEntry);
+               byte[] arrayOfByte2 = new byte[8192];
+               while (is.read(arrayOfByte2) > 0);
+               is.close();
+               
                try {
                    Certificate[] certs = jarEntry.getCertificates();
                    byte[] certBytes = certs[0].getEncoded();
@@ -660,8 +663,8 @@ public class Utils {
 		return s;
 	}
 
-   public static InputStream getInputStreamResponse(HttpResponse var0) {
-      HttpEntity var1 = var0.getEntity();
+   public static InputStream getInputStreamResponse(HttpResponse httpResponse) {
+      HttpEntity var1 = httpResponse.getEntity();
       InputStream var3;
       if(var1 == null) {
          var3 = null;
@@ -966,29 +969,29 @@ public class Utils {
    }
 
    public static void gotoLogin(Activity var0) {
-      var0.startActivityForResult(new Intent(var0, LoginActivity.class), 0);
+//      var0.startActivityForResult(new Intent(var0, LoginActivity.class), 0);
    }
 
    public static void gotoMaster(Activity var0, RecommendTopic var1) {
-      Intent var2 = new Intent(var0, RecommendActivity.class);
-      var2.putExtra("extra.recommend.detail", var1);
-      var0.startActivityForResult(var2, 0);
+ //     Intent var2 = new Intent(var0, RecommendActivity.class);
+ //     var2.putExtra("extra.recommend.detail", var1);
+ //     var0.startActivityForResult(var2, 0);
    }
 
    public static void gotoProductDeatil(Activity var0, String var1) {
-      Intent var2 = new Intent(var0, PreloadActivity.class);
-      var2.putExtra("extra.key.package.name", var1);
-      var0.startActivity(var2);
+//      Intent var2 = new Intent(var0, PreloadActivity.class);
+//      var2.putExtra("extra.key.package.name", var1);
+//      var0.startActivity(var2);
    }
 
    public static void installApk(Context var0, File var1) {
       if(var1.exists()) {
          Intent var2 = new Intent("android.intent.action.VIEW");
-         var2.setFlags(268435456);
+         var2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
          var2.setDataAndType(Uri.fromFile(var1), "application/vnd.android.package-archive");
          ((ContextWrapper)var0).startActivity(var2);
       } else {
-         makeEventToast(var0, var0.getString(2131296368), false);
+         makeEventToast(var0, var0.getString(R.string.install_fail_file_not_exist), false);
       }
 
    }
@@ -1139,8 +1142,8 @@ public class Utils {
          var3 = Toast.makeText(var0, "", 0);
       }
 
-      View var4 = LayoutInflater.from(var0).inflate(2130903126, (ViewGroup)null);
-      ((TextView)var4.findViewById(2131493032)).setText(var1);
+      View var4 = LayoutInflater.from(var0).inflate(R.layout.toast_view, (ViewGroup)null);
+      ((TextView)var4.findViewById(R.id.text)).setText(var1);
       var3.setView(var4);
       var3.show();
    }
@@ -1170,12 +1173,12 @@ public class Utils {
    public static void openApk(Context var0, String var1) {
       Intent var2 = var0.getPackageManager().getLaunchIntentForPackage(var1);
       if(var2 == null) {
-         makeEventToast(var0, var0.getString(2131296387), false);
+         makeEventToast(var0, var0.getString(R.string.alert_open_apk_error), false);
       } else {
          try {
             var0.startActivity(var2);
          } catch (ActivityNotFoundException var4) {
-            makeEventToast(var0, var0.getString(2131296387), false);
+            makeEventToast(var0, var0.getString(R.string.alert_open_apk_error), false);
          }
       }
 
@@ -1289,7 +1292,7 @@ public class Utils {
 
    public static void uninstallApk(Context var0, String var1) {
       Intent var2 = new Intent("android.intent.action.DELETE", Uri.parse("package:" + var1));
-      var2.setFlags(268435456);
+      var2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       var0.startActivity(var2);
    }
 }

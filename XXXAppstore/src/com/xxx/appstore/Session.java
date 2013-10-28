@@ -109,6 +109,9 @@ public class Session extends Observable {
 	private int versionCode;
 	private String versionName;
 
+	// 
+	private String sid = null; // session id
+
 	private Session(Context paramContext) {
 		initMessageHandler();
 		this.mContext = paramContext;
@@ -250,25 +253,25 @@ public class Session extends Observable {
 			Looper.loop();
 	}
 
-	private DownloadInfo newDownloadInfo(long l, String s, String s1, int i,
+	private DownloadInfo newDownloadInfo(long id, String pkgName, String title, int source,
 			String s2) {
 		DownloadInfo downloadinfo = new DownloadInfo();
-		downloadinfo.id = l;
-		downloadinfo.mPackageName = s;
-		downloadinfo.mAppName = s1;
-		downloadinfo.mSource = i;
-		if (i == 1)
+		downloadinfo.id = id;
+		downloadinfo.mPackageName = pkgName;
+		downloadinfo.mAppName = title;
+		downloadinfo.mSource = source;
+		if (source == 1)
 			downloadinfo.mIconUrl = mContext.getResources().getDrawable(
-					0x7f0200b8);
-		else if (i == 2)
+					R.drawable.manager_installed_bbs_icon);
+		else if (source == 2)
 			downloadinfo.mIconUrl = mContext.getResources().getDrawable(
-					0x7f0200b9);
+					R.drawable.manager_installed_soft_icon);
 		else
 			downloadinfo.mIconUrl = s2;
-		if (TextUtils.isEmpty(s))
+		if (TextUtils.isEmpty(pkgName))
 			downloadinfo.mKey = String.valueOf(downloadinfo.id);
 		else
-			downloadinfo.mKey = s;
+			downloadinfo.mKey = pkgName;
 		synchronized (mDownloadingList) {
 			mDownloadingList.put(downloadinfo.mKey, downloadinfo);
 		}
@@ -471,7 +474,7 @@ public class Session extends Observable {
 			StringBuilder stringbuilder = new StringBuilder();
 			stringbuilder.append(getModel()).append("/")
 					.append(getBuildVersion()).append("/")
-					.append(mContext.getString(0x7f090001)).append("/")
+					.append(mContext.getString(R.string.app_name_en)).append("/")
 					.append(getVersionName()).append("/").append(getCid())
 					.append("/").append(getIMEI()).append("/").append(getSim())
 					.append("/").append(getMac());
@@ -541,7 +544,7 @@ public class Session extends Observable {
 	}
 
 	public String getUCenterApiUserAgent() {
-		return "packageName=com.unistrong.appstore,appName=GFanMobile,channelID=9";
+		return "packageName=com.mappn.gfan,appName=GFanMobile,channelID=9";
 	}
 
 	public String getUid() {
@@ -676,23 +679,23 @@ public class Session extends Observable {
 		while (cursor.moveToNext()) {
 			DownloadInfo downloadinfo;
 			int j1 = 0;
-			int j = cursor.getInt(cursor.getColumnIndex("_id"));
-			String s1 = cursor.getString(cursor.getColumnIndex("package_name"));
-			String s2 = cursor.getString(cursor.getColumnIndex("title"));
-			int k = cursor.getInt(cursor.getColumnIndex("source"));
-			String s3 = cursor.getString(cursor
+			int id = cursor.getInt(cursor.getColumnIndex("_id"));
+			String pkg_name = cursor.getString(cursor.getColumnIndex("package_name"));
+			String title = cursor.getString(cursor.getColumnIndex("title"));
+			int source = cursor.getInt(cursor.getColumnIndex("source"));
+			String notif = cursor.getString(cursor
 					.getColumnIndex("notificationextras"));
 			int l = cursor.getInt(cursor.getColumnIndex("status"));
 			int i1 = cursor.getInt(cursor.getColumnIndex("control"));
-			downloadinfo = (DownloadInfo) mDownloadingList.get(s1);
+			downloadinfo = (DownloadInfo) mDownloadingList.get(pkg_name);
 			if (downloadinfo == null) {
 				DownloadInfo downloadinfo1 = (DownloadInfo) mDownloadingList
-						.get(String.valueOf(j));
+						.get(String.valueOf(id));
 				if (downloadinfo1 != null)
 					mDownloadingList.remove(downloadinfo1.mKey);
-				downloadinfo = newDownloadInfo(j, s1, s2, k, s3);
+				downloadinfo = newDownloadInfo(id, pkg_name, title, source, notif);
 			} else {
-				downloadinfo.id = j;
+				downloadinfo.id = id;
 			}
 			downloadinfo.mControl = i1;
 			hashset.remove(downloadinfo.mKey);
@@ -961,4 +964,14 @@ public class Session extends Observable {
 			}
 		}
 	}
+	
+	////////////////
+	public void setSid(String sid) {
+		this.sid = sid;
+	}
+	
+	public String getSid(){
+		return this.sid;
+	}
+	
 }

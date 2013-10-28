@@ -6,7 +6,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-
 import com.xxx.appstore.Session;
 import com.xxx.appstore.common.util.MarketProvider;
 import com.xxx.appstore.common.vo.BuyLog;
@@ -14,7 +13,6 @@ import com.xxx.appstore.common.vo.CardsVerification;
 import com.xxx.appstore.common.vo.CardsVerifications;
 import com.xxx.appstore.common.vo.LogEntity;
 import com.xxx.appstore.common.vo.UpgradeInfo;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -291,17 +289,18 @@ public class DBUtils {
       ConcurrentHashMap var1 = new ConcurrentHashMap();
       String[] var2 = new String[]{"0"};
       Cursor var3 = var0.getContentResolver().query(MarketProvider.UPDATE_CONTENT_URI, (String[])null, "p_update_ingore = ? ", var2, (String)null);
-      if(var3 != null && var3.getCount() > 0) {
-         while(var3.moveToNext()) {
-            UpgradeInfo var4 = new UpgradeInfo();
-            var4.pid = var3.getString(var3.getColumnIndex("p_id"));
-            var4.pkgName = var3.getString(var3.getColumnIndex("p_package_name"));
-            var4.versionName = var3.getString(var3.getColumnIndex("p_new_version_name"));
-            var4.versionCode = var3.getInt(var3.getColumnIndex("p_new_version_code"));
-            var4.signature = var3.getString(var3.getColumnIndex("p_signature"));
-            var1.put(var4.pkgName, var4);
-         }
-
+      if(var3 != null) {
+    	  if(var3.getCount() > 0) {
+	         while(var3.moveToNext()) {
+	            UpgradeInfo var4 = new UpgradeInfo();
+	            var4.pid = var3.getString(var3.getColumnIndex("p_id"));
+	            var4.pkgName = var3.getString(var3.getColumnIndex("p_package_name"));
+	            var4.versionName = var3.getString(var3.getColumnIndex("p_new_version_name"));
+	            var4.versionCode = var3.getInt(var3.getColumnIndex("p_new_version_code"));
+	            var4.signature = var3.getString(var3.getColumnIndex("p_signature"));
+	            var1.put(var4.pkgName, var4);
+	         }
+    	  }
          var3.close();
       }
 

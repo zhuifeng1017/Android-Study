@@ -1,80 +1,117 @@
 package com.xxx.appstore.common.download;
 
+import java.io.File;
+
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 
-import com.xxx.appstore.common.download.DownloadService;
+import com.xxx.appstore.R;
 import com.xxx.appstore.common.util.Utils;
-
-import java.io.File;
 
 public class DownloadReceiver extends BroadcastReceiver {
 
-   private void handleNotificationBroadcast(Context param1, Intent param2) {
-      // $FF: Couldn't be decompiled
+	/**
+     * Handle any broadcast related to a system notification.
+     */
+    private void handleNotificationBroadcast(Context context, Intent intent) {
+        Uri uri = intent.getData();
+        String action = intent.getAction();
+            if (action.equals(Constants.ACTION_OPEN)) {
+            	Utils.V("Receiver open for " + uri);
+            } else if (action.equals(Constants.ACTION_LIST)) {
+            	Utils.V("Receiver list for " + uri);
+            } else { // ACTION_HIDE
+            	Utils.V("Receiver hide for " + uri);
+            }
+
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+        if (cursor == null) {
+            return;
+        }
+        try {
+            if (!cursor.moveToFirst()) {
+                return;
+            }
+
+            if (action.equals(Constants.ACTION_OPEN)) {
+                openDownload(context, cursor);
+                hideNotification(context, uri, cursor);
+            } else if (action.equals(Constants.ACTION_LIST)) {
+                sendNotificationClickedIntent(context, intent, cursor);
+            } else { // ACTION_HIDE
+                hideNotification(context, uri, cursor);
+            }
+        } finally {
+            cursor.close();
+        }
+    }
+
+   private void hideNotification(Context context, Uri uri, Cursor cursor) {
+      ContentValues values  = new ContentValues();
+      values .put(DownloadManager.Impl.COLUMN_VISIBILITY,
+    		  DownloadManager.Impl.VISIBILITY_HIDDEN);
+      context.getContentResolver().update(uri, values , null, null);
    }
 
-   private void hideNotification(Context var1, Uri var2, Cursor var3) {
-      ContentValues var4 = new ContentValues();
-      var4.put("visibility", Integer.valueOf(2));
-      var1.getContentResolver().update(var2, var4, (String)null, (String[])null);
+   /**
+    * Open the download that cursor is currently pointing to, since it's completed notification
+    * has been clicked.
+    */
+   private void openDownload(Context context, Cursor cursor) {
+       String filename = cursor.getString(cursor.getColumnIndexOrThrow(DownloadManager.Impl.COLUMN_DATA));
+       String mimetype =
+           cursor.getString(cursor.getColumnIndexOrThrow(DownloadManager.Impl.COLUMN_MIME_TYPE));
+       if(cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.Impl.COLUMN_DESTINATION)) == 0 && !Utils.isSdcardWritable()) {
+           Utils.makeEventToast(context, context.getString(R.string.warning_sdcard_unmounted), false);
+        } else {
+	       Uri path = Uri.parse(filename);
+	       // If there is no scheme, then it must be a file
+	       if (path.getScheme() == null) {
+	           path = Uri.fromFile(new File(filename));
+	       }
+	
+	       Intent activityIntent = new Intent(Intent.ACTION_VIEW);
+	       activityIntent.setDataAndType(path, mimetype);
+	       activityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	       try {
+	           context.startActivity(activityIntent);
+	       } catch (ActivityNotFoundException ex) {
+	    	   Utils.D("no activity for " + mimetype, ex);
+	       }
+        }
+   }
+   
+   private void sendNotificationClickedIntent(Context context, Intent intent, Cursor cursor) {
+	   context.sendBroadcast(new Intent(com.xxx.appstore.Constants.BROADCAST_CLICK_INTENT));
    }
 
-   private void openDownload(Context var1, Cursor var2) {
-      String var3 = var2.getString(var2.getColumnIndexOrThrow("_data"));
-      String var4 = var2.getString(var2.getColumnIndexOrThrow("mimetype"));
-      if(var2.getInt(var2.getColumnIndexOrThrow("destination")) == 0 && !Utils.isSdcardWritable()) {
-         Utils.makeEventToast(var1, var1.getString(2131296608), false);
-      } else {
-         Uri var5 = Uri.parse(var3);
-         Uri var6;
-         if(var5.getScheme() == null) {
-            var6 = Uri.fromFile(new File(var3));
-         } else {
-            var6 = var5;
-         }
-
-         Intent var7 = new Intent("android.intent.action.VIEW");
-         var7.setDataAndType(var6, var4);
-         var7.setFlags(268435456);
-
-         try {
-            var1.startActivity(var7);
-         } catch (ActivityNotFoundException var11) {
-            Utils.D("no activity for " + var4, var11);
-         }
-      }
-
+   private void startService(Context context) {
+       context.startService(new Intent(context, DownloadService.class));
    }
 
-   private void sendNotificationClickedIntent(Context var1, Intent var2, Cursor var3) {
-      var1.sendBroadcast(new Intent("com.unistrong.appstore.download.intent"));
-   }
-
-   private void startService(Context var1) {
-      var1.startService(new Intent(var1, DownloadService.class));
-   }
-
-   public void onReceive(Context var1, Intent var2) {
-      String var3 = var2.getAction();
-      if(var3.equals("android.intent.action.BOOT_COMPLETED")) {
-         this.startService(var1);
-      } else if(var3.equals("android.net.conn.CONNECTIVITY_CHANGE")) {
-         NetworkInfo var4 = (NetworkInfo)var2.getParcelableExtra("networkInfo");
-         if(var4 != null && var4.isConnected()) {
-            this.startService(var1);
-         }
-      } else if(var3.equals("gfan.intent.action.DOWNLOAD_WAKEUP")) {
-         this.startService(var1);
-      } else if(var3.equals("gfan.intent.action.DOWNLOAD_OPEN") || var3.equals("gfan.intent.action.DOWNLOAD_LIST") || var3.equals("gfan.intent.action.DOWNLOAD_HIDE")) {
-         this.handleNotificationBroadcast(var1, var2);
-      }
-
+   public void onReceive(Context context, Intent intent) {
+       String action = intent.getAction();
+       if (action.equals(Intent.ACTION_BOOT_COMPLETED)) {
+           startService(context);
+       } else if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+           NetworkInfo info = (NetworkInfo)
+                   intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+           if (info != null && info.isConnected()) {
+               startService(context);
+           }
+       } else if (action.equals(Constants.ACTION_RETRY)) {
+           startService(context);
+       } else if (action.equals(Constants.ACTION_OPEN)
+               || action.equals(Constants.ACTION_LIST)
+               || action.equals(Constants.ACTION_HIDE)) {
+           handleNotificationBroadcast(context, intent);
+       }
    }
 }

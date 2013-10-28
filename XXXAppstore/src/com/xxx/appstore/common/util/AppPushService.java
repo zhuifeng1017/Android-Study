@@ -8,11 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.text.TextUtils;
-
 import com.xxx.appstore.Session;
 import com.xxx.appstore.common.MarketAPI;
-import com.xxx.appstore.ui.PreloadActivity;
-
+//import com.xxx.appstore.ui.PreloadActivity;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -42,25 +40,25 @@ public class AppPushService extends Service
 
   private void showRecommendAppsNotification(String paramString1, String paramString2, String paramString3, String paramString4, String paramString5)
   {
-    NotificationManager localNotificationManager = (NotificationManager)getSystemService("notification");
-    Notification localNotification = new Notification();
-    localNotification.icon = 2130837722;
-    Object[] arrayOfObject1 = new Object[1];
-    arrayOfObject1[0] = paramString1;
-    localNotification.tickerText = getString(2131296263, arrayOfObject1);
-    localNotification.when = System.currentTimeMillis();
-    Intent localIntent = new Intent(getApplicationContext(), PreloadActivity.class);
-    localIntent.putExtra("extra.key.pid", paramString3);
-    localIntent.putExtra("extra.app.push", true);
-    localIntent.putExtra("extra.app.nid", paramString4);
-    localIntent.putExtra("extra.app.rule", paramString5);
-    PendingIntent localPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, localIntent, 16);
-    Context localContext = getApplicationContext();
-    Object[] arrayOfObject2 = new Object[1];
-    arrayOfObject2[0] = paramString1;
-    localNotification.setLatestEventInfo(localContext, getString(2131296263, arrayOfObject2), paramString2, localPendingIntent);
-    localNotification.flags = (0x10 | localNotification.flags);
-    localNotificationManager.notify(2130837548, localNotification);
+//    NotificationManager localNotificationManager = (NotificationManager)getSystemService("notification");
+//    Notification localNotification = new Notification();
+//    localNotification.icon = 2130837722;
+//    Object[] arrayOfObject1 = new Object[1];
+//    arrayOfObject1[0] = paramString1;
+//    localNotification.tickerText = getString(R.string.notification_recommend_info_title, arrayOfObject1);
+//    localNotification.when = System.currentTimeMillis();
+//    Intent localIntent = new Intent(getApplicationContext(), PreloadActivity.class);
+//    localIntent.putExtra("extra.key.pid", paramString3);
+//    localIntent.putExtra("extra.app.push", true);
+//    localIntent.putExtra("extra.app.nid", paramString4);
+//    localIntent.putExtra("extra.app.rule", paramString5);
+//    PendingIntent localPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, localIntent, 16);
+//    Context localContext = getApplicationContext();
+//    Object[] arrayOfObject2 = new Object[1];
+//    arrayOfObject2[0] = paramString1;
+//    localNotification.setLatestEventInfo(localContext, getString(R.string.notification_recommend_info_title, arrayOfObject2), paramString2, localPendingIntent);
+//    localNotification.flags = (0x10 | localNotification.flags);
+//    localNotificationManager.notify(2130837548, localNotification);
   }
 
   public IBinder onBind(Intent paramIntent)

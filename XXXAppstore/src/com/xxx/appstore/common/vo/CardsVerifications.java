@@ -1,7 +1,6 @@
 package com.xxx.appstore.common.vo;
 
 import com.xxx.appstore.common.vo.CardsVerification;
-
 import java.util.ArrayList;
 import java.util.List;
 

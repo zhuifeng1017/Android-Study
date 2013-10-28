@@ -2,8 +2,8 @@
 <manifest android:versionCode="90" android:versionName="0.9 Beta" package="com.xxx.appstore"
   xmlns:android="http://schemas.android.com/apk/res/android">
     <permission android:name="com.hudee.pns.permission.RECEIVE" android:protectionLevel="normal" />
-    <permission android:name="com.unistrong.appstore.permission.C2D_MESSAGE" android:protectionLevel="signature" />
-    <permission android:name="com.unistrong.appstore.permission.BATCH_DOWNLOAD" android:protectionLevel="signature" />
+    <permission android:name="com.xxx.appstore.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <permission android:name="com.xxx.appstore.permission.BATCH_DOWNLOAD" android:protectionLevel="signature" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -13,7 +13,7 @@
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_LOGS" />
-    <uses-permission android:name="com.unistrong.appstore.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.xxx.appstore.permission.C2D_MESSAGE" />
     <!-- <uses-permission android:name="com.hudee.pns.permission.RECEIVE" /> -->
     <supports-screens android:anyDensity="true" />
     <uses-sdk android:minSdkVersion="5" android:targetSdkVersion="9" />
@@ -65,11 +65,11 @@
         <activity android:name=".ui.LoginActivity" android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="adjustResize" />
         <provider android:name=".common.util.MarketProvider" android:authorities="gfan_xxx" />
         <service android:name=".common.util.AppPushService" />
-        <service android:name=".common.util.BatchDownloadService" android:permission="com.unistrong.appstore.permission.BATCH_DOWNLOAD" android:exported="true" />
+        <service android:name=".common.util.BatchDownloadService" android:permission="com.xxx.appstore.permission.BATCH_DOWNLOAD" android:exported="true" />
         <receiver android:name=".common.util.AppPushReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="com.unistrong.appstore.download.intent" />
+                <action android:name="com.xxx.appstore.download.intent" />
             </intent-filter>
         </receiver>
         <provider android:name=".common.download.DownloadProvider" android:authorities="gfan_downloads_xxx" />
@@ -97,11 +97,11 @@
         <receiver android:name=".common.hudee.C2DMReceiver">
             <intent-filter>
                 <action android:name="com.hudee.pns.intent.MESSAGE" />
-                <category android:name="com.unistrong.appstore" />
+                <category android:name="com.xxx.appstore" />
             </intent-filter>
             <intent-filter>
                 <action android:name="com.hudee.pns.intent.REGISTRATION" />
-                <category android:name="com.unistrong.appstore" />
+                <category android:name="com.xxx.appstore" />
             </intent-filter>
         </receiver>
         -->

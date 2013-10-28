@@ -5,7 +5,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.text.TextUtils;
-
 import com.xxx.appstore.Session;
 import com.xxx.appstore.common.AndroidHttpClient;
 import com.xxx.appstore.common.codec.digest.DigestUtils;
@@ -13,7 +12,6 @@ import com.xxx.appstore.common.util.DBUtils;
 import com.xxx.appstore.common.util.SecurityUtil;
 import com.xxx.appstore.common.util.Utils;
 import com.xxx.appstore.common.vo.LogEntity;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -24,6 +22,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
@@ -34,16 +33,31 @@ import org.json.JSONObject;
 
 public class ApiRequestFactory {
 
+   /*需要缓存的map*/
    public static ArrayList<Integer> API_CACHE_MAP;
+   
    private static final String[] REPLACE;
+   
    private static ArrayList<Integer> S_ENCODE_FORM_REQUESTS = new ArrayList();
+   
+   //需要加密的请求
    private static ArrayList<Integer> S_ENCRYPT_REQUESTS = new ArrayList();
+   
+   // 格式为json的request
    private static ArrayList<Integer> S_JSON_REQUESTS = new ArrayList();
+   
+   // 格式为xml的request
    private static ArrayList<Integer> S_XML_REQUESTS = new ArrayList();
+   
+   // 用户中心的request
    private static ArrayList<Integer> UCENTER_API;
-
+   
+   // uni 为Post请求的request
+   private static ArrayList<Integer> S_POST_REQUESTS_EX = new ArrayList<Integer>();
 
    static {
+	   S_POST_REQUESTS_EX.add(Integer.valueOf(MarketAPI.ACTION_ADDCOMMENT_EX));
+	   //
       S_XML_REQUESTS.add(Integer.valueOf(16));
       S_XML_REQUESTS.add(Integer.valueOf(18));
       S_XML_REQUESTS.add(Integer.valueOf(33));
@@ -86,19 +100,24 @@ public class ApiRequestFactory {
       S_XML_REQUESTS.add(Integer.valueOf(54));
       S_XML_REQUESTS.add(Integer.valueOf(55));
       S_XML_REQUESTS.add(Integer.valueOf(56));
+            	/**/
       S_JSON_REQUESTS.add(Integer.valueOf(20));
       S_JSON_REQUESTS.add(Integer.valueOf(31));
       S_JSON_REQUESTS.add(Integer.valueOf(32));
       S_JSON_REQUESTS.add(Integer.valueOf(40));
       S_JSON_REQUESTS.add(Integer.valueOf(41));
+      /*需要加密的请求*/
       S_ENCRYPT_REQUESTS.add(Integer.valueOf(1));
       S_ENCRYPT_REQUESTS.add(Integer.valueOf(0));
       S_ENCRYPT_REQUESTS.add(Integer.valueOf(22));
       S_ENCRYPT_REQUESTS.add(Integer.valueOf(23));
       S_ENCRYPT_REQUESTS.add(Integer.valueOf(21));
+      //
       S_ENCODE_FORM_REQUESTS.add(Integer.valueOf(31));
       S_ENCODE_FORM_REQUESTS.add(Integer.valueOf(32));
       S_ENCODE_FORM_REQUESTS.add(Integer.valueOf(39));
+      
+      /*用户中心的request*/
       UCENTER_API = new ArrayList();
       UCENTER_API.add(Integer.valueOf(1));
       UCENTER_API.add(Integer.valueOf(0));
@@ -111,6 +130,7 @@ public class ApiRequestFactory {
       UCENTER_API.add(Integer.valueOf(23));
       UCENTER_API.add(Integer.valueOf(24));
       UCENTER_API.add(Integer.valueOf(25));
+      /**/
       API_CACHE_MAP = new ArrayList();
       API_CACHE_MAP.add(Integer.valueOf(13));
       API_CACHE_MAP.add(Integer.valueOf(14));
@@ -127,32 +147,71 @@ public class ApiRequestFactory {
       REPLACE = new String[]{"&", "&amp;", "\"", "&quot;", "\'", "&apos;", "<", "&lt;", ">", "&gt;"};
    }
 
-   private static String generateJsonRequestBody(Object var0) {
-      String var1;
-      if(var0 == null) {
-         var1 = "";
-      } else if(var0 instanceof HashMap) {
-         HashMap var2 = (HashMap)var0;
-         Iterator var3 = var2.keySet().iterator();
-         JSONObject var4 = new JSONObject();
-
+   /////////////////////////////////////////////////////////////////////////////////////////////////////////
+   
+   public static ArrayList getUrlAndEntityEX(int action, Object parameter) throws UnsupportedEncodingException {
+		String url = MarketAPI.API_URLS_EX[action - MarketAPI.ACTION_STARTD];
+		HttpEntity entity = null;
+		if(parameter != null){
+			if (S_POST_REQUESTS_EX.contains(Integer.valueOf(action))){
+				// 组post request body
+				HashMap<String, Object> hmap =(HashMap<String, Object>) parameter;
+				String jsonStr = generateJsonRequestBody(parameter);
+				entity =  new StringEntity(jsonStr, "UTF-8");
+			}else{
+				// 组 Get 请求参数
+				StringBuilder urlBuilder = new StringBuilder(url);
+				urlBuilder.append("?");
+				HashMap<String, Object> hmap =(HashMap<String, Object>) parameter;
+				// 遍历hashmap
+				Iterator iter = hmap.entrySet().iterator();
+				boolean first = true;
+				while (iter.hasNext()) {
+					if (!first){
+						urlBuilder.append("&");
+					}
+					HashMap.Entry entry = (HashMap.Entry) iter.next(); 
+				    String key = (String) entry.getKey(); 
+				    String val = entry.getValue().toString();
+				    urlBuilder.append(key).append("=").append(val);
+				    first = false;
+				} 
+				url = urlBuilder.toString();
+			}
+		}
+		
+		ArrayList arr = new ArrayList();
+		arr.add(url);
+		arr.add(entity);
+	    return arr;
+   }
+   
+   ///////////////////////////////////////////////////////////////////////////////////
+   
+   private static String generateJsonRequestBody(Object parameter) {
+      String jsonStr;
+      if(parameter == null) {
+         jsonStr = "";
+      } else if(parameter instanceof HashMap) {
+         HashMap hmap = (HashMap)parameter;
+         Iterator iter = hmap.keySet().iterator();
+         JSONObject jsonObj = new JSONObject();
          try {
-            while(var3.hasNext()) {
-               String var6 = (String)var3.next();
-               var4.put(var6, var2.get(var6));
+            while(iter.hasNext()) {
+               String obj = (String)iter.next();
+               jsonObj.put(obj, hmap.get(obj));
             }
-         } catch (JSONException var7) {
-            var7.printStackTrace();
-            var1 = "";
-            return var1;
+         } catch (JSONException exception) {
+            exception.printStackTrace();
+            jsonStr = "";
+            return jsonStr;
          }
-
-         var1 = var4.toString();
+         jsonStr = jsonObj.toString();
       } else {
-         var1 = "";
+         jsonStr = "";
       }
-
-      return var1;
+      
+      return jsonStr;
    }
 
    private static String generateLogBody(Context var0, Object var1) {
@@ -337,50 +396,60 @@ public class ApiRequestFactory {
       return new StringEntity(var3, "UTF-8");
    }
 
-   public static HttpUriRequest getRequest(String var0, int var1, HttpEntity var2, Session var3) throws IOException {
-      Object var4;
-      if(29 == var1) {
-         var4 = new HttpGet(var0 + var3.getUid());
-      } else if(UCENTER_API.contains(Integer.valueOf(var1))) {
-         var4 = new HttpPost(var0);
-         ((HttpPost)var4).setHeader("User-Agent", var3.getUCenterApiUserAgent());
-         ((HttpPost)var4).setEntity(var2);
-      } else if(S_XML_REQUESTS.contains(Integer.valueOf(var1))) {
-         var4 = new HttpPost(var0);
-         ((HttpPost)var4).setHeader("G-Header", var3.getJavaApiUserAgent());
-         ((HttpPost)var4).addHeader("Accept-Encoding", "gzip");
-         ((HttpPost)var4).setEntity(AndroidHttpClient.getCompressedEntity(var2.getContent()));
-      } else if(40 != var1 && 41 != var1) {
-         var4 = new HttpPost(var0);
-         ((HttpPost)var4).setEntity(var2);
+   public static HttpUriRequest getRequest(String url, int action, HttpEntity httpentity, Session session) throws IOException {
+      HttpRequestBase uriRequest;
+      if(action >= MarketAPI.ACTION_STARTD ){ // 自己的action
+    	  if (S_POST_REQUESTS_EX.contains(Integer.valueOf(action))){
+    		  uriRequest = new HttpPost(url);
+    		  ((HttpPost)uriRequest).setEntity(httpentity);
+    		  uriRequest.addHeader("HOST", "www.appstore.com");
+    	  }else{
+    		  uriRequest = new HttpGet(url);
+    		  uriRequest.addHeader("HOST", "www.appstore.com");
+    	  }
+      }else if(MarketAPI.ACTION_UNBIND == action) {
+         uriRequest = new HttpGet(url + session.getUid());
+      } else if(UCENTER_API.contains(Integer.valueOf(action))) {
+         uriRequest = new HttpPost(url);
+         ((HttpPost)uriRequest).setHeader("User-Agent", session.getUCenterApiUserAgent());
+         ((HttpPost)uriRequest).setEntity(httpentity);
+      } else if(S_XML_REQUESTS.contains(Integer.valueOf(action))) {
+         uriRequest = new HttpPost(url);
+         ((HttpPost)uriRequest).setHeader("G-Header", session.getJavaApiUserAgent());
+         ((HttpPost)uriRequest).addHeader("Accept-Encoding", "gzip");
+         ((HttpPost)uriRequest).setEntity(AndroidHttpClient.getCompressedEntity(httpentity.getContent()));
+      } else if(40 != action && 41 != action) {
+         uriRequest = new HttpPost(url);
+         ((HttpPost)uriRequest).setEntity(httpentity);
       } else {
-         var4 = new HttpPost(var0);
-         ((HttpPost)var4).addHeader("Accept-Encoding", "gzip");
-         ((HttpPost)var4).setEntity(AndroidHttpClient.getCompressedEntity(var2.getContent()));
+         uriRequest = new HttpPost(url);
+         ((HttpPost)uriRequest).addHeader("Accept-Encoding", "gzip");
+         ((HttpPost)uriRequest).setEntity(AndroidHttpClient.getCompressedEntity(httpentity.getContent()));
       }
 
-      return (HttpUriRequest)var4;
+      return (HttpUriRequest)uriRequest;
    }
 
-   public static HttpEntity getRequestEntity(Context var0, int var1, Object var2) throws UnsupportedEncodingException {
-      Object var3;
-      if(S_XML_REQUESTS.contains(Integer.valueOf(var1))) {
-         var3 = getXmlRequest(var0, var2);
-      } else if(S_ENCODE_FORM_REQUESTS.contains(Integer.valueOf(var1))) {
-         var3 = getFormRequest(var1, var2);
-      } else if(S_JSON_REQUESTS.contains(Integer.valueOf(var1))) {
-         var3 = getJsonRequest(var0, var1, var2);
-      } else if(S_ENCRYPT_REQUESTS.contains(Integer.valueOf(var1))) {
-         var3 = getEncryptRequest(var0, var1, var2);
+   // 组request body部分
+   public static HttpEntity getRequestEntity(Context context, int action, Object parameter) throws UnsupportedEncodingException {
+      Object entity;
+      if(S_XML_REQUESTS.contains(Integer.valueOf(action))) {
+         entity = getXmlRequest(context, parameter);
+      } else if(S_ENCODE_FORM_REQUESTS.contains(Integer.valueOf(action))) {
+         entity = getFormRequest(action, parameter);
+      } else if(S_JSON_REQUESTS.contains(Integer.valueOf(action))) {
+         entity = getJsonRequest(context, action, parameter);
+      } else if(S_ENCRYPT_REQUESTS.contains(Integer.valueOf(action))) {
+         entity = getEncryptRequest(context, action, parameter);
       } else {
-         var3 = null;
+         entity = null;
       }
 
-      return (HttpEntity)var3;
+      return (HttpEntity)entity;
    }
 
-   private static StringEntity getXmlRequest(Context var0, Object var1) throws UnsupportedEncodingException {
-      String var2 = generateXmlRequestBody(var0, var1);
+   private static StringEntity getXmlRequest(Context context, Object parameter) throws UnsupportedEncodingException {
+      String var2 = generateXmlRequestBody(context, parameter);
       Utils.D("generate XML request body is : " + var2);
       return new StringEntity(var2, "UTF-8");
    }

@@ -1,5 +1,6 @@
 package com.xxx.appstore.common.util;
 
+import com.xxx.appstore.R;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -9,7 +10,6 @@ import com.gfan.sdk.statistics.Collector;
 import com.xxx.appstore.common.util.DialogUtil;
 import com.xxx.appstore.common.util.Utils;
 import com.xxx.appstore.ui.HomeActivity;
-
 import org.apache.http.HttpResponse;
 
 public class MenuUtil {
@@ -25,14 +25,14 @@ public class MenuUtil {
             if(!TextUtils.isEmpty(var2)) {
                Collector.comment(var0, var3, new Collector.IResponse() {
                   public void onFailed(Exception var1) {
-                     Utils.makeEventToast(var0, var0.getString(2131296539), false);
+                     Utils.makeEventToast(var0, var0.getString(R.string.thanks_response), false);
                   }
                   public void onSuccess(HttpResponse var1) {
-                     Utils.makeEventToast(var0, var0.getString(2131296539), false);
+                     Utils.makeEventToast(var0, var0.getString(R.string.thanks_response), false);
                   }
                });
             } else {
-               Utils.makeEventToast(var0, var0.getString(2131296540), false);
+               Utils.makeEventToast(var0, var0.getString(R.string.content_no_empty), false);
             }
 
          }
@@ -52,7 +52,7 @@ public class MenuUtil {
          if(Utils.isNetworkAvailable(var0)) {
             var1.showDialog(200);
          } else {
-            Utils.makeEventToast(var0, var0.getString(2131296494), false);
+            Utils.makeEventToast(var0, var0.getString(R.string.warning_netword_error), false);
          }
       }
 

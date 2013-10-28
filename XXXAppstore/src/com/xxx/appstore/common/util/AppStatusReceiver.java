@@ -3,12 +3,10 @@ package com.xxx.appstore.common.util;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-
 import com.xxx.appstore.Session;
 import com.xxx.appstore.common.util.AlarmManageUtils;
 import com.xxx.appstore.common.util.DBUtils;
 import com.xxx.appstore.common.util.Utils;
-
 import java.io.File;
 
 public class AppStatusReceiver extends BroadcastReceiver {
@@ -24,7 +22,7 @@ public class AppStatusReceiver extends BroadcastReceiver {
             Utils.installApk(var1, new File((String)var5.mNotSameApps.get(var4)));
             var5.mNotSameApps.remove(var4);
          }
-      } else if("android.intent.action.PACKAGE_REPLACED".equals(var3) && "com.unistrong.appstore".equals(var4)) {
+      } else if("android.intent.action.PACKAGE_REPLACED".equals(var3) && "com.xxx.appstore".equals(var4)) {
          AlarmManageUtils.notifyPushService(var1, false);
       }
 

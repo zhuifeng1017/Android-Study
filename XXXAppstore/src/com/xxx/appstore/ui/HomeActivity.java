@@ -147,7 +147,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnIte
       HashMap var2 = (HashMap)this.getIntent().getSerializableExtra("extra.home.data");
       this.initTopBar();
       this.initView(var2);
-      IntentFilter var3 = new IntentFilter("com.unistrong.appstore.theme");
+      IntentFilter var3 = new IntentFilter("com.xxx.appstore.theme");
       this.registerReceiver(this.mThemeReceiver, var3);
    }
 

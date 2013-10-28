@@ -20,7 +20,7 @@ import javax.net.ssl.SSLSession;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
 
-// Referenced classes of package com.unistrong.appstore.common.util:
+// Referenced classes of package com.xxx.appstore.common.util:
 //            BaseHelper
 
 public class NetworkManager

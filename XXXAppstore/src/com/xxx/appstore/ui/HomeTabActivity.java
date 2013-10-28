@@ -65,7 +65,7 @@ import com.xxx.appstore.common.util.Utils;
 import com.xxx.appstore.common.vo.UpdateInfo;
 import com.xxx.appstore.common.widget.BaseTabActivity;
 
-// Referenced classes of package com.unistrong.appstore.ui:
+// Referenced classes of package com.xxx.appstore.ui:
 //            HomeActivity, CategoryActivity, MasterTabActivity, RankTabActivity, 
 //            AppManagerActivity, InstallNecessaryActivity, PersonalAccountActivity, ClientPreferenceActivity, 
 //            MoreInfoActivity
@@ -141,11 +141,11 @@ public class HomeTabActivity extends BaseTabActivity implements
 		mUpdateReceiver = new BroadcastReceiver() {
 			public void onReceive(Context paramContext, Intent paramIntent) {
 				String str = paramIntent.getAction();
-				if (str.equals("com.unistrong.appstore.broadcast.FORCE_EXIT")) {
+				if (str.equals("com.xxx.appstore.broadcast.FORCE_EXIT")) {
 					exit();
 				} else if (!str
-						.equals("com.unistrong.appstore.broadcast.REMIND_LATTER")) {
-					if (str.equals("com.unistrong.appstore.broadcast.DOWNLOAD_OPT")) {
+						.equals("com.xxx.appstore.broadcast.REMIND_LATTER")) {
+					if (str.equals("com.xxx.appstore.broadcast.DOWNLOAD_OPT")) {
 						DownloadManager.Request localRequest1 = new DownloadManager.Request(
 								Uri.parse(mSession.getUpdateUri()));
 						localRequest1.setPackageName(mSession.getPackageName());
@@ -161,7 +161,7 @@ public class HomeTabActivity extends BaseTabActivity implements
 										mSession.setUpdateID(paramLong);
 									}
 								});
-					} else if (str.equals("com.unistrong.appstore.broadcast.DOWNLOAD")) {
+					} else if (str.equals("com.xxx.appstore.broadcast.DOWNLOAD")) {
 						DownloadManager.Request localRequest2 = new DownloadManager.Request(
 								Uri.parse(mSession.getUpdateUri()));
 						localRequest2.setPackageName(mSession.getPackageName());
@@ -217,7 +217,7 @@ public class HomeTabActivity extends BaseTabActivity implements
 			aobj[0] = Integer.valueOf(mSession.getUpgradeNumber());
 			notification.tickerText = getString(R.string.notification_update_info, aobj);
 			notification.when = System.currentTimeMillis();
-			Intent intent = new Intent("com.unistrong.appstore.download.intent");
+			Intent intent = new Intent("com.xxx.appstore.download.intent");
 			PendingIntent pendingintent = PendingIntent.getBroadcast(
 					getApplicationContext(), 0, intent, 0);
 			Context context = getApplicationContext();
@@ -602,12 +602,12 @@ public class HomeTabActivity extends BaseTabActivity implements
 		intentfilter1.addDataScheme("package");
 		registerReceiver(mInstallReceiver, intentfilter1);
 		IntentFilter intentfilter2 = new IntentFilter();
-		intentfilter2.addAction("com.unistrong.appstore.broadcast.FORCE_EXIT");
-		intentfilter2.addAction("com.unistrong.appstore.broadcast.REMIND_LATTER");
-		intentfilter2.addAction("com.unistrong.appstore.broadcast.DOWNLOAD_OPT");
-		intentfilter2.addAction("com.unistrong.appstore.broadcast.DOWNLOAD");
+		intentfilter2.addAction("com.xxx.appstore.broadcast.FORCE_EXIT");
+		intentfilter2.addAction("com.xxx.appstore.broadcast.REMIND_LATTER");
+		intentfilter2.addAction("com.xxx.appstore.broadcast.DOWNLOAD_OPT");
+		intentfilter2.addAction("com.xxx.appstore.broadcast.DOWNLOAD");
 		registerReceiver(mUpdateReceiver, intentfilter2);
-		IntentFilter intentfilter3 = new IntentFilter("com.unistrong.appstore.theme");
+		IntentFilter intentfilter3 = new IntentFilter("com.xxx.appstore.theme");
 		registerReceiver(mThemeReceiver, intentfilter3);
 	}
 
@@ -696,7 +696,7 @@ public class HomeTabActivity extends BaseTabActivity implements
 		}
 
 		public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-			sendBroadcast(new Intent("com.unistrong.appstore.broadcast.DOWNLOAD_OPT"));
+			sendBroadcast(new Intent("com.xxx.appstore.broadcast.DOWNLOAD_OPT"));
 			removeDialog(paramInt);
 		}
 	}
@@ -706,7 +706,7 @@ public class HomeTabActivity extends BaseTabActivity implements
 		}
 
 		public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-			sendBroadcast(new Intent("com.unistrong.appstore.broadcast.FORCE_EXIT"));
+			sendBroadcast(new Intent("com.xxx.appstore.broadcast.FORCE_EXIT"));
 			removeDialog(paramInt);
 		}
 	}
@@ -716,7 +716,7 @@ public class HomeTabActivity extends BaseTabActivity implements
 		}
 
 		public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-			sendBroadcast(new Intent("com.unistrong.appstore.broadcast.FORCE_EXIT"));
+			sendBroadcast(new Intent("com.xxx.appstore.broadcast.FORCE_EXIT"));
 			removeDialog(paramInt);
 		}
 	}

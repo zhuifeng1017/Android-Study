@@ -1,5 +1,6 @@
 package com.xxx.appstore.common.util;
 
+import com.xxx.appstore.R;
 import com.xxx.appstore.Session;
 
 public class ThemeManager {
@@ -52,31 +53,31 @@ public class ThemeManager {
 
 
    private static int getDarkResourceId(int var0) {
-      int var1 = 2130837532;
+      int var1 = R.drawable.action_bar_operation_bg;
       switch(var0) {
       case 1:
-         var1 = 2130837669;
+         var1 = R.drawable.main_tab_index_selector;
          break;
       case 2:
-         var1 = 2130837662;
+         var1 = R.drawable.main_tab_category_selector;
          break;
       case 3:
-         var1 = 2130837683;
+    	 var1 = R.drawable.main_tab_rank_selector;         
          break;
       case 4:
-         var1 = 2130837676;
+    	  var1 = R.drawable.main_tab_recommend_selector;
          break;
       case 5:
-         var1 = 2130837647;
+         var1 = R.drawable.main_tab_app_manager_selector;
          break;
       case 6:
-         var1 = 2130837790;
+         var1 = R.drawable.tab_selector;
          break;
       case 7:
-         var1 = 2130837774;
+         var1 = R.drawable.tab_l_bg_selector;
          break;
       case 8:
-         var1 = 2130837782;
+         var1 = R.drawable.tab_r_bg_selector;
          break;
       case 9:
       case 10:
@@ -85,130 +86,130 @@ public class ThemeManager {
          var1 = 1;
          break;
       case 11:
-         var1 = 2131361815;
+         var1 = R.style.home_tab_text_style_dark;
          break;
       case 12:
-         var1 = 2131361818;
+         var1 = R.style.tab_text_style_dark;
          break;
       case 13:
-         var1 = 2131361805;
+         var1 = R.style.text_style_3e;
          break;
       case 14:
-         var1 = 2130837772;
+         var1 = R.drawable.tab_bg;
       case 15:
       case 16:
          break;
       case 17:
-         var1 = 2131361805;
+         var1 = R.style.text_style_3e;
          break;
       case 18:
-         var1 = 2131361801;
+         var1 = R.style.text_style_2e;
          break;
       case 19:
-         var1 = 2130837536;
+         var1 = R.drawable.action_bar_splitter;
          break;
       case 20:
-         var1 = 2130837710;
+ //        var1 = R.drawable.master_breath_drawable;
          break;
       case 21:
-         var1 = 2130837526;
+         var1 = R.drawable.action_bar_download;
          break;
       case 22:
-         var1 = 2130837534;
+         var1 = R.drawable.action_bar_pending;
          break;
       case 23:
-         var1 = 2130837528;
+         var1 = R.drawable.action_bar_install;
          break;
       case 24:
-         var1 = 2130837530;
+         var1 = R.drawable.action_bar_open;
          break;
       case 25:
-         var1 = 2130837540;
+         var1 = R.drawable.action_bar_uninstall;
          break;
       case 26:
-         var1 = 2130837544;
+         var1 = R.drawable.action_bar_up_normal;
          break;
       case 27:
-         var1 = 2130837542;
+         var1 = R.drawable.action_bar_up_checked;
          break;
       case 28:
-         var1 = 2130837524;
+         var1 = R.drawable.action_bar_down_normal;
          break;
       case 29:
-         var1 = 2130837522;
+         var1 = R.drawable.action_bar_down_checked;
          break;
       case 30:
-         var1 = 2130837800;
+         var1 = R.drawable.topbar_bg;
          break;
       case 31:
-         var1 = 2130837606;
+         var1 = R.drawable.home_tab_bg;
          break;
       case 32:
-         var1 = 2130837806;
+         var1 = R.drawable.topbar_btn_search;
          break;
       case 33:
-         var1 = 2130837641;
+         var1 = R.drawable.logo;
          break;
       case 34:
-         var1 = 2130837810;
+         var1 = R.drawable.topbar_navigation;
          break;
       case 35:
-         var1 = 2130837808;
+         var1 = R.drawable.topbar_btn_share;
          break;
       case 36:
-         var1 = 2131361796;
+         var1 = R.style.text_style_1e;
          break;
       case 37:
-         var1 = 2130837515;
+         var1 = R.drawable.action_bar_btn_bg;
          break;
       case 38:
-         var1 = 2130837712;
+ //        var1 = R.drawable.master_follow_selector;
          break;
       case 40:
-         var1 = 2130837745;
+         var1 = R.drawable.progress_horizontal;
          break;
       case 41:
-         var1 = 2130837520;
+         var1 = R.drawable.action_bar_cancel;
          break;
       case 42:
-         var1 = 2130837802;
+         var1 = R.drawable.topbar_btn_bg;
          break;
       case 43:
-         var1 = 2130837644;
+         var1 = R.drawable.main_tab_anim;
          break;
       case 44:
-         var1 = 2130837538;
+         var1 = R.drawable.action_bar_start;
       }
 
       return var1;
    }
 
    private static int getLightResourceId(int var0) {
-      int var1 = 2130837533;
+      int var1 = R.drawable.action_bar_operation_bg_light;
       switch(var0) {
       case 1:
-         var1 = 2130837670;
+         var1 = R.drawable.main_tab_index_selector_light;
          break;
       case 2:
-         var1 = 2130837663;
+         var1 = R.drawable.main_tab_category_selector_light;
          break;
       case 3:
-         var1 = 2130837684;
+    	 var1 = R.drawable.main_tab_rank_selector_light;      
          break;
       case 4:
-         var1 = 2130837677;
+    	 var1 = R.drawable.main_tab_recommend_selector_light;
          break;
       case 5:
-         var1 = 2130837648;
+         var1 = R.drawable.main_tab_app_manager_selector_light;
          break;
       case 6:
-         var1 = 2130837791;
+         var1 = R.drawable.tab_selector_light;
          break;
       case 7:
-         var1 = 2130837775;
+         var1 = R.drawable.tab_l_bg_selector_light;
          break;
       case 8:
-         var1 = 2130837783;
+         var1 = R.drawable.tab_r_bg_selector_light;
          break;
       case 9:
       case 10:
@@ -217,99 +218,99 @@ public class ThemeManager {
          var1 = 0;
          break;
       case 11:
-         var1 = 2131361816;
+         var1 = R.style.home_tab_text_style_light;
          break;
       case 12:
-         var1 = 2131361817;
+         var1 = R.style.tab_text_style_light;
          break;
       case 13:
-         var1 = 2131361806;
+         var1 = R.style.app_text_style1;
          break;
       case 14:
-         var1 = 2130837773;
+         var1 = R.drawable.tab_bg_light;
       case 15:
       case 16:
          break;
       case 17:
-         var1 = 2131361809;
+         var1 = R.style.text_style_3b;
          break;
       case 18:
-         var1 = 2131361808;
+         var1 = R.style.text_style_2b;
          break;
       case 19:
-         var1 = 2130837537;
+         var1 = R.drawable.action_bar_splitter_light;
          break;
       case 20:
-         var1 = 2130837711;
+//         var1 = R.drawable.master_breath_drawable_light;
          break;
       case 21:
-         var1 = 2130837527;
+         var1 = R.drawable.action_bar_download_light;
          break;
       case 22:
-         var1 = 2130837535;
+         var1 = R.drawable.action_bar_pending_light;
          break;
       case 23:
-         var1 = 2130837529;
+         var1 = R.drawable.action_bar_install_light;
          break;
       case 24:
-         var1 = 2130837531;
+         var1 = R.drawable.action_bar_open_light;
          break;
       case 25:
-         var1 = 2130837541;
+         var1 = R.drawable.action_bar_uninstall_light;
          break;
       case 26:
-         var1 = 2130837545;
+         var1 = R.drawable.action_bar_up_normal_light;
          break;
       case 27:
-         var1 = 2130837543;
+         var1 = R.drawable.action_bar_up_checked_light;
          break;
       case 28:
-         var1 = 2130837525;
+         var1 = R.drawable.action_bar_down_normal_light;
          break;
       case 29:
-         var1 = 2130837523;
+         var1 = R.drawable.action_bar_down_checked_light;
          break;
       case 30:
-         var1 = 2130837801;
+         var1 = R.drawable.topbar_bg_light;
          break;
       case 31:
-         var1 = 2130837607;
+         var1 = R.drawable.home_tab_bg_light;
          break;
       case 32:
-         var1 = 2130837807;
+         var1 = R.drawable.topbar_btn_search_light;
          break;
       case 33:
-         var1 = 2130837642;
+         var1 = R.drawable.logo_light;
          break;
       case 34:
-         var1 = 2130837811;
+         var1 = R.drawable.topbar_navigation_light;
          break;
       case 35:
-         var1 = 2130837809;
+         var1 = R.drawable.topbar_btn_share_light;
          break;
       case 36:
-         var1 = 2131361793;
+         var1 = R.style.text_style_1b;
          break;
       case 37:
-         var1 = 2130837515;
+         var1 = R.drawable.action_bar_btn_bg;
          break;
       case 38:
-         var1 = 2130837713;
+//         var1 = R.drawable.master_follow_selector_light;
          break;
       case 40:
-         var1 = 2130837746;
+         var1 = R.drawable.progress_horizontal_light;
          break;
       case 41:
-         var1 = 2130837521;
+         var1 = R.drawable.action_bar_cancel_light;
          break;
       case 42:
-         var1 = 2130837803;
+         var1 = R.drawable.topbar_btn_bg_light;
          break;
       case 43:
-         var1 = 2130837645;
+         var1 = R.drawable.main_tab_anim_light;
          break;
       case 44:
-         var1 = 2130837539;
+         var1 = R.drawable.action_bar_start_light;
       }
 
       return var1;
@@ -318,10 +319,10 @@ public class ThemeManager {
    public static int getResource(Session var0, int var1) {
       int var2;
       switch(var0.getTheme()) {
-      case 2131361832:
+      case R.style.gfan_theme_light:
          var2 = getLightResourceId(var1);
          break;
-      case 2131361833:
+      case R.style.gfan_theme_dark:
          var2 = getDarkResourceId(var1);
          break;
       default:

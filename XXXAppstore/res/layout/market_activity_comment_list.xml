@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:admobsdk="http://schemas.android.com/apk/res/com.unistrong.appstore">
+  xmlns:admobsdk="http://schemas.android.com/apk/res/com.xxx.appstore">
     <include android:id="@id/login" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_alignParentBottom="true" layout="@layout/actiong_bar_login" />
     <include android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_above="@id/login" android:layout_alignWithParentIfMissing="true" layout="@layout/common_list_view" />
     <ViewStub android:id="@id/view_stub_product_comment" android:layout="@layout/product_post_comment" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_alignParentBottom="true" />

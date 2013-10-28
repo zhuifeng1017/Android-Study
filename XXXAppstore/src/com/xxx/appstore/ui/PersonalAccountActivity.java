@@ -16,7 +16,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-//import com.unistrong.appstore.common.hudee.HudeeUtils;
+//import com.xxx.appstore.common.hudee.HudeeUtils;
 import com.xxx.appstore.Session;
 import com.xxx.appstore.common.MarketAPI;
 import com.xxx.appstore.common.ApiAsyncTask.ApiRequestListener;
@@ -222,7 +222,7 @@ public class PersonalAccountActivity extends BaseActivity
     setContentView(2130903063);
     IntentFilter localIntentFilter = new IntentFilter();
     localIntentFilter.addAction("com.hudee.pns.intent.REGISTRATION");
-    localIntentFilter.addCategory("com.unistrong.appstore");
+    localIntentFilter.addCategory("com.xxx.appstore");
     registerReceiver(this.mReceiver, localIntentFilter, null, null);
     initTopBar();
     initView();

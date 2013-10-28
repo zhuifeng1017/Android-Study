@@ -72,9 +72,9 @@ public class AppManagerActivity extends BaseTabActivity {
    protected void onCreate(Bundle var1) {
       super.onCreate(var1);
       this.setContentView(2130903041);
-      IntentFilter var2 = new IntentFilter("com.unistrong.appstore.download.intent");
+      IntentFilter var2 = new IntentFilter("com.xxx.appstore.download.intent");
       this.registerReceiver(this.mClickReceiver, var2);
-      IntentFilter var4 = new IntentFilter("com.unistrong.appstore.theme");
+      IntentFilter var4 = new IntentFilter("com.xxx.appstore.theme");
       this.registerReceiver(this.mThemeReceiver, var4);
       this.initTopBar();
       this.initView();

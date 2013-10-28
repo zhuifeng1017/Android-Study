@@ -213,7 +213,7 @@ public class CategoryActivity extends BaseActivity implements OnItemClickListene
       this.setContentView(2130903048);
       this.width = this.getWindowManager().getDefaultDisplay().getWidth();
       this.mInflater = LayoutInflater.from(this.getApplicationContext());
-      IntentFilter var2 = new IntentFilter("com.unistrong.appstore.theme");
+      IntentFilter var2 = new IntentFilter("com.xxx.appstore.theme");
       this.registerReceiver(this.mThemeReceiver, var2);
       this.initAnimation();
       this.initTopBar();

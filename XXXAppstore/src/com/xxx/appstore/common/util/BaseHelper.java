@@ -6,10 +6,8 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface.OnClickListener;
 import android.util.Log;
-
 import com.xxx.appstore.common.util.Utils;
-import com.xxx.appstore.ui.PayMainActivity;
-
+//import com.xxx.appstore.ui.PayMainActivity;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -117,7 +115,7 @@ public class BaseHelper {
       var5.setMessage(var2);
       var5.setIndeterminate(var3);
       var5.setCancelable(false);
-      var5.setOnCancelListener(new PayMainActivity.AlixOnCancelListener((Activity)var0));
+ //     var5.setOnCancelListener(new PayMainActivity.AlixOnCancelListener((Activity)var0));
       var5.show();
       return var5;
    }

@@ -1,9 +1,7 @@
 package com.xxx.appstore.common.util;
 
 import android.text.TextUtils;
-
 import com.xxx.appstore.common.util.Utils;
-
 import java.text.DecimalFormat;
 
 public class StringUtils {

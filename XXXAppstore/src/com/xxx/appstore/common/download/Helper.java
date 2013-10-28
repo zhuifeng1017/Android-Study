@@ -9,9 +9,7 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.os.SystemClock;
 import android.webkit.MimeTypeMap;
-
 import com.xxx.appstore.common.util.Utils;
-
 import java.io.File;
 import java.util.Random;
 
@@ -19,261 +17,309 @@ public class Helper
 {
   public static Random rnd = new Random(SystemClock.uptimeMillis());
 
-  private static String chooseExtensionFromFilename(String paramString1, String paramString2, int paramInt)
-  {
-    String str1 = null;
-    if (paramString1 != null)
-    {
-      int i = paramString2.lastIndexOf('.');
-      String str2 = MimeTypeMap.getSingleton().getMimeTypeFromExtension(paramString2.substring(i + 1));
-      if ((str2 == null) || (!str2.equalsIgnoreCase(paramString1)))
-      {
-        str1 = chooseExtensionFromMimeType(paramString1, false);
-        if (str1 == null) {
-        	 Utils.D("couldn't find extension for " + paramString1);
-        	 
-        	Utils.D("keeping extension");
-            str1 = paramString2.substring(paramInt);
-        }
-        else {
-        	Utils.D("substituting extension from type");
-        }
+  private static String chooseExtensionFromFilename(String mimeType,
+          String filename, int dotIndex) {
+      String extension = null;
+      if (mimeType != null) {
+          // Compare the last segment of the extension against the mime type.
+          // If there's a mismatch, discard the entire extension.
+          int lastDotIndex = filename.lastIndexOf('.');
+          String typeFromExt = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
+                  filename.substring(lastDotIndex + 1));
+          if (typeFromExt == null || !typeFromExt.equalsIgnoreCase(mimeType)) {
+              extension = chooseExtensionFromMimeType(mimeType, false);
+              if (extension != null) {
+            	  Utils.D("substituting extension from type");
+              } else {
+            	  Utils.D("couldn't find extension for " + mimeType);
+              }
+          }
       }
-    }
-    return str1;
-
+      if (extension == null) {
+    	  Utils.D("keeping extension");
+          extension = filename.substring(dotIndex);
+      }
+      return extension;
   }
-
-  private static String chooseExtensionFromMimeType(String paramString, boolean paramBoolean)
-  {
-    String str = null;
-    if (paramString != null)
-    {
-      str = MimeTypeMap.getSingleton().getExtensionFromMimeType(paramString);
-      if (str != null)
-      {
-        Utils.D("adding extension from MIME type.");
-        str = "." + str;
+  
+  private static String chooseExtensionFromMimeType(String mimeType, boolean useDefaults) {
+      String extension = null;
+      if (mimeType != null) {
+          extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+          if (extension != null) {
+        	  Utils.D("adding extension from type");
+              extension = "." + extension;
+          } else {
+        	  Utils.D("couldn't find extension for " + mimeType);
+          }
       }
-      else
-      {
-    	  Utils.D("couldn't find extension for " + paramString);
-          if (paramString.toLowerCase().startsWith("text/"))
-            if (paramString.equalsIgnoreCase("text/html"))
-            {
-              Utils.D("adding default html extension");
-              str = ".html";
-            }
-            else if (paramBoolean)
-            {
-              Utils.D("adding default text extension");
-              str = ".txt";
-            }
-            else
-            {
-            	Utils.D("adding default binary extension");
-                str = ".bin";
-            }
+      if (extension == null) {
+          if (mimeType != null && mimeType.toLowerCase().startsWith("text/")) {
+              if (mimeType.equalsIgnoreCase("text/html")) {
+            	  Utils.D("adding default html extension");
+                  extension = Constants.DEFAULT_DL_HTML_EXTENSION;
+              } else if (useDefaults) {
+            	  Utils.D("adding default text extension");
+                  extension = Constants.DEFAULT_DL_TEXT_EXTENSION;
+              }
+          } else if (useDefaults) {
+        	  Utils.D("adding default binary extension");
+              extension = Constants.DEFAULT_DL_BINARY_EXTENSION;
+          }
       }
-    }
-    return str;
+      return extension;
   }
+  
+  private static String chooseFilename(String url, String hint,
+          String contentLocation, int destination) {
+      String filename = null;
 
-  private static String chooseFilename(String paramString1, String paramString2, String paramString3, int paramInt)
-  {
-    Object localObject = null;
-    String str2;
-    return "fuck";
-//    int j;
-//    if ((0 == 0) && (paramString2 != null) && (!paramString2.endsWith("/")))
-//    {
-//      Utils.V("getting filename from hint");
-//      int k = 1 + paramString2.lastIndexOf('/');
-//      if (k > 0)
-//        localObject = paramString2.substring(k);
-//    }
-//    else if ((localObject == null) && (paramString3 != null))
-//    {
-//      str2 = Uri.decode(paramString3);
-//      if ((str2 != null) && (!str2.endsWith("/")) && (str2.indexOf('?') < 0))
-//      {
-//        Utils.V("getting filename from content-location");
-//        j = 1 + str2.lastIndexOf('/');
-//        if (j <= 0)
-//          break label210;
-//      }
-//    }
-//    label210: for (localObject = str2.substring(j); ; localObject = str2)
-//    {
-//      if (localObject == null)
-//      {
-//        String str1 = Uri.decode(paramString1);
-//        if ((str1 != null) && (!str1.endsWith("/")) && (str1.indexOf('?') < 0))
-//        {
-//          int i = 1 + str1.lastIndexOf('/');
-//          if (i > 0)
-//          {
-//            Utils.V("getting filename from uri");
-//            localObject = str1.substring(i);
+      // First, try to use the hint from the application, if there's one
+      if (filename == null && hint != null && !hint.endsWith("/")) {
+//          if (Constants.LOGVV) {
+    	  Utils.D("getting filename from hint");
 //          }
-//        }
-//      }
-//      if (localObject == null)
-//      {
-//        Utils.V("using default filename");
-//        localObject = "downloadfile";
-//      }
-//      return replaceInvalidVfatCharacters((String)localObject);
-//      localObject = paramString2;
-//      break;
-//    }
-  }
-
-  private static String chooseFullPath(Context paramContext, String paramString1, String paramString2, String paramString3, String paramString4, int paramInt1, long paramLong, int paramInt2)
-    throws Helper.GenerateSaveFileError
-  {
-	  return "fuck";
-//    File localFile = locateDestinationDirectory(paramContext, paramString4, paramInt2, paramInt1, paramLong);
-//    String str1 = chooseFilename(paramString1, paramString2, paramString3, paramInt1);
-//    int i = str1.indexOf('.');
-//    String str5;
-//    String str3;
-//    if (i < 0)
-//    {
-//      str5 = chooseExtensionFromMimeType(paramString4, true);
-//      str3 = str1;
-//    }
-//    String str2;
-//    for (Object localObject = str5; ; localObject = str2)
-//    {
-//      boolean bool = "recovery".equalsIgnoreCase(str3 + (String)localObject);
-//      String str4 = localFile.getPath() + File.separator + str3;
-//      Utils.V("target file: " + str4 + (String)localObject);
-//      return chooseUniqueFilename(paramInt1, str4, (String)localObject, bool);
-//      str2 = chooseExtensionFromFilename(paramString4, str1, i);
-//      str3 = str1.substring(0, i);
-//    }
-  }
-
-  private static String chooseUniqueFilename(int paramInt, String paramString1, String paramString2, boolean paramBoolean)
-  {
-	  return "fuck";
-//    int i = 1;
-//    Object localObject = paramString1 + paramString2;
-//    if ((!new File((String)localObject).exists()) && ((!paramBoolean) || (paramInt != i)));
-//    while (true)
-//    {
-//      return localObject;
-//      String str1 = paramString1 + "-";
-//      int j = i;
-//      while (true)
-//      {
-//        if (j >= 1000000000)
-//          break label208;
-//        int k = i;
-//        for (int m = 0; ; m++)
-//        {
-//          if (m >= 9)
-//            break label194;
-//          String str2 = str1 + k + paramString2;
-//          if (!new File(str2).exists())
-//          {
-//            localObject = str2;
-//            break;
+          int index = hint.lastIndexOf('/') + 1;
+          if (index > 0) {
+              filename = hint.substring(index);
+          } else {
+              filename = hint;
+          }
+      }
+  
+//   // If we couldn't do anything with the hint, move toward the content disposition
+//      if (filename == null && contentDisposition != null) {
+//          filename = parseContentDisposition(contentDisposition);
+//          if (filename != null) {
+////              if (Constants.LOGVV) {
+//        	  Utils.D("getting filename from content-disposition");
+////              }
+//              int index = filename.lastIndexOf('/') + 1;
+//              if (index > 0) {
+//                  filename = filename.substring(index);
+//              }
 //          }
-//          Utils.V("file with sequence number " + k + " exists");
-//          k += 1 + rnd.nextInt(j);
-//        }
-//        label194: j *= 10;
-//        i = k;
 //      }
-//      label208: localObject = null;
-//    }
+
+      // If we still have nothing at this point, try the content location
+      if (filename == null && contentLocation != null) {
+          String decodedContentLocation = Uri.decode(contentLocation);
+          if (decodedContentLocation != null
+                  && !decodedContentLocation.endsWith("/")
+                  && decodedContentLocation.indexOf('?') < 0) {
+//              if (Constants.LOGVV) {
+        	  Utils.D("getting filename from content-location");
+//              }
+              int index = decodedContentLocation.lastIndexOf('/') + 1;
+              if (index > 0) {
+                  filename = decodedContentLocation.substring(index);
+              } else {
+                  filename = decodedContentLocation;
+              }
+          }
+      }
+
+      // If all the other http-related approaches failed, use the plain uri
+      if (filename == null) {
+          String decodedUrl = Uri.decode(url);
+          if (decodedUrl != null
+                  && !decodedUrl.endsWith("/") && decodedUrl.indexOf('?') < 0) {
+              int index = decodedUrl.lastIndexOf('/') + 1;
+              if (index > 0) {
+//                  if (Constants.LOGVV) {
+            	  Utils.D("getting filename from uri");
+//                  }
+                  filename = decodedUrl.substring(index);
+              }
+          }
+      }
+
+      // Finally, if couldn't get filename from URI, get a generic filename
+      if (filename == null) {
+//          if (Constants.LOGVV) {
+    	  Utils.D("using default filename");
+//          }
+          filename = Constants.DEFAULT_DL_FILENAME;
+      }
+
+      // The VFAT file system is assumed as target for downloads.
+      // Replace invalid characters according to the specifications of VFAT.
+      filename = replaceInvalidVfatCharacters(filename);
+
+      return filename;
+  }
+  
+	private static String chooseFullPath(Context context, String url,
+			String hint, String contentLocation,String mimeType,
+			 int destination, long contentLength, int source)
+			throws GenerateSaveFileError {
+		File base = locateDestinationDirectory(context, mimeType, source, destination, contentLength);
+		String filename = chooseFilename(url, hint, contentLocation, destination);
+
+		// Split filename between base and extension
+		// Add an extension if filename does not have one
+		String extension = null;
+		int dotIndex = filename.indexOf('.');
+		if (dotIndex < 0) {
+			extension = chooseExtensionFromMimeType(mimeType, true);
+		} else {
+			extension = chooseExtensionFromFilename(mimeType, filename, dotIndex);
+			filename = filename.substring(0, dotIndex);
+		}
+
+		boolean recoveryDir = Constants.RECOVERY_DIRECTORY
+				.equalsIgnoreCase(filename + extension);
+
+		filename = base.getPath() + File.separator + filename;
+
+//		if (Constants.LOGVV) {
+			Utils.V("target file: " + filename + extension);
+//		}
+
+		return chooseUniqueFilename(destination, filename, extension, recoveryDir);
+}
+
+	private static String chooseUniqueFilename(int destination, String filename,
+            String extension, boolean recoveryDir) throws GenerateSaveFileError {
+        String fullFilename = filename + extension;
+        if (!new File(fullFilename).exists()
+                && (!recoveryDir ||
+                (destination != DownloadManager.Impl.DESTINATION_CACHE_PARTITION))) {
+            return fullFilename;
+        }
+        filename = filename + Constants.FILENAME_SEQUENCE_SEPARATOR;
+        /*
+        * This number is used to generate partially randomized filenames to avoid
+        * collisions.
+        * It starts at 1.
+        * The next 9 iterations increment it by 1 at a time (up to 10).
+        * The next 9 iterations increment it by 1 to 10 (random) at a time.
+        * The next 9 iterations increment it by 1 to 100 (random) at a time.
+        * ... Up to the point where it increases by 100000000 at a time.
+        * (the maximum value that can be reached is 1000000000)
+        * As soon as a number is reached that generates a filename that doesn't exist,
+        *     that filename is used.
+        * If the filename coming in is [base].[ext], the generated filenames are
+        *     [base]-[sequence].[ext].
+        */
+        int sequence = 1;
+        for (int magnitude = 1; magnitude < 1000000000; magnitude *= 10) {
+            for (int iteration = 0; iteration < 9; ++iteration) {
+                fullFilename = filename + sequence + extension;
+                if (!new File(fullFilename).exists()) {
+                    return fullFilename;
+                }
+//                if (Constants.LOGVV) {
+                Utils.V("file with sequence number " + sequence + " exists");
+//                }
+                sequence += rnd.nextInt(magnitude) + 1;
+            }
+        }
+        throw new GenerateSaveFileError(DownloadManager.Impl.STATUS_FILE_ERROR,
+                "failed to generate an unused filename on internal download storage");
+    }
+  
+  /**
+   * Creates a filename (where the file should be saved) from info about a download.
+   */
+  public static String generateSaveFile(
+          Context context,
+          String url,
+          String hint,
+          String contentLocation,
+          String mimeType,
+          int destination,
+          long contentLength,
+          int source) throws GenerateSaveFileError {
+	  return chooseFullPath(context, url, hint, contentLocation, mimeType, destination, contentLength, source);
   }
 
-  public static String generateSaveFile(Context paramContext, String paramString1, String paramString2, String paramString3, String paramString4, int paramInt1, long paramLong, int paramInt2)
-    throws Helper.GenerateSaveFileError
+  public static Integer getActiveNetworkType(Context context)
   {
-    return chooseFullPath(paramContext, paramString1, paramString2, paramString3, paramString4, paramInt1, paramLong, paramInt2);
-  }
-
-  public static Integer getActiveNetworkType(Context paramContext)
-  {
-    ConnectivityManager localConnectivityManager = (ConnectivityManager)paramContext.getSystemService("connectivity");
-    Integer localInteger;
-    if (localConnectivityManager == null)
+    ConnectivityManager cm = (ConnectivityManager)context.getSystemService("connectivity");
+    Integer integer;
+    if (cm == null)
     {
       Utils.D("couldn't get connectivity manager");
-      localInteger = null;
+      integer = null;
     }
-
-      NetworkInfo localNetworkInfo = localConnectivityManager.getActiveNetworkInfo();
+    else {
+      NetworkInfo localNetworkInfo = cm.getActiveNetworkInfo();
       if (localNetworkInfo == null)
       {
         Utils.D("network is not available");
-        localInteger = null;
+        integer = null;
       }
       else
       {
-        localInteger = Integer.valueOf(localNetworkInfo.getType());
+    	  integer = Integer.valueOf(localNetworkInfo.getType());
       }
-    return localInteger;
+    }
+    return integer;
   }
 
-  public static long getAvailableBytes(File paramFile)
-  {
-    StatFs localStatFs = new StatFs(paramFile.getPath());
-    return (localStatFs.getAvailableBlocks() - 4L) * localStatFs.getBlockSize();
+  /**
+   * @return the number of bytes available on the filesystem rooted at the given File
+   */
+  public static long getAvailableBytes(File root) {
+      StatFs stat = new StatFs(root.getPath());
+      // put a bit of margin (in case creating the file grows the system by a few blocks)
+      long availableBlocks = (long) stat.getAvailableBlocks() - 4;
+      return stat.getBlockSize() * availableBlocks;
   }
 
-  private static File getCacheDestination(Context paramContext, long paramLong)
+  private static File getCacheDestination(Context context, long contentLength)
     throws Helper.GenerateSaveFileError
   {
-    File localFile = paramContext.getFilesDir();
-    if (getAvailableBytes(localFile) < paramLong)
+    File base = context.getFilesDir();
+    if (getAvailableBytes(base) < contentLength)
     {
       Utils.D("download aborted - not enough internal free space");
-      throw new GenerateSaveFileError(498, "not enough free space in internal download storage, unable to free any more");
+      throw new GenerateSaveFileError(DownloadManager.Impl.STATUS_INSUFFICIENT_SPACE_ERROR, "not enough free space in internal download storage, unable to free any more");
     }
-    return localFile;
+    return base;
   }
 
-  private static File getExternalDestination(long paramLong, int paramInt, String paramString)
-    throws Helper.GenerateSaveFileError
-  {
-		if (!isExternalMediaMounted())
-			throw new GenerateSaveFileError(499, "external media not mounted");
-		File localFile1 = Environment.getExternalStorageDirectory();
-		if (getAvailableBytes(localFile1) < paramLong) {
-			Utils.D("download aborted - not enough external free space");
-			throw new GenerateSaveFileError(498,
-					"insufficient space on external media");
-		}
-		File localFile2;
+  private static File getExternalDestination(long contentLength,int paramInt, String paramString) throws GenerateSaveFileError {
+      if (!isExternalMediaMounted()) {
+          throw new GenerateSaveFileError(DownloadManager.Impl.STATUS_DEVICE_NOT_FOUND_ERROR,
+                  "external media not mounted");
+      }
+
+      File root = Environment.getExternalStorageDirectory();
+      if (getAvailableBytes(root) < contentLength) {
+          // Insufficient space.
+    	  Utils.D("download aborted - not enough free space");
+          throw new GenerateSaveFileError(DownloadManager.Impl.STATUS_INSUFFICIENT_SPACE_ERROR,
+                  "insufficient space on external media");
+      }
+
+      File base;
 		if (paramInt == 0)
-			localFile2 = new File(localFile1.getPath(), "gfan/market");
+			base = new File(root.getPath(), "gfan/market");
 		else if (1 == paramInt)
-			localFile2 = new File(localFile1.getPath(), "gfan/bbs");
+			base = new File(root.getPath(), "gfan/bbs");
 		else if (2 == paramInt)
-			localFile2 = new File(localFile1.getPath(), "gfan/cloud");
+			base = new File(root.getPath(), "gfan/cloud");
 		else
-			localFile2 = null;
-
-		if ((null != localFile2) && (!localFile2.isDirectory()) && (!localFile2.mkdirs())) {
-			throw new GenerateSaveFileError(492,
-					"unable to create external downloads directory "
-							+ localFile2.getPath());
-		}
-		return localFile2;
-	}
-
-	public static boolean isExternalMediaMounted() {
-		boolean bool = false;
-		if (!Environment.getExternalStorageState().equals("mounted"))
-			Utils.D("no external storage");
-		else
-			bool = true;
-		return bool;
+			base = null;
+		
+      if (!base.isDirectory() && !base.mkdirs()) {
+          // Can't create download directory, e.g. because a file called "download"
+          // already exists at the root level, or the SD card filesystem is read-only.
+          throw new GenerateSaveFileError(DownloadManager.Impl.STATUS_FILE_ERROR,
+                  "unable to create external downloads directory " + base.getPath());
+      }
+      return base;
+  }
+  
+  public static boolean isExternalMediaMounted() {
+      if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+          // No SD card found.
+    	  Utils.D("no external storage");
+          return false;
+      }
+      return true;
   }
 
 	public static boolean isFilenameValid(String paramString, int paramInt) {
@@ -294,44 +340,50 @@ public class Helper
 		return bool;
 	}
 
-  public static boolean isNetworkAvailable(Context paramContext)
+  public static boolean isNetworkAvailable(Context context)
   {
-	  return true;
-//    ConnectivityManager localConnectivityManager = (ConnectivityManager)paramContext.getSystemService("connectivity");
-//    if (localConnectivityManager == null)
-//      Utils.D("couldn't get connectivity manager");
-//    label75: 
-//    while (true)
-//    {
-//      Utils.D("network is not available");
-//      boolean bool = false;
-//      return bool;
-//      NetworkInfo[] arrayOfNetworkInfo = localConnectivityManager.getAllNetworkInfo();
-//      if (arrayOfNetworkInfo != null)
-//        for (int i = 0; ; i++)
-//        {
-//          if (i >= arrayOfNetworkInfo.length)
-//            break label75;
-//          if (arrayOfNetworkInfo[i].getState() == NetworkInfo.State.CONNECTED)
-//          {
-//            Utils.D("network is available");
-//            bool = true;
-//            break;
-//          }
-//        }
-//    }
+    ConnectivityManager cm = (ConnectivityManager)context.getSystemService("connectivity");
+    if (cm == null) {
+      Utils.D("couldn't get connectivity manager");
+      return false;
+    }
+  
+      NetworkInfo[] arrNetworkInfo = cm.getAllNetworkInfo();
+      if (arrNetworkInfo != null) {
+        for (int i = 0; i<arrNetworkInfo.length; i++) {
+          if (arrNetworkInfo[i].getState() == NetworkInfo.State.CONNECTED)
+          {
+            Utils.D("network is available");
+            return true;
+          }
+        }
+      }
+      Utils.D("network is not available");
+      return false;
   }
 
-  private static File locateDestinationDirectory(Context paramContext, String paramString, int paramInt1, int paramInt2, long paramLong)
-    throws Helper.GenerateSaveFileError
-  {
-	  File localFile;
-    if (paramInt2 == 1)
-    	localFile = getCacheDestination(paramContext, paramLong); 
-    else
-    	localFile = getExternalDestination(paramLong, paramInt1, paramString);
-      return localFile;
-  }
+  private static File locateDestinationDirectory(Context context, String mimeType,int source,
+          int destination, long contentLength)
+	throws GenerateSaveFileError {
+	// DRM messages should be temporarily stored internally and then passed to
+	// the DRM content provider
+	if (destination == DownloadManager.Impl.DESTINATION_CACHE_PARTITION) {
+		return getCacheDestination(context, contentLength);
+	}
+	
+	return getExternalDestination(contentLength,source,mimeType);
+}
+  
+//  private static File locateDestinationDirectory(Context paramContext, String paramString, int paramInt1, int paramInt2, long paramLong)
+//    throws Helper.GenerateSaveFileError
+//  {
+//	  File localFile;
+//    if (paramInt2 == 1)
+//    	localFile = getCacheDestination(paramContext, paramLong); 
+//    else
+//    	localFile = getExternalDestination(paramLong, paramInt1, paramString);
+//      return localFile;
+//  }
 
   private static String replaceInvalidVfatCharacters(String paramString)
   {

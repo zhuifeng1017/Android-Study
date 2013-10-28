@@ -1,7 +1,6 @@
 package com.xxx.appstore.common.util;
 
 import com.xxx.appstore.common.util.Utils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;

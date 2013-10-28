@@ -156,22 +156,26 @@ public final class AndroidHttpClient implements HttpClient {
       return newInstance(var0, (Context)null);
    }
 
-   public static AndroidHttpClient newInstance(String var0, Context var1) {
-      BasicHttpParams var2 = new BasicHttpParams();
-      HttpConnectionParams.setStaleCheckingEnabled(var2, false);
-      HttpConnectionParams.setConnectionTimeout(var2, 20000);
-      HttpConnectionParams.setSoTimeout(var2, 20000);
-      HttpConnectionParams.setSocketBufferSize(var2, 8192);
-      ConnManagerParams.setMaxTotalConnections(var2, 60);
-      ConnPerRouteBean var3 = new ConnPerRouteBean(20);
-      var3.setMaxForRoute(new HttpRoute(new HttpHost("locahost", 80)), 20);
-      ConnManagerParams.setMaxConnectionsPerRoute(var2, var3);
-      HttpClientParams.setRedirecting(var2, false);
-      HttpProtocolParams.setUserAgent(var2, var0);
-      SchemeRegistry var4 = new SchemeRegistry();
-      var4.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-      var4.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
-      return new AndroidHttpClient(new ThreadSafeClientConnManager(var2, var4), var2);
+   public static AndroidHttpClient newInstance(String userAgent, Context context) {
+      BasicHttpParams httpParams = new BasicHttpParams();
+      HttpConnectionParams.setStaleCheckingEnabled(httpParams, false);
+      HttpConnectionParams.setConnectionTimeout(httpParams, 20000);
+      HttpConnectionParams.setSoTimeout(httpParams, 20000);
+      HttpConnectionParams.setSocketBufferSize(httpParams, 8192);
+      // 设置最大连接数
+      ConnManagerParams.setMaxTotalConnections(httpParams, 60);
+      // 设置每个路由最大连接数  
+      ConnPerRouteBean connPerRoute = new ConnPerRouteBean(20);
+      connPerRoute.setMaxForRoute(new HttpRoute(new HttpHost("locahost", 80)), 20);
+      ConnManagerParams.setMaxConnectionsPerRoute(httpParams, connPerRoute);
+      
+      HttpClientParams.setRedirecting(httpParams, false);
+      // 设置HttpHeader User-Agent
+      HttpProtocolParams.setUserAgent(httpParams, userAgent);
+      SchemeRegistry registry = new SchemeRegistry();
+      registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+      registry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+      return new AndroidHttpClient(new ThreadSafeClientConnManager(httpParams, registry), httpParams);
    }
 
    private static String toCurl(HttpUriRequest var0, boolean var1) throws IOException {

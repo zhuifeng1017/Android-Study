@@ -18,402 +18,449 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.net.Uri;
 import android.text.TextUtils;
-
 import com.xxx.appstore.common.download.DownloadManager;
 import com.xxx.appstore.common.download.DownloadService;
 import com.xxx.appstore.common.util.Utils;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class DownloadProvider extends ContentProvider {
 
+/**
+ * Allows application to interact with the download manager.
+ */
+public final class DownloadProvider extends ContentProvider {
+    /** Database filename */
    private static final String DB_NAME = "downloads.db";
+    /** Name of table in the database */
    private static final String DB_TABLE = "downloads";
+    /** Current database version */
    private static final int DB_VERSION = 109;
+    /** MIME type for the entire download list */
    private static final String DOWNLOAD_LIST_TYPE = "vnd.android.cursor.dir/download";
+    /** MIME type for an individual download */
    private static final String DOWNLOAD_TYPE = "vnd.android.cursor.item/download";
+
+    /** URI matcher used to recognize URIs sent by applications */
+    private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+    /** URI matcher constant for the URI of all downloads belonging to the calling UID */
    private static final int MY_DOWNLOADS = 1;
+    /** URI matcher constant for the URI of an individual download belonging to the calling UID */
    private static final int MY_DOWNLOADS_ID = 2;
-   private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
    private SQLiteOpenHelper mOpenHelper = null;
 
 
    static {
-      sURIMatcher.addURI("gfan_downloads_xxx", "my_downloads", 1);
-      sURIMatcher.addURI("gfan_downloads_xxx", "my_downloads/#", 2);
+      sURIMatcher.addURI("gfan_downloads_xxx", "my_downloads", MY_DOWNLOADS);
+      sURIMatcher.addURI("gfan_downloads_xxx", "my_downloads/#", MY_DOWNLOADS_ID);
    }
 
-   private static final void copyInteger(String var0, ContentValues var1, ContentValues var2) {
-      Integer var3 = var1.getAsInteger(var0);
-      if(var3 != null) {
-         var2.put(var0, var3);
-      }
-
+   private static final void copyInteger(String key, ContentValues from, ContentValues to) {
+       Integer i = from.getAsInteger(key);
+       if (i != null) {
+           to.put(key, i);
+       }
    }
 
-   private static final void copyString(String var0, ContentValues var1, ContentValues var2) {
-      String var3 = var1.getAsString(var0);
-      if(var3 != null) {
-         var2.put(var0, var3);
-      }
-
+   private static final void copyString(String key, ContentValues from, ContentValues to) {
+       String s = from.getAsString(key);
+       if (s != null) {
+           to.put(key, s);
+       }
    }
 
-   private static final void copyStringWithDefault(String var0, ContentValues var1, ContentValues var2, String var3) {
-      copyString(var0, var1, var2);
-      if(!var2.containsKey(var0)) {
-         var2.put(var0, var3);
-      }
-
+   private static final void copyStringWithDefault(String key, ContentValues from,
+           ContentValues to, String defaultValue) {
+       copyString(key, from, to);
+       if (!to.containsKey(key)) {
+           to.put(key, defaultValue);
+       }
    }
 
-   private String getDownloadIdFromUri(Uri var1) {
-      return (String)var1.getPathSegments().get(1);
+   private String getDownloadIdFromUri(final Uri uri) {
+       return uri.getPathSegments().get(1);
    }
 
-   private DownloadProvider.SqlSelection getWhereClause(Uri var1, String var2, String[] var3, int var4) {
-      DownloadProvider.SqlSelection var5 = new DownloadProvider.SqlSelection(null);
-      var5.appendClause(var2, var3);
-      if(var4 == 2) {
-         String[] var6 = new String[]{this.getDownloadIdFromUri(var1)};
-         var5.appendClause("_id = ?", var6);
-      }
+   private SqlSelection getWhereClause(final Uri uri, final String where, final String[] whereArgs,
+           int uriMatch) {
+       SqlSelection selection = new SqlSelection();
+       selection.appendClause(where, whereArgs);
+       if (uriMatch == MY_DOWNLOADS_ID) {
+           selection.appendClause(DownloadManager.Impl.COLUMN_ID + " = ?", getDownloadIdFromUri(uri));
+       }
 
-      return var5;
+       return selection;
+   }
+   
+   private void logVerboseQueryInfo(String[] projection, final String selection,
+           final String[] selectionArgs, final String sort, SQLiteDatabase db) {
+       java.lang.StringBuilder sb = new java.lang.StringBuilder();
+       sb.append("starting query, database is ");
+       if (db != null) {
+           sb.append("not ");
+       }
+       sb.append("null; ");
+       if (projection == null) {
+           sb.append("projection is null; ");
+       } else if (projection.length == 0) {
+           sb.append("projection is empty; ");
+       } else {
+           for (int i = 0; i < projection.length; ++i) {
+               sb.append("projection[");
+               sb.append(i);
+               sb.append("] is ");
+               sb.append(projection[i]);
+               sb.append("; ");
+           }
+       }
+       sb.append("selection is ");
+       sb.append(selection);
+       sb.append("; ");
+       if (selectionArgs == null) {
+           sb.append("selectionArgs is null; ");
+       } else if (selectionArgs.length == 0) {
+           sb.append("selectionArgs is empty; ");
+       } else {
+           for (int i = 0; i < selectionArgs.length; ++i) {
+               sb.append("selectionArgs[");
+               sb.append(i);
+               sb.append("] is ");
+               sb.append(selectionArgs[i]);
+               sb.append("; ");
+           }
+       }
+       sb.append("sort is ");
+       sb.append(sort);
+       sb.append(".");
+       Utils.V(sb.toString());
    }
 
-   private void logVerboseQueryInfo(String[] var1, String var2, String[] var3, String var4, SQLiteDatabase var5) {
-      StringBuilder var6 = new StringBuilder();
-      var6.append("starting query, database is ");
-      if(var5 != null) {
-         var6.append("not ");
-      }
+   /**
+    * Notify of a change through both URIs (/my_downloads and /all_downloads)
+    * @param uri either URI for the changed download(s)
+    * @param uriMatch the match ID from {@link #sURIMatcher}
+    */
+   private void notifyContentChanged(final Uri uri, int uriMatch) {
+       Long downloadId = null;
+       if (uriMatch == MY_DOWNLOADS_ID) {
+           downloadId = Long.parseLong(getDownloadIdFromUri(uri));
+       }
+       Uri uriToNotify = DownloadManager.Impl.CONTENT_URI;
+       if (downloadId != null) {
+           uriToNotify = ContentUris.withAppendedId(uriToNotify, downloadId);
+       }
+       getContext().getContentResolver().notifyChange(uriToNotify, null);
+   }
 
-      var6.append("null; ");
-      if(var1 == null) {
-         var6.append("projection is null; ");
-      } else if(var1.length == 0) {
-         var6.append("projection is empty; ");
-      } else {
-         for(int var9 = 0; var9 < var1.length; ++var9) {
-            var6.append("projection[");
-            var6.append(var9);
-            var6.append("] is ");
-            var6.append(var1[var9]);
-            var6.append("; ");
+   /**
+    * Deletes a row in the database
+    */
+   @Override
+   public int delete(final Uri uri, final String where,
+           final String[] whereArgs) {
+
+       SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+       int count;
+       int match = sURIMatcher.match(uri);
+       switch (match) {
+           case MY_DOWNLOADS:
+           case MY_DOWNLOADS_ID:
+               SqlSelection selection = getWhereClause(uri, where, whereArgs, match);
+               count = db.delete(DB_TABLE, selection.getSelection(), selection.getParameters());
+               break;
+           default:
+        	   Utils.D("deleting unknown/invalid URI: " + uri);
+               throw new UnsupportedOperationException("Cannot delete URI: " + uri);
+       }
+       notifyContentChanged(uri, match);
+       return count;
+   }
+
+   /**
+    * Returns the content-provider-style MIME types of the various
+    * types accessible through this content provider.
+    */
+   @Override
+   public String getType(final Uri uri) {
+       int match = sURIMatcher.match(uri);
+       switch (match) {
+           case MY_DOWNLOADS: {
+               return DOWNLOAD_LIST_TYPE;
+           }
+           case MY_DOWNLOADS_ID: {
+               return DOWNLOAD_TYPE;
+           }
+           default: {
+               Utils.D("calling getType on an unknown URI: " + uri);
+               throw new IllegalArgumentException("Unknown URI: " + uri);
+           }
+       }
+   }
+   
+   /**
+    * Inserts a row in the database
+    */
+   @Override
+   public Uri insert(final Uri uri, final ContentValues values) {
+      SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+
+      ContentValues filteredValues = new ContentValues();
+      copyString(DownloadManager.Impl.COLUMN_URI, values, filteredValues);
+      copyString("entity", values, filteredValues);
+      copyString("hint", values, filteredValues);
+      copyString("mimetype", values, filteredValues);
+      copyString("package_name", values, filteredValues);
+      copyString("md5", values, filteredValues);
+      copyInteger("destination", values, filteredValues);
+      copyInteger("visibility", values, filteredValues);
+      copyInteger("control", values, filteredValues);
+      copyInteger("source", values, filteredValues);
+      copyInteger("allow_network", values, filteredValues);
+      filteredValues.put("status", Integer.valueOf(190));
+      filteredValues.put("lastmod", Long.valueOf(System.currentTimeMillis()));
+      String pckg = values.getAsString(DownloadManager.Impl.COLUMN_NOTIFICATION_PACKAGE);
+      String clazz = values.getAsString(DownloadManager.Impl.COLUMN_NOTIFICATION_CLASS);
+      if(pckg != null) {
+    	  filteredValues.put("notificationpackage", pckg);
+         if(clazz != null) {
+        	 filteredValues.put("notificationclass",clazz);
          }
       }
 
-      var6.append("selection is ");
-      var6.append(var2);
-      var6.append("; ");
-      if(var3 == null) {
-         var6.append("selectionArgs is null; ");
-      } else if(var3.length == 0) {
-         var6.append("selectionArgs is empty; ");
-      } else {
-         for(int var18 = 0; var18 < var3.length; ++var18) {
-            var6.append("selectionArgs[");
-            var6.append(var18);
-            var6.append("] is ");
-            var6.append(var3[var18]);
-            var6.append("; ");
-         }
-      }
+      copyString("notificationextras", values, filteredValues);
+      copyStringWithDefault("title", values, filteredValues, "");
+      copyStringWithDefault("description", values, filteredValues, "");
+      filteredValues.put("total_bytes", Integer.valueOf(-1));
+      filteredValues.put("current_bytes", Integer.valueOf(0));
+      Context context = getContext();
+      context.startService(new Intent(context, DownloadService.class));
+      long rowID = db.insert(DB_TABLE, (String)null, filteredValues);
 
-      var6.append("sort is ");
-      var6.append(var4);
-      var6.append(".");
-      Utils.V(var6.toString());
-   }
-
-   private void notifyContentChanged(Uri var1, int var2) {
-      Long var3;
-      if(var2 == 2) {
-         var3 = Long.valueOf(Long.parseLong(this.getDownloadIdFromUri(var1)));
-      } else {
-         var3 = null;
-      }
-
-      Uri var4 = DownloadManager.Impl.CONTENT_URI;
-      Uri var5;
-      if(var3 != null) {
-         var5 = ContentUris.withAppendedId(var4, var3.longValue());
-      } else {
-         var5 = var4;
-      }
-
-      this.getContext().getContentResolver().notifyChange(var5, (ContentObserver)null);
-   }
-
-   public int delete(Uri var1, String var2, String[] var3) {
-      SQLiteDatabase var4 = this.mOpenHelper.getWritableDatabase();
-      int var5 = sURIMatcher.match(var1);
-      switch(var5) {
-      case 1:
-      case 2:
-         DownloadProvider.SqlSelection var6 = this.getWhereClause(var1, var2, var3, var5);
-         int var7 = var4.delete(DB_TABLE, var6.getSelection(), var6.getParameters());
-         this.notifyContentChanged(var1, var5);
-         return var7;
-      default:
-         Utils.D("deleting unknown/invalid URI: " + var1);
-         throw new UnsupportedOperationException("Cannot delete URI: " + var1);
-      }
-   }
-
-   public String getType(Uri var1) {
-      String var2;
-      switch(sURIMatcher.match(var1)) {
-      case 1:
-         var2 = "vnd.android.cursor.dir/download";
-         break;
-      case 2:
-         var2 = "vnd.android.cursor.item/download";
-         break;
-      default:
-         Utils.D("calling getType on an unknown URI: " + var1);
-         throw new IllegalArgumentException("Unknown URI: " + var1);
-      }
-
-      return var2;
-   }
-
-   public Uri insert(Uri var1, ContentValues var2) {
-      SQLiteDatabase var3 = this.mOpenHelper.getWritableDatabase();
-      ContentValues var4 = new ContentValues();
-      copyString("uri", var2, var4);
-      copyString("entity", var2, var4);
-      copyString("hint", var2, var4);
-      copyString("mimetype", var2, var4);
-      copyString("package_name", var2, var4);
-      copyString("md5", var2, var4);
-      copyInteger("destination", var2, var4);
-      copyInteger("visibility", var2, var4);
-      copyInteger("control", var2, var4);
-      copyInteger("source", var2, var4);
-      copyInteger("allow_network", var2, var4);
-      var4.put("status", Integer.valueOf(190));
-      var4.put("lastmod", Long.valueOf(System.currentTimeMillis()));
-      String var5 = var2.getAsString("notificationpackage");
-      String var6 = var2.getAsString("notificationclass");
-      if(var5 != null) {
-         var4.put("notificationpackage", var5);
-         if(var6 != null) {
-            var4.put("notificationclass", var6);
-         }
-      }
-
-      copyString("notificationextras", var2, var4);
-      copyStringWithDefault("title", var2, var4, "");
-      copyStringWithDefault("description", var2, var4, "");
-      var4.put("total_bytes", Integer.valueOf(-1));
-      var4.put("current_bytes", Integer.valueOf(0));
-      Context var7 = this.getContext();
-      var7.startService(new Intent(var7, DownloadService.class));
-      long var9 = var3.insert(DB_TABLE, (String)null, var4);
-      Uri var12;
-      if(var9 == -1L) {
+      if(rowID == -1L) {
          Utils.D("couldn\'t insert into downloads database");
-         var12 = null;
+         return null;
       } else {
-         var7.startService(new Intent(var7, DownloadService.class));
-         this.notifyContentChanged(var1, sURIMatcher.match(var1));
-         var12 = ContentUris.withAppendedId(DownloadManager.Impl.CONTENT_URI, var9);
+    	  context.startService(new Intent(context, DownloadService.class));
+         notifyContentChanged(uri, sURIMatcher.match(uri));
       }
 
-      return var12;
+      return ContentUris.withAppendedId(DownloadManager.Impl.CONTENT_URI, rowID);
    }
 
    public boolean onCreate() {
-      this.mOpenHelper = new DownloadProvider.DatabaseHelper(this.getContext());
+      mOpenHelper = new DownloadProvider.DatabaseHelper(getContext());
       return true;
    }
 
-   public Cursor query(Uri var1, String[] var2, String var3, String[] var4, String var5) {
-      SQLiteDatabase var6 = this.mOpenHelper.getReadableDatabase();
-      int var7 = sURIMatcher.match(var1);
-      if(var7 == -1) {
-         Utils.D("querying unknown URI: " + var1);
-         throw new IllegalArgumentException("Unknown URI: " + var1);
-      } else {
-         DownloadProvider.SqlSelection var8 = this.getWhereClause(var1, var3, var4, var7);
-         this.logVerboseQueryInfo(var2, var3, var4, var5, var6);
-         Object var9 = var6.query(DB_TABLE, var2, var8.getSelection(), var8.getParameters(), (String)null, (String)null, var5);
-         if(var9 != null) {
-            DownloadProvider.ReadOnlyCursorWrapper var10 = new DownloadProvider.ReadOnlyCursorWrapper((Cursor)var9);
-            var9 = var10;
-         }
+   /**
+    * Starts a database query
+    */
+   @Override
+   public Cursor query(final Uri uri, String[] projection,
+            final String selection, final String[] selectionArgs,
+            final String sort) {
+       SQLiteDatabase db = mOpenHelper.getReadableDatabase();
 
-         if(var9 != null) {
-            ContentResolver var11 = this.getContext().getContentResolver();
-            ((Cursor)var9).setNotificationUri(var11, var1);
-         } else {
-            Utils.D("query failed in downloads database");
-         }
+       int match = sURIMatcher.match(uri);
+       if (match == -1) {
+           Utils.V("querying unknown URI: " + uri);
+           throw new IllegalArgumentException("Unknown URI: " + uri);
+       }
 
-         return (Cursor)var9;
-      }
+       SqlSelection fullSelection = getWhereClause(uri, selection, selectionArgs, match);
+       logVerboseQueryInfo(projection, selection, selectionArgs, sort, db);
+
+       Cursor ret = db.query(DB_TABLE, projection, fullSelection.getSelection(),
+               fullSelection.getParameters(), null, null, sort);
+
+       if (ret != null) {
+          ret = new ReadOnlyCursorWrapper(ret);
+       }
+
+       if (ret != null) {
+           ret.setNotificationUri(getContext().getContentResolver(), uri);
+       } else {
+    	   Utils.D("query failed in downloads database");
+       }
+
+       return ret;
    }
+   
+   /**
+    * Updates a row in the database
+    */
+   @Override
+   public int update(final Uri uri, final ContentValues values,
+           final String where, final String[] whereArgs) {
 
-   public int update(Uri var1, ContentValues var2, String var3, String[] var4) {
-      SQLiteDatabase var5 = this.mOpenHelper.getWritableDatabase();
-      boolean var6;
-      if(var2.containsKey("deleted") && var2.getAsInteger("deleted").intValue() == 1) {
-         var6 = true;
-      } else {
-         var6 = false;
-      }
+       SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 
-      String var7 = var2.getAsString("_data");
-      if(var7 != null) {
-         Cursor var16 = this.query(var1, new String[]{"title"}, (String)null, (String[])null, (String)null);
-         if(!var16.moveToFirst() || TextUtils.isEmpty(var16.getString(0))) {
-            var2.put("title", (new File(var7)).getName());
-         }
+       int count;
+       boolean startService = false;
 
-         var16.close();
-      }
+       if (values.containsKey(DownloadManager.Impl.COLUMN_DELETED)) {
+           if (values.getAsInteger(DownloadManager.Impl.COLUMN_DELETED) == 1) {
+               // some rows are to be 'deleted'. need to start DownloadService.
+               startService = true;
+           }
+       }
 
-      Integer var8 = var2.getAsInteger("status");
-      boolean var9;
-      if(var8 != null && var8.intValue() == 190) {
-         var9 = true;
-      } else {
-         var9 = false;
-      }
+       String filename = values.getAsString(DownloadManager.Impl.COLUMN_DATA);
+       if (filename != null) {
+           Cursor c = query(uri, new String[]
+                   { DownloadManager.Impl.COLUMN_TITLE }, null, null, null);
+           if (!c.moveToFirst() || TextUtils.isEmpty(c.getString(0))) {
+               values.put(DownloadManager.Impl.COLUMN_TITLE, new File(filename).getName());
+           }
+           c.close();
+       }
 
-      boolean var10;
-      if(var9) {
-         var10 = true;
-      } else {
-         var10 = var6;
-      }
+       Integer status = values.getAsInteger(DownloadManager.Impl.COLUMN_STATUS);
+       boolean isRestart = status != null && status == DownloadManager.Impl.STATUS_PENDING;
+//       boolean isUserBypassingSizeLimit =
+//           values.containsKey(DownloadManager.Impl.COLUMN_BYPASS_RECOMMENDED_SIZE_LIMIT);
+       if (isRestart/* || isUserBypassingSizeLimit*/) {
+           startService = true;
+       }
+ 
+       ContentValues filteredValues = values;
+       int match = sURIMatcher.match(uri);
+       switch (match) {
+           case MY_DOWNLOADS:
+           case MY_DOWNLOADS_ID:
+               SqlSelection selection = getWhereClause(uri, where, whereArgs, match);
+               if (filteredValues.size() > 0) {
+            	   Utils.D("update database values  : " + filteredValues);
+                   count = db.update(DB_TABLE, filteredValues, selection.getSelection(),
+                           selection.getParameters());
+               } else {
+                   count = 0;
+               }
+               break;
 
-      int var11 = sURIMatcher.match(var1);
-      switch(var11) {
-      case 1:
-      case 2:
-         DownloadProvider.SqlSelection var12 = this.getWhereClause(var1, var3, var4, var11);
-         int var13;
-         if(var2.size() > 0) {
-            Utils.D("update database values  : " + var2);
-            var13 = var5.update(DB_TABLE, var2, var12.getSelection(), var12.getParameters());
-            if(var13 > 0) {
-               var10 = true;
-            }
-         } else {
-            var13 = 0;
-         }
+           default:
+        	   Utils.D("updating unknown/invalid URI: " + uri);
+               throw new UnsupportedOperationException("Cannot update URI: " + uri);
+       }
 
-         this.notifyContentChanged(var1, var11);
-         if(var10) {
-            Context var14 = this.getContext();
-            var14.startService(new Intent(var14, DownloadService.class));
-         }
-
-         return var13;
-      default:
-         Utils.D("updating unknown/invalid URI: " + var1);
-         throw new UnsupportedOperationException("Cannot update URI: " + var1);
-      }
+       notifyContentChanged(uri, match);
+       if (startService) {
+           Context context = getContext();
+           context.startService(new Intent(context, DownloadService.class));
+       }
+       return count;
    }
 
    private final class DatabaseHelper extends SQLiteOpenHelper {
 
-      public DatabaseHelper(Context var2) {
-         super(var2, DB_NAME, (CursorFactory)null, 109);
-      }
+	   public DatabaseHelper(final Context context) {
+           super(context, DB_NAME, null, DB_VERSION);
+       }
 
-      private void createDownloadsTable(SQLiteDatabase var1) {
+      private void createDownloadsTable(SQLiteDatabase db) {
          try {
-            var1.execSQL("DROP TABLE IF EXISTS downloads");
-            var1.execSQL("CREATE TABLE downloads(_id INTEGER PRIMARY KEY AUTOINCREMENT,uri TEXT, redirectcount INTEGER, entity TEXT, hint TEXT, _data TEXT, mimetype TEXT, destination INTEGER, visibility INTEGER, control INTEGER, status INTEGER, numfailed INTEGER, lastmod BIGINT, notificationpackage TEXT, notificationclass TEXT, notificationextras TEXT, total_bytes INTEGER DEFAULT -1, current_bytes INTEGER DEFAULT 0, etag TEXT, md5 TEXT, package_name TEXT, allow_network INTEGER, title TEXT, description TEXT, deleted BOOLEAN NOT NULL DEFAULT 0, source INTEGER);");
-         } catch (SQLException var3) {
+        	 db.execSQL("DROP TABLE IF EXISTS downloads");
+        	 db.execSQL("CREATE TABLE downloads(_id INTEGER PRIMARY KEY AUTOINCREMENT,uri TEXT, redirectcount INTEGER, entity TEXT, hint TEXT, _data TEXT, mimetype TEXT, destination INTEGER, visibility INTEGER, control INTEGER, status INTEGER, numfailed INTEGER, lastmod BIGINT, notificationpackage TEXT, notificationclass TEXT, notificationextras TEXT, total_bytes INTEGER DEFAULT -1, current_bytes INTEGER DEFAULT 0, etag TEXT, md5 TEXT, package_name TEXT, allow_network INTEGER, title TEXT, description TEXT, deleted BOOLEAN NOT NULL DEFAULT 0, source INTEGER);");
+//        	 db.execSQL("CREATE TABLE " + DB_TABLE + "(" +
+//           DownloadManager.Impl.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+//           DownloadManager.Impl.COLUMN_URI + " TEXT, " +
+//           DownloadManager.Impl.COLUMN_RETRY_AFTER_REDIRECT_COUNT + " INTEGER, " +
+//           DownloadManager.Impl.COLUMN_APP_DATA + " TEXT, " +
+//           DownloadManager.Impl.COLUMN_FILE_NAME_HINT + " TEXT, " +
+//           DownloadManager.Impl.COLUMN_DATA + " TEXT, " +
+//           DownloadManager.Impl.COLUMN_MIME_TYPE + " TEXT, " +
+//           DownloadManager.Impl.COLUMN_DESTINATION + " INTEGER, " +
+//           DownloadManager.Impl.COLUMN_VISIBILITY + " INTEGER, " +
+//           DownloadManager.Impl.COLUMN_CONTROL + " INTEGER, " +
+//           DownloadManager.Impl.COLUMN_STATUS + " INTEGER, " +
+//           DownloadManager.Impl.COLUMN_FAILED_CONNECTIONS + " INTEGER, " +
+//           DownloadManager.Impl.COLUMN_LAST_MODIFICATION + " BIGINT, " +
+//           DownloadManager.Impl.COLUMN_NOTIFICATION_PACKAGE + " TEXT, " +
+//           DownloadManager.Impl.COLUMN_NOTIFICATION_CLASS + " TEXT, " +
+//           DownloadManager.Impl.COLUMN_NOTIFICATION_EXTRAS + " TEXT, " +
+//           DownloadManager.Impl.COLUMN_TOTAL_BYTES + " INTEGER DEFAULT -1, " +
+//           DownloadManager.Impl.COLUMN_CURRENT_BYTES + " INTEGER DEFAULT 0, " +
+//           DownloadManager.Impl.COLUMN_ETAG + " TEXT, " +
+//           DownloadManager.Impl.COLUMN_MD5 + " TEXT, " +
+//           DownloadManager.Impl.COLUMN_PACKAGE_NAME + " TEXT, " +
+//           DownloadManager.Impl.COLUMN_TITLE + " TEXT, " +
+//           DownloadManager.Impl.COLUMN_DESCRIPTION + " TEXT, " +
+//           Constants.MEDIA_SCANNED + " BOOLEAN);");
+         } catch (SQLException ex) {
             Utils.E("couldn\'t create table in downloads database");
-            throw var3;
+            throw ex;
          }
       }
 
-      public void onCreate(SQLiteDatabase var1) {
+      /**
+       * Creates database the first time we try to open it.
+       */
+      public void onCreate(final SQLiteDatabase db) {
          Utils.D("populating new database");
-         this.onUpgrade(var1, 0, 109);
+         onUpgrade(db, 0, 109);
       }
 
-      public void onUpgrade(SQLiteDatabase var1, int var2, int var3) {
-         this.createDownloadsTable(var1);
+      public void onUpgrade(final SQLiteDatabase db, int oldV, final int newV) {
+         createDownloadsTable(db);
       }
    }
 
+   /**
+    * This class encapsulates a SQL where clause and its parameters.  It makes it possible for
+    * shared methods (like {@link DownloadProvider#getWhereClause(Uri, String, String[], int)})
+    * to return both pieces of information, and provides some utility logic to ease piece-by-piece
+    * construction of selections.
+    */
    private static class SqlSelection {
+       public StringBuilder mWhereClause = new StringBuilder();
+       public List<String> mParameters = new ArrayList<String>();
 
-      public List<String> mParameters;
-      public StringBuilder mWhereClause;
-
-
-      private SqlSelection() {
-         this.mWhereClause = new StringBuilder();
-         this.mParameters = new ArrayList();
-      }
-
-      // $FF: synthetic method
-      SqlSelection(Object var1) {
-         this();
-      }
-
-      public <T extends Object> void appendClause(String var1, T ... var2) {
-         if(!TextUtils.isEmpty(var1)) {
-            if(this.mWhereClause.length() != 0) {
-               this.mWhereClause.append(" AND ");
-            }
-
-            this.mWhereClause.append("(");
-            this.mWhereClause.append(var1);
-            this.mWhereClause.append(")");
-            if(var2 != null) {
-               int var6 = var2.length;
-
-               for(int var7 = 0; var7 < var6; ++var7) {
-                  Object var8 = var2[var7];
-                  this.mParameters.add(var8.toString());
+       public <T> void appendClause(String newClause, final T... parameters) {
+           if (newClause == null || TextUtils.isEmpty(newClause)) {
+               return;
+           }
+           if (mWhereClause.length() != 0) {
+               mWhereClause.append(" AND ");
+           }
+           mWhereClause.append("(");
+           mWhereClause.append(newClause);
+           mWhereClause.append(")");
+           if (parameters != null) {
+               for (Object parameter : parameters) {
+                   mParameters.add(parameter.toString());
                }
-            }
-         }
+           }
+       }
 
-      }
+       public String getSelection() {
+           return mWhereClause.toString();
+       }
 
-      public String[] getParameters() {
-         String[] var1 = new String[this.mParameters.size()];
-         return (String[])this.mParameters.toArray(var1);
-      }
-
-      public String getSelection() {
-         return this.mWhereClause.toString();
-      }
+       public String[] getParameters() {
+           String[] array = new String[mParameters.size()];
+           return mParameters.toArray(array);
+       }
    }
 
    private class ReadOnlyCursorWrapper extends CursorWrapper implements CrossProcessCursor {
 
       private CrossProcessCursor mCursor;
 
-
-      public ReadOnlyCursorWrapper(Cursor var2) {
-         super(var2);
-         this.mCursor = (CrossProcessCursor)var2;
+      public ReadOnlyCursorWrapper(Cursor cursor) {
+          super(cursor);
+          mCursor = (CrossProcessCursor) cursor;
       }
 
-      public void fillWindow(int var1, CursorWindow var2) {
-         this.mCursor.fillWindow(var1, var2);
+      public void fillWindow(int pos, CursorWindow window) {
+          mCursor.fillWindow(pos, window);
       }
 
       public CursorWindow getWindow() {
-         return this.mCursor.getWindow();
+          return mCursor.getWindow();
       }
 
-      public boolean onMove(int var1, int var2) {
-         return this.mCursor.onMove(var1, var2);
+      public boolean onMove(int oldPosition, int newPosition) {
+          return mCursor.onMove(oldPosition, newPosition);
       }
    }
 }

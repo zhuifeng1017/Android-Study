@@ -140,28 +140,28 @@ public class AppSecurityPermissions
       }
   }
 
-  private void extractPerms(String[] paramArrayOfString, Set<PermissionInfo> paramSet)
+  private void extractPerms(String as[], Set set)
   {
-    int i = 0;
-    if ((paramArrayOfString == null) || (paramArrayOfString.length == 0))
-      return;
-    int j = paramArrayOfString.length;
-    while (i < j)
-    {
-      String str = paramArrayOfString[i];
-      try
+      int i = 0;
+      if(as != null && as.length != 0)
       {
-        PermissionInfo localPermissionInfo = this.mPm.getPermissionInfo(str, 0);
-        if (localPermissionInfo != null)
-          paramSet.add(localPermissionInfo);
-        i++;
+          int j = as.length;
+          while(i < j) 
+          {
+              String s = as[i];
+              try
+              {
+                  PermissionInfo permissioninfo = mPm.getPermissionInfo(s, 0);
+                  if(permissioninfo != null)
+                      set.add(permissioninfo);
+              }
+              catch(android.content.pm.PackageManager.NameNotFoundException namenotfoundexception)
+              {
+                  Log.i("AppSecurityPermissions", (new StringBuilder()).append("Ignoring unknown permission:").append(s).toString());
+              }
+              i++;
+          }
       }
-      catch (PackageManager.NameNotFoundException localNameNotFoundException)
-      {
-        while (true)
-          Log.i("AppSecurityPermissions", "Ignoring unknown permission:" + str);
-      }
-    }
   }
 
   private String formatPermissions(String paramString, CharSequence paramCharSequence)
@@ -384,17 +384,17 @@ public class AppSecurityPermissions
     return this.mPermsView;
   }
 
-  public void onClick(View paramView)
+  public void onClick(View view)
   {
-    if (this.localLOGV)
-      Log.i("AppSecurityPermissions", "mExpanded=" + this.mExpanded);
-    if (!this.mExpanded);
-    for (boolean bool = true; ; bool = false)
-    {
-      this.mExpanded = bool;
+      if(localLOGV)
+          Log.i("AppSecurityPermissions", (new StringBuilder()).append("mExpanded=").append(mExpanded).toString());
+      boolean flag;
+      if(!mExpanded)
+          flag = true;
+      else
+          flag = false;
+      mExpanded = flag;
       showPermissions();
-      return;
-    }
   }
 
   private static class PermissionInfoComparator

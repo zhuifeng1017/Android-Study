@@ -1,5 +1,6 @@
 package com.xxx.appstore.common.download;
 
+import com.xxx.appstore.R;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -12,9 +13,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
-
 import com.xxx.appstore.common.util.Utils;
-
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,48 +30,86 @@ public class DownloadNotification {
 	NotificationManager mNotificationManager;
 	HashMap<String, NotificationItem> mNotifications;
 
+    /**
+     * This inner class is used to collate downloads that are owned by
+     * the same application. This is so that only one notification line
+     * item is used for all downloads of a given application.
+     *
+     */
+	static class NotificationItem {
+	    int mId;  // This first db _id for the download for the app
+	    long mTotalCurrent = 0;
+	    long mTotalTotal = 0;
+	    int mTitleCount = 0;
+	    String mPackageName;  // App package name
+	    String mDescription;
+	    String[] mTitles = new String[2]; // download titles.
+	    String mPausedText = null;
+
+	    /*
+	     * Add a second download to this notification item.
+	     */
+	    void addItem(String title, long currentBytes, long totalBytes) {
+	        mTotalCurrent += currentBytes;
+	        if (totalBytes <= 0 || mTotalTotal == -1) {
+	            mTotalTotal = -1;
+	        } else {
+	            mTotalTotal += totalBytes;
+	        }
+	        if (mTitleCount < 2) {
+	            mTitles[mTitleCount] = title;
+	        }
+	        mTitleCount++;
+	    }
+	}
+	
+    /**
+     * Constructor
+     * @param ctx The context to use to obtain access to the
+     *            Notification Service
+     */
 	DownloadNotification(Context paramContext) {
 		this.mContext = paramContext;
 		this.mNotifications = new HashMap();
 		this.mNotificationManager = ((NotificationManager) this.mContext
 				.getSystemService("notification"));
 	}
-
-	private String getDownloadingText(long paramLong1, long paramLong2) {
-		String str = "";
-		if (paramLong1 <= 0L)
-			return str;
-
-		StringBuilder localStringBuilder;
-		long l = 100L * paramLong2 / paramLong1;
-		localStringBuilder = new StringBuilder();
-		localStringBuilder.append(l);
-		localStringBuilder.append('%');
-		str = localStringBuilder.toString();
-		return str;
-	}
+	
+	/*
+     * Helper function to build the downloading text.
+     */
+    private String getDownloadingText(long totalBytes, long currentBytes) {
+        if (totalBytes <= 0) {
+            return "";
+        }
+        long progress = currentBytes * 100 / totalBytes;
+        StringBuilder sb = new StringBuilder();
+        sb.append(progress);
+        sb.append('%');
+        return sb.toString();
+    }
 
 	private String handleErrorMessage(int paramInt) {
 		String str;
 		if (400 == paramInt)
-			str = this.mContext.getString(2131296605);
+			str = this.mContext.getString(R.string.download_alert_url);
 		else if (406 == paramInt)
-			str = this.mContext.getString(2131296596);
+			str = this.mContext.getString(R.string.download_error_file_type);
 		else if ((411 == paramInt) || (412 == paramInt) || (491 == paramInt))
-			str = this.mContext.getString(2131296602);
+			str = this.mContext.getString(R.string.download_alert_service);
 		else if ((488 == paramInt) || (492 == paramInt))
-			str = this.mContext.getString(2131296603);
+			str = this.mContext.getString(R.string.download_alert_client);
 		else if (490 == paramInt)
-			str = this.mContext.getString(2131296606);
+			str = this.mContext.getString(R.string.download_alert_cancel);
 		else if ((493 == paramInt) || (494 == paramInt) || (496 == paramInt)
 				|| (495 == paramInt) || (497 == paramInt))
-			str = this.mContext.getString(2131296601);
+			str = this.mContext.getString(R.string.download_alert_network);
 		else if (499 == paramInt)
-			str = this.mContext.getString(2131296599);
+			str = this.mContext.getString(R.string.download_alert_no_sdcard);
 		else if (498 == paramInt)
-			str = this.mContext.getString(2131296600);
+			str = this.mContext.getString(R.string.download_alert_no_space);
 		else
-			str = this.mContext.getString(2131296557);
+			str = this.mContext.getString(R.string.download_error);
 		return str;
 	}
 
@@ -114,7 +151,7 @@ public class DownloadNotification {
 				String s1 = cursor.getString(1);
 
 				if (s1 == null || s1.length() == 0)
-					s2 = mContext.getResources().getString(0x7f09003c);
+					s2 = mContext.getResources().getString(R.string.download_unknown_title);
 				else
 					s2 = s1;
 				if (mNotifications.containsKey(s)) {
@@ -135,12 +172,12 @@ public class DownloadNotification {
 				notificationitem = (NotificationItem) iterator.next();
 				notification = new Notification();
 				notification.defaults = 0;
-				notification.icon = 0x1080081;
+				notification.icon = android.R.drawable.stat_sys_download;
 				notification.flags = 2 | notification.flags;
-				remoteviews = new RemoteViews("com.unistrong.appstore", 0x7f030055);
+				remoteviews = new RemoteViews("com.xxx.appstore", R.layout.status_bar_ongoing_event_progress_bar);
 				stringbuilder = new StringBuilder(notificationitem.mTitles[0]);
 				if (notificationitem.mTitleCount > 1) {
-					stringbuilder.append(mContext.getString(0x7f09003d));
+					stringbuilder.append(mContext.getString(R.string.notification_filename_separator));
 					stringbuilder.append(notificationitem.mTitles[1]);
 					notification.number = notificationitem.mTitleCount;
 					if (notificationitem.mTitleCount > 2) {
@@ -149,25 +186,25 @@ public class DownloadNotification {
 						aobj[0] = Integer
 								.valueOf(notificationitem.mTitleCount - 2);
 						stringbuilder.append(context
-								.getString(0x7f09003e, aobj));
+								.getString(R.string.notification_filename_extras, aobj));
 					}
 				}
-				remoteviews.setTextViewText(0x7f0c000b, stringbuilder);
-				i = (int) notificationitem.mTotalBytes;
-				j = (int) notificationitem.mCurrentBytes;
-				if (notificationitem.mTotalBytes == -1L)
+				remoteviews.setTextViewText(R.id.title, stringbuilder);
+				i = (int) notificationitem.mTotalTotal;
+				j = (int) notificationitem.mTotalCurrent;
+				if (notificationitem.mTotalTotal == -1L)
 					flag = true;
 				else
 					flag = false;
-				remoteviews.setProgressBar(0x7f0c00a6, i, j, flag);
+				remoteviews.setProgressBar(R.id.progress_bar, i, j, flag);
 				remoteviews.setTextViewText(
-						0x7f0c00a3,
-						getDownloadingText(notificationitem.mTotalBytes,
-								notificationitem.mCurrentBytes));
-				remoteviews.setImageViewResource(0x7f0c00a2, 0x1080081);
+						R.id.progress_text,
+						getDownloadingText(notificationitem.mTotalTotal,
+								notificationitem.mTotalCurrent));
+				remoteviews.setImageViewResource(R.id.appIcon, android.R.drawable.stat_sys_download);
 				notification.contentView = remoteviews;
 				intent = new Intent("gfan.intent.action.DOWNLOAD_LIST");
-				intent.setClassName("com.unistrong.appstore",
+				intent.setClassName("com.xxx.appstore",
 						DownloadReceiver.class.getName());
 				intent.setData(Uri.parse((new StringBuilder())
 						.append(DownloadManager.Impl.CONTENT_URI).append("/")
@@ -200,10 +237,10 @@ public class DownloadNotification {
 			while (!cursor.isAfterLast()) {
 				Notification notification = new Notification();
 				notification.defaults = 0;
-				notification.icon = 0x1080082;
+				notification.icon = android.R.drawable.stat_sys_download_done;
 				String s = cursor.getString(1);
 				if (s == null || s.length() == 0)
-					s = mContext.getResources().getString(0x7f09003c);
+					s = mContext.getResources().getString(R.string.download_unknown_title);
 				Uri uri1 = Uri.parse((new StringBuilder())
 						.append(DownloadManager.Impl.CONTENT_URI).append("/")
 						.append(cursor.getInt(0)).toString());
@@ -218,7 +255,7 @@ public class DownloadNotification {
 					s2 = s3;
 					intent2 = intent4;
 				} else {
-					String s1 = mContext.getResources().getString(0x7f090040);
+					String s1 = mContext.getResources().getString(R.string.notification_download_complete);
 					Intent intent;
 					Intent intent1;
 					if (cursor.getInt(4) != 0)
@@ -230,13 +267,13 @@ public class DownloadNotification {
 					s2 = s1;
 					intent2 = intent1;
 				}
-				intent2.setClassName("com.unistrong.appstore",
+				intent2.setClassName("com.xxx.appstore",
 						DownloadReceiver.class.getName());
 				intent2.setData(uri1);
 				notification.setLatestEventInfo(mContext, s, s2,
 						PendingIntent.getBroadcast(mContext, 0, intent2, 0));
 				intent3 = new Intent("gfan.intent.action.DOWNLOAD_HIDE");
-				intent3.setClassName("com.unistrong.appstore",
+				intent3.setClassName("com.xxx.appstore",
 						DownloadReceiver.class.getName());
 				intent3.setData(uri1);
 				notification.deleteIntent = PendingIntent.getBroadcast(
@@ -256,20 +293,26 @@ public class DownloadNotification {
 		String[] arrayOfString = new String[2];
 		arrayOfString[0] = "_id";
 		arrayOfString[1] = "_data";
-		Cursor localCursor = localContentResolver
+		Cursor cursor = localContentResolver
 				.query(localUri,
 						arrayOfString,
 						"status >= '200' AND source == '3' AND visibility == '0' AND mimetype == 'application/vnd.android.package-archive'",
 						null, "_id");
-		if (localCursor == null)
+		if (cursor == null)
 			return;
 
-		if (!localCursor.moveToFirst())
+		if (!cursor.moveToFirst())
+		{
+			cursor.close();
 			return;
+		}
 
-		String str = localCursor.getString(1);
+		String str = cursor.getString(1);
 		if (TextUtils.isEmpty(str))
+		{
+			cursor.close();
 			return;
+		}
 
 		try {
 			File localFile = new File(this.mContext.getFilesDir(),
@@ -280,11 +323,11 @@ public class DownloadNotification {
 			localContentValues.put("visibility", Integer.valueOf(2));
 			this.mContext.getContentResolver().update(
 					DownloadManager.Impl.CONTENT_URI, localContentValues,
-					"_id = " + localCursor.getLong(0), null);
-			localCursor.close();
+					"_id = " + cursor.getLong(0), null);
+			cursor.close();
 		} catch (Exception localException) {
 			Utils.E("ota exception", localException);
-			localCursor.close();
+			cursor.close();
 		}
 	}
 
@@ -327,27 +370,5 @@ public class DownloadNotification {
 		updateActiveNotification();
 		updateCompletedNotification();
 		updateOtaNotification();
-	}
-
-	static class NotificationItem {
-		long mCurrentBytes = 0L;
-		int mId;
-		String mPackageName;
-		String mPausedText = null;
-		int mTitleCount = 0;
-		String[] mTitles = new String[2];
-		long mTotalBytes = 0L;
-
-		void addItem(String paramString, long paramLong1, long paramLong2) {
-			this.mCurrentBytes = (paramLong1 + this.mCurrentBytes);
-			if ((paramLong2 <= 0L) || (this.mTotalBytes == -1L))
-				;
-			for (this.mTotalBytes = -1L;; this.mTotalBytes = (paramLong2 + this.mTotalBytes)) {
-				if (this.mTitleCount < 2)
-					this.mTitles[this.mTitleCount] = paramString;
-				this.mTitleCount = (1 + this.mTitleCount);
-				return;
-			}
-		}
 	}
 }

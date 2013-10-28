@@ -2,7 +2,6 @@ package com.xxx.appstore.common;
 
 import com.xxx.appstore.common.AndroidHttpClient;
 import com.xxx.appstore.common.util.Utils;
-
 import java.util.WeakHashMap;
 
 public class HttpClientFactory {

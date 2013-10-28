@@ -307,7 +307,7 @@ public class SearchActivity extends BaseTabActivity
     initTopBar();
     initView();
     initData();
-    IntentFilter localIntentFilter = new IntentFilter("com.unistrong.appstore.theme");
+    IntentFilter localIntentFilter = new IntentFilter("com.xxx.appstore.theme");
     registerReceiver(this.mThemeReceiver, localIntentFilter);
   }
 

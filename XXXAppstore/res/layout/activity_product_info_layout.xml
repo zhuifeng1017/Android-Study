@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:admobsdk="http://schemas.android.com/apk/res/com.unistrong.appstore">
+  xmlns:admobsdk="http://schemas.android.com/apk/res/com.xxx.appstore">
     <include android:layout_width="fill_parent" android:layout_height="47.0dip" android:layout_alignParentBottom="true" layout="@layout/bottom_action_bar" />
     <include android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="47.0dip" android:layout_alignParentBottom="true" layout="@layout/bottom_download_status_bar" />
     <ScrollView android:scrollbarThumbVertical="@drawable/scrollbar" android:id="@id/parent_scroll" android:background="@color/background_color" android:fadingEdge="none" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_above="@id/download_status_bar">

@@ -1,7 +1,6 @@
 package com.xxx.appstore.common.vo;
 
 import com.xxx.appstore.common.vo.PayAndChargeLog;
-
 import java.util.ArrayList;
 
 public class PayAndChargeLogs {

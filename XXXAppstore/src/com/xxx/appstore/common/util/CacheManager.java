@@ -2,10 +2,8 @@ package com.xxx.appstore.common.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-
 import com.xxx.appstore.common.util.ImageUtils;
 import com.xxx.appstore.common.util.Utils;
-
 import java.io.File;
 import java.lang.ref.SoftReference;
 import java.util.Iterator;
@@ -15,14 +13,19 @@ public class CacheManager {
 
    private static final int MAX_IMAGE_IN_L1_MEMORY = 100;
    private static CacheManager mInstance;
-   private final LinkedHashMap<Integer, Bitmap> mDrawableMap = new LinkedHashMap();
+   
+   private final LinkedHashMap<Integer, Bitmap> mDrawableMap = new LinkedHashMap<Integer, Bitmap>();
+   
+   // 一级缓存，缓存在内存
    private SoftReference<LinkedHashMap<Integer, Bitmap>> mL1Cache;
+   
+   // 二级缓存，缓存在文件中
    private final LinkedHashMap<Integer, SoftReference<Bitmap>> mL2Cache;
 
 
    private CacheManager() {
-      this.mL1Cache = new SoftReference(this.mDrawableMap);
-      this.mL2Cache = new LinkedHashMap();
+      mL1Cache = new SoftReference<LinkedHashMap<Integer, Bitmap>>(mDrawableMap);
+      mL2Cache = new LinkedHashMap<Integer, SoftReference<Bitmap>>();
    }
 
    public static CacheManager getInstance() {
@@ -42,36 +45,37 @@ public class CacheManager {
       return var1;
    }
 
+   // 缓存图片
    public void cacheDrawable(Context context, String url, Bitmap bitmap) {
       synchronized(this){}
       if(bitmap != null) {
          try {
             int hCode = url.hashCode();
-            LinkedHashMap var6 = (LinkedHashMap)this.mL1Cache.get();
-            if(var6 == null) {
-               this.mL1Cache = new SoftReference(this.mDrawableMap);
+            LinkedHashMap<Integer, Bitmap> drawableCale = mL1Cache.get();
+            if(drawableCale == null) {
+               mL1Cache = new SoftReference<LinkedHashMap<Integer, Bitmap>>(mDrawableMap);
             }
 
-            if(var6.size() < 100) {
-               var6.put(Integer.valueOf(hCode), bitmap);
-            } else {
-               Iterator var7 = var6.keySet().iterator();
-               if(var7.hasNext()) {
-                  var6.remove((Integer)var7.next());
-                  var6.put(Integer.valueOf(hCode), bitmap);
+            if(drawableCale.size() < MAX_IMAGE_IN_L1_MEMORY) {	// 缓存
+               drawableCale.put(Integer.valueOf(hCode), bitmap);
+            } else {	// 缓存数量大于100
+               Iterator<Integer> item = drawableCale.keySet().iterator();
+               if(item.hasNext()) {
+                  drawableCale.remove((Integer)item.next());
+                  drawableCale.put(Integer.valueOf(hCode), bitmap);
                }
             }
 
-            if(!this.mL2Cache.containsKey(Integer.valueOf(hCode))) {
+            // 缓存到文件
+            if(!mL2Cache.containsKey(Integer.valueOf(hCode))) {
                ImageUtils.saveBitmapToSdcard(context, hCode, bitmap);
             }
-
-            this.mL2Cache.put(Integer.valueOf(hCode), new SoftReference(bitmap));
+            // 更新文件缓存
+            mL2Cache.put(Integer.valueOf(hCode), new SoftReference<Bitmap>(bitmap));
          } finally {
             ;
          }
       }
-
    }
 
    public void cacheDrawableToL2(Context context, String url, Bitmap bitmap) {
@@ -79,16 +83,15 @@ public class CacheManager {
       if(bitmap != null) {
          try {
             int hCode = url.hashCode();
-            if(!this.mL2Cache.containsKey(Integer.valueOf(hCode))) {
+            if(!mL2Cache.containsKey(Integer.valueOf(hCode))) {
                ImageUtils.saveBitmapToSdcard(context, hCode, bitmap);
             }
-
-            this.mL2Cache.put(Integer.valueOf(hCode),  new SoftReference(bitmap));
+            // 更新文件缓存
+            mL2Cache.put(Integer.valueOf(hCode), new SoftReference<Bitmap>(bitmap));
          } finally {
             ;
          }
       }
-
    }
 
    public void clearFromFile(final Context var1) {
@@ -103,7 +106,6 @@ public class CacheManager {
                   var2[var4].delete();
                }
             }
-
          }
       };
       var2.setPriority(10);
@@ -111,58 +113,42 @@ public class CacheManager {
    }
 
    public void clearFromMemory() {
-      if(this.mL1Cache.get() != null) {
-         ((LinkedHashMap)this.mL1Cache.get()).clear();
+      if(mL1Cache.get() != null) {
+         ((LinkedHashMap<Integer, Bitmap>)mL1Cache.get()).clear();
       }
 
-      if(this.mL2Cache != null) {
-         this.mL2Cache.clear();
+      if(mL2Cache != null) {
+         mL2Cache.clear();
       }
 
       mInstance = null;
    }
 
-   public boolean existsDrawable(String var1) {
-      int var2 = var1.hashCode();
-      boolean var3;
-      if(this.mL2Cache.containsKey(Integer.valueOf(var2))) {
-         var3 = true;
-      } else {
-         var3 = false;
-      }
-
-      return var3;
+   public boolean existsDrawable(String url) {
+      int hCode = url.hashCode();
+      return mL2Cache.containsKey(Integer.valueOf(hCode));
    }
 
-   public Bitmap getDrawableFromCache(Context var1, String var2) {
-      int var3 = var2.hashCode();
-      LinkedHashMap var4 = (LinkedHashMap)this.mL1Cache.get();
-      Bitmap var6;
-      if(var4 != null) {
-         var6 = (Bitmap)var4.get(Integer.valueOf(var3));
-         if(var6 != null) {
-            return var6;
-         }
-      } else {
-         Utils.D("l1 cache is empty");
-      }
+   // 从缓存中去图片
+	public Bitmap getDrawableFromCache(Context context, String url) {
+		int hCode = url.hashCode();
+		LinkedHashMap<Integer, Bitmap> drawableMapL1 = mL1Cache.get();
+		Bitmap bitmap = null;
+		if (drawableMapL1 != null) {
+			bitmap = (Bitmap) drawableMapL1.get(Integer.valueOf(hCode));
+		} else {
+			Utils.D("l1 cache is empty");
+		}
 
-      SoftReference var5 = (SoftReference)this.mL2Cache.get(Integer.valueOf(var3));
-      if(var5 == null) {
-         var6 = null;
-      } else {
-         Bitmap var7 = (Bitmap)var5.get();
-         if(var7 != null) {
-            Utils.D("get cache from l2");
-         }
+		if (bitmap != null) {
+			return bitmap;
+		}
 
-         if(var7 == null) {
-            var6 = null;
-         } else {
-            var6 = var7;
-         }
-      }
-
-      return var6;
-   }
+		SoftReference<Bitmap> drawableMapL2 = mL2Cache.get(Integer.valueOf(hCode));
+		if (drawableMapL2 != null) {
+			bitmap = (Bitmap) drawableMapL2.get();
+		}
+		
+		return bitmap;
+	}
 }

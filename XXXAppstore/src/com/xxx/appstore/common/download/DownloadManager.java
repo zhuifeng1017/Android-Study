@@ -8,10 +8,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
-
 import com.xxx.appstore.common.download.Helper;
-import com.xxx.appstore.ui.AppManagerActivity;
-
+import com.xxx.appstore.ui.AppsUpdateActivity;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -33,30 +31,30 @@ public class DownloadManager {
       this.mPackageName = var2;
    }
 
-   private void doEnqueue(Context var1, DownloadManager.Request var2, final DownloadManager.EnqueueListener var3) {
-      ContentValues var4 = var2.toContentValues(this.mPackageName);
-      var4.put("hint", (String)var2.mTitle);
-      var4.put("package_name", var2.mPackageName);
-      var4.put("notificationclass", AppManagerActivity.class.getName());
-      var4.put("md5", var2.mMD5);
-      var4.put("allow_network", Helper.getActiveNetworkType(var1));
-      if(var2.mSourceType == 3) {
+   private void doEnqueue(Context context, DownloadManager.Request request, final DownloadManager.EnqueueListener listener) {
+      ContentValues var4 = request.toContentValues(this.mPackageName);
+      var4.put("hint", (String)request.mTitle);
+      var4.put("package_name", request.mPackageName);
+      var4.put(Impl.COLUMN_NOTIFICATION_CLASS, AppsUpdateActivity.class.getName());
+      var4.put("md5", request.mMD5);
+      var4.put("allow_network", Helper.getActiveNetworkType(context));
+      if(request.mSourceType == 3) {
          var4.put("destination", Integer.valueOf(1));
       } else {
-         var4.put("destination", Integer.valueOf(var2.mDestination));
+         var4.put("destination", Integer.valueOf(request.mDestination));
       }
 
       (new AsyncQueryHandler(this.mResolver) {
-         protected void onInsertComplete(int var1, Object var2, Uri var3x) {
-            if(var3 != null) {
+         protected void onInsertComplete(int var1, Object var2, Uri uri) {
+            if(listener != null) {
                long var4;
-               if(var3x == null) {
+               if(uri == null) {
                   var4 = -1L;
                } else {
-                  var4 = Long.parseLong(var3x.getLastPathSegment());
+                  var4 = Long.parseLong(uri.getLastPathSegment());
                }
 
-               var3.onFinish(var4);
+               listener.onFinish(var4);
             }
 
          }
@@ -143,7 +141,7 @@ public class DownloadManager {
    }
 
    public void enqueue(final Context var1, final DownloadManager.Request var2, final DownloadManager.EnqueueListener var3) {
-      if("application/vnd.android.package-archive".equals(var2.mMimeType)) {
+      if(Constants.MIMETYPE_APK.equals(var2.mMimeType)) {
          String[] var4 = new String[]{var2.mPackageName, String.valueOf(192)};
          (new AsyncQueryHandler(this.mResolver) {
             protected void onQueryComplete(int var1x, Object var2x, Cursor var3x) {
@@ -158,18 +156,17 @@ public class DownloadManager {
 
                DownloadManager.this.doEnqueue(var1, var2, var3);
             }
-         }).startQuery(0, (Object)null, DownloadManager.Impl.CONTENT_URI, (String[])null, "package_name = ? & status = ?", var4, (String)null);
+         }).startQuery(0, (Object)null, DownloadManager.Impl.CONTENT_URI, (String[])null, "package_name = ? && status = ?", var4, (String)null);
       } else {
          this.doEnqueue(var1, var2, var3);
       }
-
    }
 
    public void enqueueWaitRequest(DownloadManager.Request var1, final DownloadManager.EnqueueListener var2) {
       ContentValues var3 = var1.toContentValues(this.mPackageName);
       var3.put("hint", (String)var1.mTitle);
       var3.put("package_name", var1.mPackageName);
-      var3.put("notificationclass", AppManagerActivity.class.getName());
+      var3.put(Impl.COLUMN_NOTIFICATION_CLASS, AppsUpdateActivity.class.getName());
       var3.put("md5", var1.mMD5);
       var3.put("destination", Integer.valueOf(var1.mDestination));
       var3.put("visibility", Integer.valueOf(2));
@@ -466,7 +463,7 @@ public class DownloadManager {
       private int mDestination = 0;
       private String mIconUrl;
       private String mMD5;
-      private String mMimeType = "application/vnd.android.package-archive";
+      private String mMimeType = Constants.MIMETYPE_APK;
       private String mPackageName;
       private boolean mShowNotification = true;
       private int mSourceType;
@@ -570,7 +567,7 @@ public class DownloadManager {
             }
 
             var2.put("visibility", Integer.valueOf(var3));
-            if(this.mSourceType == 3 && "application/vnd.android.package-archive".equals(this.mMimeType)) {
+            if(this.mSourceType == 3 && Constants.MIMETYPE_APK.equals(this.mMimeType)) {
                var2.put("visibility", Integer.valueOf(0));
             }
 
