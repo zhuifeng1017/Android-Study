@@ -21,7 +21,7 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 import com.xxx.appstore.Session;
-import com.xxx.appstore.common.codec.binary.Base64;
+import org.apache.commons.codec.binary.Base64;
 import com.xxx.appstore.common.util.Crypter;
 import com.xxx.appstore.common.util.DBUtils;
 import com.xxx.appstore.common.util.SecurityUtil;

@@ -7,7 +7,7 @@ import android.os.Build;
 import android.text.TextUtils;
 import com.xxx.appstore.Session;
 import com.xxx.appstore.common.AndroidHttpClient;
-import com.xxx.appstore.common.codec.digest.DigestUtils;
+import org.apache.commons.codec.digest.DigestUtils;
 import com.xxx.appstore.common.util.DBUtils;
 import com.xxx.appstore.common.util.SecurityUtil;
 import com.xxx.appstore.common.util.Utils;

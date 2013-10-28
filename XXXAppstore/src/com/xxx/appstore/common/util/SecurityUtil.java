@@ -1,8 +1,8 @@
 package com.xxx.appstore.common.util;
 
 import android.text.TextUtils;
-import com.xxx.appstore.common.codec.binary.Base64;
-import com.xxx.appstore.common.codec.digest.DigestUtils;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.DigestUtils;
 import com.xxx.appstore.common.util.Crypter;
 import com.xxx.appstore.common.util.Utils;
 import java.io.IOException;
