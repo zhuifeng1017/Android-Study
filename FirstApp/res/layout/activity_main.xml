@@ -4,6 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="testListView"
+        android:text="@string/button_testNavi" />
+
         <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,4 +33,21 @@
     	<Button android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_testResultActivity" android:onClick="testResultActivity"/>
+
+    	<Button
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:text="@string/button_testNavi" android:onClick="testNavi"/>
+    	
+    	<Button
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:text="toast" android:onClick="testToast"/>
+
+    	<Button
+    	    android:id="@+id/button1"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:text="Download" android:onClick="TestDownload" />
+
 </LinearLayout>

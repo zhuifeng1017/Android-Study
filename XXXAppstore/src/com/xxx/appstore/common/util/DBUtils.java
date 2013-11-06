@@ -28,8 +28,8 @@ public class DBUtils {
       }).startInsert(0, (Object)null, MarketProvider.SEARCH_CONTENT_URI, var2);
    }
 
-   public static int addUpdateProduct(Context var0, ArrayList<UpgradeInfo> var1) {
-      Cursor var2 = var0.getContentResolver().query(MarketProvider.UPDATE_CONTENT_URI, (String[])null, (String)null, (String[])null, (String)null);
+   public static int addUpdateProduct(Context context, ArrayList<UpgradeInfo> upgradeList) {
+      Cursor var2 = context.getContentResolver().query(MarketProvider.UPDATE_CONTENT_URI, (String[])null, (String)null, (String[])null, (String)null);
       HashMap var8;
       if(var2 != null) {
          HashMap var3 = new HashMap();
@@ -52,7 +52,7 @@ public class DBUtils {
 
       int var9;
       if(var8 != null) {
-         Iterator var15 = var1.iterator();
+         Iterator var15 = upgradeList.iterator();
 
          int var16;
          int var18;
@@ -76,16 +76,16 @@ public class DBUtils {
          var9 = 0;
       }
 
-      ContentValues[] var10 = new ContentValues[var1.size()];
+      ContentValues[] var10 = new ContentValues[upgradeList.size()];
 
       for(int var11 = 0; var11 < var10.length; ++var11) {
-         var10[var11] = ((UpgradeInfo)var1.get(var11)).getContentValues();
+         var10[var11] = ((UpgradeInfo)upgradeList.get(var11)).getContentValues();
       }
 
-      var0.getContentResolver().delete(MarketProvider.UPDATE_CONTENT_URI, (String)null, (String[])null);
-      var0.getContentResolver().bulkInsert(MarketProvider.UPDATE_CONTENT_URI, var10);
+      context.getContentResolver().delete(MarketProvider.UPDATE_CONTENT_URI, (String)null, (String[])null);
+      context.getContentResolver().bulkInsert(MarketProvider.UPDATE_CONTENT_URI, var10);
       if(var9 > 0) {
-         Session var14 = Session.get(var0);
+         Session var14 = Session.get(context);
          var14.setUpdateList();
          var14.setUpgradeNumber(var9);
       }

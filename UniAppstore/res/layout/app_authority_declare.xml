@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@id/auth_declare" android:background="@drawable/section_bg_selector" android:layout_width="fill_parent" android:layout_height="48.0dip"
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <ImageView android:id="@id/auth_image" android:background="@drawable/auth_alarm" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:layout_marginRight="5.0dip" android:layout_centerVertical="true" />
-    <TextView android:id="@id/security_settings_desc" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/permissions_desc" android:layout_toRightOf="@id/auth_image" android:layout_centerVertical="true" style="@style/text_style_1b" />
-    <ImageView android:id="@id/auth_more" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_marginRight="8.0dip" android:src="@drawable/more_indicator_details" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
-</RelativeLayout>

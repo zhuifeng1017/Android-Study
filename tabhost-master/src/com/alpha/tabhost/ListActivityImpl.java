@@ -2,6 +2,10 @@ package com.alpha.tabhost;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -55,6 +59,20 @@ public class ListActivityImpl extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		// TODO Auto-generated method stub
+		
+		String str = "{'name':'xiazdong','age':20,'book':['book1','book2']";  
+        JSONObject obj;
+		try {
+			obj = new JSONObject(str);
+			String book0 = obj.getJSONArray("book").getString(0);
+			String name = obj.getString("name");
+			Log.i("com.alpha.tabhost.info", name);
+			Log.i("com.alpha.tabhost.info", book0);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
+		
 		Log.e("position", "" + position);
 		setTitle("Äãµã»÷µÚ" + position + "ÐÐ");
 	}

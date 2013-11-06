@@ -6,37 +6,102 @@ import org.apache.http.protocol.HTTP;
 
 //import android.database.sqlite.*;
 
+
 import com.zhao.firstapp.R;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.CalendarContract.Events;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ShareActionProvider;
+import android.widget.Toast;
 
 
+@SuppressLint("NewApi")
 public class MainActivity extends Activity {
 	
 	public static final String TAG = "com.example.myfirstapp.LOG";
 	public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
 	static final int PICK_CONTACT_REQUEST = 1;
+	private ShareActionProvider mShareActionProvider;
+	private long mId = -1;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		// 注册广播
+		IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+		BroadcastReceiver receiver = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				// TODO Auto-generated method stub
+				long refId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+				if (refId != -1 && mId==refId){
+					Log.d(TAG, "下载完成！");
+				}
+			}
+		};
+		registerReceiver(receiver, filter);
+		
+		// 查询已完成的下载
+		DownloadManager dm = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+		DownloadManager.Query query = new DownloadManager.Query();
+		query.setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL);
+		Cursor cursor = dm.query(query);
+		int cnt = cursor.getCount(); 
+		cursor.moveToFirst();
+		Log.d(TAG, "success count:" + cnt);
+		while (!cursor.isAfterLast()) {
+			String localURI = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+			String localFilename = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
+			Log.d(TAG,  localURI);
+			Log.d(TAG,  localFilename);
+			long id = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
+			dm.remove(id);
+			cursor.moveToNext();
+		}
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+//		getMenuInflater().inflate(R.menu.main, menu);
+//		return true;
+		// Inflate menu resource file.
+	    getMenuInflater().inflate(R.menu.main, menu);
+
+	    // Locate MenuItem with ShareActionProvider
+	    MenuItem item = menu.findItem(R.id.action_settings);
+
+	    // Fetch and store ShareActionProvider
+	    mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+
+	    // Return true to display menu
+	    return true;
+	}
+	
+	// Call to update the share intent
+	@SuppressWarnings("unused")
+	private void setShareIntent(Intent shareIntent) {
+	    if (mShareActionProvider != null) {
+	        mShareActionProvider.setShareIntent(shareIntent);
+	    }
 	}
 	
 	/** Called when the user clicks the Send button */
@@ -116,6 +181,30 @@ public class MainActivity extends Activity {
 		Intent pickContactIntent = new Intent(Intent.ACTION_PICK,  Uri.parse("content://contacts"));
 	    pickContactIntent.setType(Phone.CONTENT_TYPE); // Show user only contacts w/ phone numbers
 	    startActivityForResult(pickContactIntent, PICK_CONTACT_REQUEST);
+	}
+	
+	public void testNavi(View view) {
+		Log.v(TAG, "testNavi");	// 调用第三方地图软件，暂时还没有实现
+	}
+	
+	public void testListView(View view) {
+		Intent localIntent = new Intent(this,MyListActivity.class);
+		startActivity(localIntent);
+	}
+	
+	public void testToast(View view) {
+		Toast toast = Toast.makeText(this, "请稍后....", Toast.LENGTH_SHORT);
+		toast.show();
+	}
+	
+	public void TestDownload(View view) {
+		DownloadManager dm = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+		DownloadManager.Request request = 
+				new DownloadManager.Request(Uri.parse("http://cdn6.down.apk.gfan.com/asdf/Pfiles/2013/9/29/257211_b4bbfe9a-8cda-4c92-9d64-40d2a36f1466.apk"));
+		request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
+		request.setVisibleInDownloadsUi(false);		
+		long downloadID = dm.enqueue(request);
+		mId = downloadID;
 	}
 	
 	@Override

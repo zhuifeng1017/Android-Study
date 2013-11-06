@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:gravity="center" android:background="@drawable/toast_bg" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="40.0dip" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <TextView android:id="@id/text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/check_network" style="@style/text_style_1e" />
-    <ProgressBar android:id="@id/loading" android:visibility="gone" android:layout_width="54.0dip" android:layout_height="12.0dip" android:indeterminateOnly="true" />
-</LinearLayout>

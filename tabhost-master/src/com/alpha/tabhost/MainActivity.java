@@ -1,6 +1,10 @@
 package com.alpha.tabhost;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.R.string;
 import android.app.Activity;
 import android.app.ActivityGroup;
 import android.app.LocalActivityManager;
@@ -8,6 +12,7 @@ import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TabHost;
@@ -25,6 +30,8 @@ public class MainActivity extends ActivityGroup {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+	
 		setContentView(R.layout.main);
 		
 		mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -1582,12 +1582,12 @@ public class ApiResponseFactory {
 		return var3;
 	}
 
-	private static String parseUpgrade(Context var0, XmlElement var1) {
+	private static String parseUpgrade(Context context, XmlElement xmlEle) {
 		String var3;
-		if (var1 == null) {
+		if (xmlEle == null) {
 			var3 = "";
 		} else {
-			XmlElement var2 = var1.getChild("products", 0);
+			XmlElement var2 = xmlEle.getChild("products", 0);
 			if (var2 != null) {
 				List var4 = var2.getChildren("product");
 				if (var4 == null) {
@@ -1609,7 +1609,7 @@ public class ApiResponseFactory {
 						var5.add(var8);
 					}
 
-					var3 = String.valueOf(DBUtils.addUpdateProduct(var0, var5));
+					var3 = String.valueOf(DBUtils.addUpdateProduct(context, var5));
 				}
 			} else {
 				var3 = "";

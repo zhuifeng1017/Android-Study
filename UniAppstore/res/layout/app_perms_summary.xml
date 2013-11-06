@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:orientation="vertical" android:background="@drawable/list_item_bg_selector" android:layout_width="fill_parent" android:layout_height="fill_parent"
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <TextView android:gravity="left|center" android:id="@id/no_permissions" android:background="@drawable/list_item_bg_selector" android:paddingLeft="10.0dip" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent" android:text="@string/no_permissions" android:singleLine="true" style="@style/text_style_2a" />
-    <LinearLayout android:orientation="vertical" android:id="@id/dangerous_perms_list" android:background="@drawable/list_item_bg_selector" android:layout_width="fill_parent" android:layout_height="wrap_content" />
-    <LinearLayout android:orientation="vertical" android:id="@id/non_dangerous_perms_list" android:background="@drawable/list_item_bg_selector" android:layout_width="fill_parent" android:layout_height="wrap_content" />
-</LinearLayout>

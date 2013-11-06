@@ -1,6 +1,7 @@
 package com.alpha.tabhost;
 
 import android.app.ActivityGroup;
+import android.app.TabActivity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -28,7 +29,7 @@ public class SecondTabActivity extends ActivityGroup {
 		// 否则必须使用该方法
 		mTabHost = (TabHost) findViewById(R.id.tabhost);
 		// 本方法必须调用,在底层去查找TabWidegt和TabContent,所以xml文件中两个节点的id必须和系统的相匹配
-		mTabHost.setup();
+		mTabHost.setup(this.getLocalActivityManager());
 		
 		// 添加标签页
 		TabSpec tabSpec1 = mTabHost.newTabSpec("tabSpec1");
