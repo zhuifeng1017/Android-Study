@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="60.0dip" >
+
+    <ImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="48.0dip"
+        android:layout_height="48.0dip"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="6.0dip"
+        android:layout_marginLeft="6.0dip"
+        android:layout_marginTop="6.0dip"
+        android:scaleType="fitCenter"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="8.0dip"
+        android:layout_marginRight="8.0dip"
+        android:layout_marginTop="12.0dip"
+        android:layout_toLeftOf="@+id/iv_devider"
+        android:layout_toRightOf="@+id/iv_logo"
+        android:gravity="left|center"
+        android:includeFontPadding="false"
+        android:singleLine="true"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/tv_description"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_below="@+id/tv_name"
+        android:layout_marginBottom="12.0dip"
+        android:layout_marginLeft="8.0dip"
+        android:layout_marginTop="6.0dip"
+        android:layout_toLeftOf="@+id/rb_app_rating"
+        android:layout_toRightOf="@+id/iv_logo"
+        android:gravity="left|center"
+        android:includeFontPadding="false"
+        android:singleLine="true"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/tv_download"
+        android:layout_width="48.0dip"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:paddingBottom="12.0dip"
+        android:paddingTop="4.0dip"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/iv_devider"
+        android:layout_width="0.8000001dip"
+        android:layout_height="48.0dip"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/tv_download" />
+
+    <TextView
+        android:id="@+id/tv_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_name"
+        android:layout_marginBottom="12.0dip"
+        android:layout_marginRight="8.0dip"
+        android:layout_marginTop="6.0dip"
+        android:layout_toLeftOf="@+id/iv_devider"
+        android:gravity="right|center"
+        android:includeFontPadding="false"
+        android:visibility="visible" />
+
+    <RatingBar
+        android:id="@+id/rb_app_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="12.0dip"
+        android:layout_below="@+id/tv_name"
+        android:layout_marginBottom="12.0dip"
+        android:layout_marginRight="8.0dip"
+        android:layout_marginTop="6.0dip"
+        android:layout_toLeftOf="@+id/iv_devider"
+        android:isIndicator="true"
+        android:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/iv_star"
+        android:layout_width="21.0dip"
+        android:layout_height="21.0dip"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:visibility="visible" />
+
+</RelativeLayout>

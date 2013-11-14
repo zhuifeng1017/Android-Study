@@ -11,43 +11,67 @@
         android:onClick="testListView"
         android:text="@string/button_testNavi" />
 
-        <RelativeLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-			<EditText android:id="@+id/edit_message"
-        			android:layout_width="wrap_content"
-        			android:layout_height="wrap_content"
-        				android:hint="@string/edit_message" />
-	        <Button
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_toRightOf="@id/edit_message"
-	        android:text="@string/button_send" android:onClick="sendMessage"/>
-    	</RelativeLayout>
-    	
-    	<Button android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_testIntent" android:onClick="testIntent"/>
-    	
-    	<Button android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_testResultActivity" android:onClick="testResultActivity"/>
+        android:orientation="vertical" >
 
-    	<Button
-    	    android:layout_width="wrap_content"
-    	    android:layout_height="wrap_content"
-    	    android:text="@string/button_testNavi" android:onClick="testNavi"/>
-    	
-    	<Button
-    	    android:layout_width="wrap_content"
-    	    android:layout_height="wrap_content"
-    	    android:text="toast" android:onClick="testToast"/>
+        <EditText
+            android:id="@+id/edit_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/edit_message" />
 
-    	<Button
-    	    android:id="@+id/button1"
-    	    android:layout_width="wrap_content"
-    	    android:layout_height="wrap_content"
-    	    android:text="Download" android:onClick="TestDownload" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/edit_message"
+            android:onClick="sendMessage"
+            android:text="@string/button_send" />
+    </RelativeLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="testIntent"
+        android:text="@string/button_testIntent" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="testResultActivity"
+        android:text="@string/button_testResultActivity" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="testNavi"
+        android:text="@string/button_testNavi" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="testToast"
+        android:text="toast" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="TestDownload"
+        android:text="Download" />
+
+    <Button
+        android:id="@+id/btnProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="TestProgressBar"
+        android:text="TestProgressBar" />
+    
+         <ProgressBar
+            android:id="@+id/splash_loading"
+            android:layout_width="54.0dip"
+            android:layout_height="12.0dip"
+            android:indeterminateOnly="true" />
 
 </LinearLayout>

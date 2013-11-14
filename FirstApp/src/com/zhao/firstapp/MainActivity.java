@@ -2,11 +2,14 @@ package com.zhao.firstapp;
 
 import java.io.File;
 import java.util.Calendar;
+import java.util.zip.Inflater;
+
 import org.apache.http.protocol.HTTP;
 
 //import android.database.sqlite.*;
 
 
+import com.zhao.util.*;
 import com.zhao.firstapp.R;
 
 import android.net.Uri;
@@ -23,10 +26,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
 
@@ -44,6 +49,9 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		((ProgressBar) findViewById(R.id.splash_loading))
+		.setIndeterminateDrawable(new LoadingDrawable(this));
 		
 		// ×¢²á¹ã²¥
 		IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
