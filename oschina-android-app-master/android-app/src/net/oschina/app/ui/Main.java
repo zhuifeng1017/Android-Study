@@ -1577,7 +1577,6 @@ public class Main extends BaseActivity {
 					// listview数据处理
 					Notice notice = handleLvData(msg.what, msg.obj, msg.arg2,
 							msg.arg1);
-
 					if (msg.what < pageSize) {
 						lv.setTag(UIHelper.LISTVIEW_DATA_FULL);
 						adapter.notifyDataSetChanged();

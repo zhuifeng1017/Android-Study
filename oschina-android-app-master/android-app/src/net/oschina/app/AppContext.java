@@ -41,6 +41,7 @@ import net.oschina.app.bean.UserInformation;
 import net.oschina.app.common.CyptoUtils;
 import net.oschina.app.common.FileUtils;
 import net.oschina.app.common.ImageUtils;
+import net.oschina.app.common.LogUtils;
 import net.oschina.app.common.MethodsCompat;
 import net.oschina.app.common.StringUtils;
 import net.oschina.app.common.UIHelper;
@@ -55,7 +56,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Message;
-import android.webkit.CacheManager;
+import android.util.Log;
+//import android.webkit.CacheManager;
 
 /**
  * 全局应用程序类：用于保存和调用全局应用配置及访问网络数据
@@ -838,7 +840,8 @@ public class AppContext extends Application {
 	 */
 	public TweetList getTweetList(int catalog, int pageIndex, boolean isRefresh) throws AppException {
 		TweetList list = null;
-		String key = "tweetlist_"+catalog+"_"+pageIndex+"_"+PAGE_SIZE;		
+		String key = "tweetlist_"+catalog+"_"+pageIndex+"_"+PAGE_SIZE;
+		LogUtils.V(key);
 		if(isNetworkConnected() && (!isReadDataCache(key) || isRefresh)) {
 			try{
 				list = ApiClient.getTweetList(this, catalog, pageIndex, PAGE_SIZE);
@@ -1477,13 +1480,13 @@ public class AppContext extends Application {
 	public void clearAppCache()
 	{
 		//清除webview缓存
-		File file = CacheManager.getCacheFileBaseDir();  
-		if (file != null && file.exists() && file.isDirectory()) {  
-		    for (File item : file.listFiles()) {  
-		    	item.delete();  
-		    }  
-		    file.delete();  
-		}  		  
+//		File file = CacheManager.getCacheFileBaseDir();  
+//		if (file != null && file.exists() && file.isDirectory()) {  
+//		    for (File item : file.listFiles()) {  
+//		    	item.delete();  
+//		    }  
+//		    file.delete();  
+//		}  		  
 		deleteDatabase("webview.db");  
 		deleteDatabase("webview.db-shm");  
 		deleteDatabase("webview.db-wal");  

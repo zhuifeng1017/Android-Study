@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import net.oschina.app.AppException;
+import net.oschina.app.common.LogUtils;
 import net.oschina.app.common.StringUtils;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -82,6 +83,10 @@ public class Tweet extends Entity{
 		return body;
 	}
 	public void setBody(String body) {
+		final String url = "my.oschina.net";
+		if (body.contains(url)){
+			LogUtils.V(body);
+		}
 		this.body = body;
 	}
 	public String getAuthor() {

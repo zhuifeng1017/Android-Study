@@ -36,6 +36,7 @@ import net.oschina.app.bean.URLs;
 import net.oschina.app.bean.Update;
 import net.oschina.app.bean.User;
 import net.oschina.app.bean.UserInformation;
+import net.oschina.app.common.LogUtils;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
@@ -53,6 +54,7 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 /**
  * API客户端接口：用于访问网络数据
@@ -176,6 +178,7 @@ public class ApiClient {
 					throw AppException.http(statusCode);
 				}
 				responseBody = httpGet.getResponseBodyAsString();
+				LogUtils.V(responseBody);
 				//System.out.println("XMLDATA=====>"+responseBody);
 				break;				
 			} catch (HttpException e) {
@@ -844,6 +847,7 @@ public class ApiClient {
 			put("pageIndex", pageIndex);
 			put("pageSize", pageSize);
 		}});
+		LogUtils.V(newUrl);
 		
 		try{
 			return TweetList.parse(http_get(appContext, newUrl));		

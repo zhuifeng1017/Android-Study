@@ -22,7 +22,7 @@
 		android:layout_marginLeft="5.0dip"
 		android:text="资讯"/>
 	
-    <!-- 这个是转圈的 -->
+    <!-- 这个是转圈的 visibility="gone"-->
    	<ProgressBar 
 		android:id="@+id/main_head_progress" 
 		style="@style/loading_small"
@@ -40,7 +40,7 @@
 		android:layout_marginRight="2.0dip"
 		android:background="@drawable/frame_icon_search"/>
    	
-    <!-- 下面两个一开始是隐藏的 -->
+    <!-- 下面两个是隐藏的 , 和main_head_search 切换显示-->
     <ImageButton
         android:id="@+id/main_head_pub_post"
         android:layout_width="wrap_content"

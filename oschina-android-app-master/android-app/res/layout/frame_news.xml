@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- 整体是一个线性布局 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" 
     android:layout_width="fill_parent" 
     android:layout_height="fill_parent">
+    
+    <!-- 顶部是一个线性布局 -->
 	<LinearLayout 
 		android:layout_width="fill_parent" 
 		android:layout_height="35.0dip"
@@ -24,10 +28,12 @@
          	android:text="@string/frame_title_news_recommend"/>
     </LinearLayout>
     
+	<!-- 下拉刷新listview -->
 	<net.oschina.app.widget.PullToRefreshListView
 	  	android:id="@+id/frame_listview_news"
 	    style="@style/widget_listview"/>
 	
+	<!-- 下拉刷新listview visibility="gone" -->
 	<net.oschina.app.widget.PullToRefreshListView
 	  	android:id="@+id/frame_listview_blog"
 	    style="@style/widget_listview"
