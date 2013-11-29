@@ -221,7 +221,7 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 			public void run() {
 				Looper.prepare();
 				UIHelper.sendAppCrashReport(context, crashReport);
-				Looper.loop();
+				Looper.loop();//run message loop
 			}
 
 		}.start();

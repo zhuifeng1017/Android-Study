@@ -28,7 +28,7 @@ public class About extends BaseActivity{
 		//获取客户端版本信息
         try { 
         	PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
-        	mVersion = (TextView)findViewById(R.id.about_version);
+        	mVersion = (TextView)findViewById(/*R.id.about_version*/0x7f0d0035);
     		mVersion.setText("版本："+info.versionName);
         } catch (NameNotFoundException e) {    
 			e.printStackTrace(System.err);

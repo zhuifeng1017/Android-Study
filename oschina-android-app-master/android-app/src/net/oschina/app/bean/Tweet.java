@@ -44,8 +44,8 @@ public class Tweet extends Entity{
 	private int authorId;
 	private int commentCount;
 	private String pubDate;
-	private String imgSmall;
-	private String imgBig;
+	private String imgSmall;	// tweet 小图
+	private String imgBig;		// tweet 大图
 	private File imageFile;
 	private int appClient; 
 	

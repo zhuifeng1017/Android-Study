@@ -46,6 +46,7 @@
 			android:textColorLink="@color/listitem_blue"
 			android:autoLink="web|email"/>	
 			
+		<!-- 用于动弹显示小图  -->
 	    <ImageView 
 	    	android:id="@+id/tweet_listitem_image"
 	      	android:layout_width="wrap_content" 
