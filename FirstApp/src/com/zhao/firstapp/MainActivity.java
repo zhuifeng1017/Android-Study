@@ -14,10 +14,9 @@ import com.zhao.firstapp.R;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.ContactsContract;
-import android.provider.CalendarContract.Events;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
@@ -32,17 +31,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.ShareActionProvider;
 import android.widget.Toast;
 
 
-@SuppressLint("NewApi")
+
 public class MainActivity extends Activity {
-	
-	public static final String TAG = "com.example.myfirstapp.LOG";
 	public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
 	static final int PICK_CONTACT_REQUEST = 1;
-	private ShareActionProvider mShareActionProvider;
 	private long mId = -1;
 	
 	@Override
@@ -50,8 +45,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		((ProgressBar) findViewById(R.id.splash_loading))
-		.setIndeterminateDrawable(new LoadingDrawable(this));
+//		((ProgressBar) findViewById(R.id.splash_loading))
+//		.setIndeterminateDrawable(new LoadingDrawable(this));
 		
 		// 注册广播
 		IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
@@ -61,7 +56,7 @@ public class MainActivity extends Activity {
 				// TODO Auto-generated method stub
 				long refId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
 				if (refId != -1 && mId==refId){
-					Log.d(TAG, "下载完成！");
+					Log.d(Constants.TAG, "下载完成！");
 				}
 			}
 		};
@@ -74,12 +69,12 @@ public class MainActivity extends Activity {
 		Cursor cursor = dm.query(query);
 		int cnt = cursor.getCount(); 
 		cursor.moveToFirst();
-		Log.d(TAG, "success count:" + cnt);
+		Log.d(Constants.TAG, "success count:" + cnt);
 		while (!cursor.isAfterLast()) {
 			String localURI = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
-			String localFilename = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
-			Log.d(TAG,  localURI);
-			Log.d(TAG,  localFilename);
+			String localFilename = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_URI));
+			Log.d(Constants.TAG,  localURI);
+			Log.d(Constants.TAG,  localFilename);
 			long id = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
 			dm.remove(id);
 			cursor.moveToNext();
@@ -96,10 +91,7 @@ public class MainActivity extends Activity {
 
 	    // Locate MenuItem with ShareActionProvider
 	    MenuItem item = menu.findItem(R.id.action_settings);
-
-	    // Fetch and store ShareActionProvider
-	    mShareActionProvider = (ShareActionProvider) item.getActionProvider();
-
+	    
 	    // Return true to display menu
 	    return true;
 	}
@@ -107,17 +99,14 @@ public class MainActivity extends Activity {
 	// Call to update the share intent
 	@SuppressWarnings("unused")
 	private void setShareIntent(Intent shareIntent) {
-	    if (mShareActionProvider != null) {
-	        mShareActionProvider.setShareIntent(shareIntent);
-	    }
 	}
 	
 	/** Called when the user clicks the Send button */
 	public void sendMessage(View view) {
 	    // Do something in response to button
-		Log.i(TAG, "sendMessage");
-		Log.i(TAG, "app file dir:  "  + getFilesDir().getAbsolutePath());
-		Log.i(TAG, "app cache dir:  " + getCacheDir().getAbsolutePath());
+		Log.i(Constants.TAG, "sendMessage");
+		Log.i(Constants.TAG, "app file dir:  "  + getFilesDir().getAbsolutePath());
+		Log.i(Constants.TAG, "app cache dir:  " + getCacheDir().getAbsolutePath());
 		
 		File file = new File( getFilesDir(), "1.txt");
 		
@@ -192,7 +181,7 @@ public class MainActivity extends Activity {
 	}
 	
 	public void testNavi(View view) {
-		Log.v(TAG, "testNavi");	// 调用第三方地图软件，暂时还没有实现
+		Log.v(Constants.TAG, "testNavi");	// 调用第三方地图软件，暂时还没有实现
 	}
 	
 	public void testListView(View view) {
@@ -215,10 +204,22 @@ public class MainActivity extends Activity {
 		mId = downloadID;
 	}
 	
+	
+	
+	public void TestPM(View view){
+		//Utils.installApk(this, new File(Environment.getExternalStorageDirectory(), "jifeng_0.9.0_android_zol.apk"));
+		Utils.InstallAPK(Environment.getExternalStorageDirectory() + "/jifeng_0.9.0_android_zol.apk");
+	}
+	
+	
+	
+	
+	
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		String str = String.format("rezquestCode: %d resultCode:%d ", requestCode, resultCode);
-		Log.i(TAG, str);
+		Log.i(Constants.TAG, str);
 		 // Check which request it is that we're responding to
 	    if (requestCode == PICK_CONTACT_REQUEST) {
 	        // Make sure the request was successful
@@ -241,7 +242,7 @@ public class MainActivity extends Activity {
 	            int column = cursor.getColumnIndex(Phone.NUMBER);
 	            String number = cursor.getString(column);
 	            // Do something with the phone number...
-	            Log.i(TAG,  "number : " + number);
+	            Log.i(Constants.TAG,  "number : " + number);
 	        }
 	    }
 	}
