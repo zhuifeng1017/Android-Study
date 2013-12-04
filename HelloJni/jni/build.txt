@@ -1,0 +1,2 @@
+cd E:\Works\Git-Space\Android-Study\HelloJni\bin\classes
+E:\Works\Git-Space\Android-Study\HelloJni\bin\classes>javah -classpath . -jni com.example.hellojni.HelloJni

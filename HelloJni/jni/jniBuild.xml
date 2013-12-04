@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- E:/android/adt-bundle-windows-x86-20131030/sdk/platforms/android-19/android.jar 不加，
+会提示找不到类 android.app.Activity 
+编写参考：https://ant.apache.org/manual/Tasks/javah.html
+-->
+<project name="jniBuild">
+    <javah classpath="../bin/classes;E:/android/adt-bundle-windows-x86-20131030/sdk/platforms/android-19/android.jar" destdir=".">
+        <!-- list classes here -->
+        <class name="com.example.hellojni.HelloJni" />
+    </javah>
+</project>
+
+
