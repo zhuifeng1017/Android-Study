@@ -16,6 +16,7 @@
  */
 #include <string.h>
 #include <jni.h>
+#include "Pinyin.h"
 
 /* This is a trivial JNI example where we use a native method
  * to return a new VM String. See the corresponding Java source
@@ -27,5 +28,15 @@ jstring
 Java_com_example_hellojni_HelloJni_stringFromJNI( JNIEnv* env,
                                                   jobject thiz )
 {
-    return (*env)->NewStringUTF(env, "Hello from JNI !");
+	//printf("获取拼音");
+	const char *py = ToPinyin('大');
+    return (*env)->NewStringUTF(env, py);
+}
+
+JNIEXPORT jstring JNICALL Java_com_example_hellojni_HelloJni_stringFromJNI2
+  (JNIEnv *env, jobject thiz, jchar code){
+
+	//printf("获取拼音");
+	const char *py = ToPinyin(code);
+    return (*env)->NewStringUTF(env, py);
 }

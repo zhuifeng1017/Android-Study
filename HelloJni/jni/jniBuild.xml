@@ -6,7 +6,7 @@
 -->
 <project name="jniBuild">
     <javah classpath="../bin/classes;E:/android/adt-bundle-windows-x86-20131030/sdk/platforms/android-19/android.jar"
-         destdir="." verbose="yes">
+         destdir="." verbose="no">
         <!-- list classes here -->
         <class name="com.example.hellojni.HelloJni"/>
         <class name="com.example.hellojni.HelloJniTwo"/>

@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.os.Bundle;
 
 
+// �ж�Ϊ��
 public class HelloJni extends Activity
 {
     /** Called when the activity is first created. */
@@ -33,7 +34,7 @@ public class HelloJni extends Activity
          * function.
          */
         TextView  tv = new TextView(this);
-        tv.setText( stringFromJNI() );
+        tv.setText( stringFromJNI2('任') + "-" + stringFromJNI2('我') +  "-" + stringFromJNI2('游'));
         setContentView(tv);
     }
 
@@ -42,7 +43,7 @@ public class HelloJni extends Activity
      * with this application.
      */
     public native String  stringFromJNI();
-    public native String  stringFromJNI2();
+    public native String  stringFromJNI2(char code);
     public native static String  stringFromJNI3();
 
     /* This is another native method declaration that is *not*

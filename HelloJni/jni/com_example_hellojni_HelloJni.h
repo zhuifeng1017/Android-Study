@@ -69,10 +69,10 @@ JNIEXPORT jstring JNICALL Java_com_example_hellojni_HelloJni_stringFromJNI
 /*
  * Class:     com_example_hellojni_HelloJni
  * Method:    stringFromJNI2
- * Signature: ()Ljava/lang/String;
+ * Signature: (C)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_com_example_hellojni_HelloJni_stringFromJNI2
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jchar);
 
 /*
  * Class:     com_example_hellojni_HelloJni
